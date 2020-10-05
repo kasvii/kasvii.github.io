@@ -320,3 +320,10 @@ pre .keyword,pre .javascript .function {color:#cc99cc;}
   .article .side {display:none}
   .comment .gt-btn-public .gt-btn-text:after{content:"";}
 }
+
+*{
+    cursor: url("/img/cs1.ico"),auto!important;
+}
+:active{
+    cursor: url("/img/cs2.ico"),auto!important;
+}

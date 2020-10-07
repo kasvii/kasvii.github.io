@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/2020/10/03/hello-world/</url>
-    <content><![CDATA[<p>Welcome to my blog!</p>
-]]></content>
-  </entry>
-  <entry>
     <title>矩阵求导</title>
     <url>/2020/10/07/matrix-derivative/</url>
     <content><![CDATA[]]></content>
@@ -18,5 +12,11 @@
         <tag>机器学习</tag>
         <tag>神经网络</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2020/10/03/hello-world/</url>
+    <content><![CDATA[<p>Welcome to my blog!</p>
+]]></content>
   </entry>
 </search>

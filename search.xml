@@ -6,4 +6,17 @@
     <content><![CDATA[<p>Welcome to my blog!</p>
 ]]></content>
   </entry>
+  <entry>
+    <title>matrix_derivative</title>
+    <url>/2020/10/02/matrix-derivative/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>矩阵</tag>
+        <tag>机器学习</tag>
+        <tag>神经网络</tag>
+      </tags>
+  </entry>
 </search>

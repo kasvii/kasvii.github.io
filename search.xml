@@ -9,7 +9,13 @@
   <entry>
     <title>矩阵求导</title>
     <url>/2020/10/07/matrix-derivative/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>第一次接触矩阵导数是暑期课Frontier Approaches of Control Science的作业用最小二乘法做线性回归。在控制理论和机器学习领域，矩阵求导更是一个常用的数学工具。</p>
+<h2 id="矩阵求导的本质"><a href="#矩阵求导的本质" class="headerlink" title="矩阵求导的本质"></a>矩阵求导的本质</h2><p>矩阵A对矩阵B求导，本质上是多元函数求导，也就是矩阵A中的每一个元素对矩阵B中的每一个元素求导，再将求导的结果排列成矩阵的形式。到这里，矩阵求导似乎就讲完了，剩下的就是复合函数求导和求偏导的计算。但是我们很快就发现这种逐元素求导的方法很复杂，随着元素的增加，计算量也极大地增加。那么，有没有直接用矩阵运算，从整体出发的算法。</p>
+<h2 id="矩阵求导的形式"><a href="#矩阵求导的形式" class="headerlink" title="矩阵求导的形式"></a>矩阵求导的形式</h2><p>常见的矩阵求导有以下六种，分别是标量对标量求导、标量对向量求导、标量对矩阵求导、向量对标量求导、向量对向量求导和矩阵对标量求导。</p>
+<p><img src="matrix-derivative/pic1.png" alt="1"></p>
+<h2 id="两种布局"><a href="#两种布局" class="headerlink" title="两种布局"></a>两种布局</h2><p>我们上面提到矩阵求导的本质是矩阵A中的每一个元素对矩阵B中的每一个元素求导，再将求导结果排列成矩阵的形式。对于两个向量的求导结果一般有两种排列方式，分别是分子布局（XY拉伸术）和分母布局（YX拉伸术）。</p>
+<p>布局规则：1.标量不变，向量拉伸 2.前面横向拉，后面纵向拉</p>
+]]></content>
       <categories>
         <category>机器学习</category>
       </categories>

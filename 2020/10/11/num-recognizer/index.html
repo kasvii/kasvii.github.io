@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>手写数字识别器 - Kasvii Blog</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="kasvii,"> 
+    <meta name="description" content="写在前面  手写数字识别器是一个经典的卷积神经网络问题，这里将利用PyTorch实验手写数字识别器的任务。
+数据准备  首先导入所有需要的库
+1234567891011121314import to,"> 
+    <meta name="author" content="kasvii"> 
+    <link rel="alternative" href="atom.xml" title="Kasvii Blog" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Kasvii Blog</span>
+    <div id="loader"></div>
+    <script type="text/javascript" src="/js/clicksakura.js"></script>
+    <script async src="/js/sakurafall.js"></script>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="https://kasvii.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">手写数字识别器</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">手写数字识别器</h1>
+        <div class="stuff">
+            <span>十月 11, 2020</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">神经网络</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>  手写数字识别器是一个经典的卷积神经网络问题，这里将利用PyTorch实验手写数字识别器的任务。</p>
+<h2 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h2><p>  首先导入所有需要的库</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> torchvision.datasets <span class="keyword">as</span> dsets</span><br><span class="line"><span class="keyword">import</span> torchvision.transforms <span class="keyword">as</span> transforms</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.environ[<span class="string">&quot;KMP_DUPLICATE_LIB_OK&quot;</span>]=<span class="string">&quot;TRUE&quot;</span></span><br></pre></td></tr></table></figure>
+<p>  接着定义一些训练用的超参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">image_size = <span class="number">28</span> <span class="comment">#训练图像的总尺寸为28*28</span></span><br><span class="line">num_classes = <span class="number">10</span> <span class="comment">#标签种类数</span></span><br><span class="line">num_epochs = <span class="number">20</span> <span class="comment">#训练的总循环周期</span></span><br><span class="line">batch_size = <span class="number">64</span> <span class="comment">#一个批次的大小，64张图片</span></span><br></pre></td></tr></table></figure>
+<p>  然后导入数据，Pytorch中自带了我们需要的手写数据集MNIST。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#加载MNIST数据，如果没有下载过，系统会在当前路径下新建/data子目录，并把文件存放在其中（压缩的格式）</span></span><br><span class="line"><span class="comment">#MNIST数据属于torchvision包自带的数据，可以直接调用</span></span><br><span class="line">train_dataset = dsets.MNIST(root=<span class="string">&#x27;./data&#x27;</span>,</span><br><span class="line">                            train=<span class="literal">True</span>,</span><br><span class="line">                            transform=transforms.ToTensor(),</span><br><span class="line">                            download=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#加载测试数据集</span></span><br><span class="line">test_dataset = dsets.MNIST(root=<span class="string">&#x27;./data&#x27;</span>,</span><br><span class="line">                           train=<span class="literal">False</span>,</span><br><span class="line">                           transform=transforms.ToTensor())</span><br><span class="line"></span><br><span class="line"><span class="comment">#训练数据集的加载器，自动将数据分成批，顺序随机打乱</span></span><br><span class="line">train_loader = torch.utils.data.DataLoader(dataset=train_dataset,</span><br><span class="line">                                           batch_size=batch_size,</span><br><span class="line">                                           shuffle=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#将数据分为两部分，一部分作为校验数据，用于检测模型是否过拟合并调整参数</span></span><br><span class="line"><span class="comment">#另一部分作为测试数据，检验整个模型</span></span><br><span class="line"><span class="comment">#首先，定义下标数组indices，相当于test_dataset中数据的编码</span></span><br><span class="line"><span class="comment">#然后，定义下表indices_val表示校验集数据的下标，indices_test表示测试集的下标</span></span><br><span class="line">indices = range(len(test_dataset))</span><br><span class="line">indices_val = indices[:<span class="number">5000</span>]</span><br><span class="line">indices_test = indices[<span class="number">5000</span>:]</span><br><span class="line"></span><br><span class="line"><span class="comment">#根据两个下标构造两个数据集的SubsetRandomSampler采样器，他会对下标进行采样</span></span><br><span class="line">sampler_val = torch.utils.data.sampler.SubsetRandomSampler(indices_val)</span><br><span class="line">sampler_test = torch.utils.data.sampler.SubsetRandomSampler(indices_test)</span><br><span class="line"></span><br><span class="line"><span class="comment">#根据两个采样器定义加载器</span></span><br><span class="line"><span class="comment">#将sampler_val和sampler_test分别赋值给validation_loader和test_loader</span></span><br><span class="line">validation_loader = torch.utils.data.DataLoader(dataset=test_dataset,</span><br><span class="line">                                                batch_size=batch_size,</span><br><span class="line">                                                shuffle=<span class="literal">False</span>,</span><br><span class="line">                                                sampler=sampler_val)</span><br><span class="line">test_loader = torch.utils.data.DataLoader(dataset=test_dataset,</span><br><span class="line">                                          batch_size=batch_size,</span><br><span class="line">                                          shuffle=<span class="literal">False</span>,</span><br><span class="line">                                          sampler=sampler_test)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>数据集（dataset）是对整个数据的封装，无论原始数据是图像还是张量，数据集都将对其进行统一处理。</li>
+<li>加载器（dataloader）主要负责在程序中对数据集的使用。</li>
+<li>采样器（sampler）为加载器提供了一个每一批抽取数据集中样本的方法。</li>
+</ul>
+<h2 id="构建网络"><a href="#构建网络" class="headerlink" title="构建网络"></a>构建网络</h2><p>  这里主要利用PyTorch的nn.Module类来构建卷积神经网络。</p>
+<p>  首先，构造ConvNet类，它是对nn.Module类的继承。</p>
+<p>  其次，复写init()和forward()两个函数。init()为构造函数，每当类ConvNet被具体化一个实例的时候就会被调用。forward()函数则是在正向运行神经网络时被自动调用，负责数据的向前传递，并同时构造计算图。</p>
+<p>  然后，定义一个retrieve_features()函数，用来提取网络中各个卷积层的权重。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#定义卷积神经网络：4和8为认为指定的两个卷积层的厚度（feature map的数量）</span></span><br><span class="line">depth = [<span class="number">4</span>, <span class="number">8</span>]</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ConvNet</span>(<span class="params">nn.Module</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="comment"># 该函数在创建一个ConvNet对象，即调用语句net=ConvNet()时就会被调用</span></span><br><span class="line">        <span class="comment"># 首先调用父类相应的构造函数</span></span><br><span class="line">        super(ConvNet, self).__init__()</span><br><span class="line"></span><br><span class="line">        <span class="comment">#其次构造ConvNet要用到的各个神经网络模块</span></span><br><span class="line">        <span class="comment">#注意，构造组件并不是真正搭建组件，只是把基本建筑砖块先找好</span></span><br><span class="line">        <span class="comment">#定义一个卷积层，输入通道为1，输出通道为4，窗口大小为5，padding为2</span></span><br><span class="line">        self.conv1 = nn.Conv2d(<span class="number">1</span>, <span class="number">4</span>, <span class="number">5</span>, padding = <span class="number">2</span>)</span><br><span class="line">        self.pool = nn.MaxPool2d(<span class="number">2</span>, <span class="number">2</span>)<span class="comment">#定义一个池化层，一个窗口为2x2的池化运算</span></span><br><span class="line">        <span class="comment">#第二个卷积层，输入通道为depth[0],输出通道为depth[1]，窗口为5，padding为2</span></span><br><span class="line">        self.conv2 = nn.Conv2d(depth[<span class="number">0</span>], depth[<span class="number">1</span>], <span class="number">5</span>, padding = <span class="number">2</span>)</span><br><span class="line">        <span class="comment">#一个线性连接层，输入尺寸为最后一层立方体的线性平铺，输出层512个节点</span></span><br><span class="line">        self.fc1 = nn.Linear(image_size // <span class="number">4</span> * image_size // <span class="number">4</span> * depth[<span class="number">1</span>], <span class="number">512</span>)</span><br><span class="line"></span><br><span class="line">        self.fc2 = nn.Linear(<span class="number">512</span>, num_classes) <span class="comment">#最后一层线性分类单元，输入为512，输出为要做分类的类别数</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, x</span>):</span> <span class="comment">#该函数完成神经网络真正的前向运算，在这里把各个组件进行实际的拼装</span></span><br><span class="line">        <span class="comment"># x的尺寸：（batch_size, image_channels, image_width, image_height）</span></span><br><span class="line">        x = self.conv1(x)    <span class="comment">#第一层卷积</span></span><br><span class="line">        x = F.relu(x)      <span class="comment">#激活函数用ReLU，防止过拟合</span></span><br><span class="line">        <span class="comment">#x的尺寸：（batch_size, num_filters, image_width, image_height）</span></span><br><span class="line"></span><br><span class="line">        x = self.pool(x) <span class="comment">#第二层池化，把图片变小</span></span><br><span class="line">        <span class="comment">#x的尺寸：（batch_size, depth[0], image_width/2, image_height/2）</span></span><br><span class="line"></span><br><span class="line">        x = self.conv2(x) <span class="comment">#第三层卷积，窗口为5，输入输出通道分别为depth[0]=4, depth[1]=8</span></span><br><span class="line">        x = F.relu(x) <span class="comment">#非线性函数</span></span><br><span class="line">        <span class="comment">#x的尺寸：（batch_size, depth[0], image_width/2, image_height/2）</span></span><br><span class="line"></span><br><span class="line">        x = self.pool(x) <span class="comment">#第四层池化，将图片缩小到原来的1/4</span></span><br><span class="line">        <span class="comment">#x的尺寸：（batch_size, depth[1], image_width/4, image_heigth/4）</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">#将立体的特征图tensor压成一个一维向量</span></span><br><span class="line">        <span class="comment">#view函数可以将一个tensor按指定的方式重新排布</span></span><br><span class="line">        <span class="comment">#下面这个命令就是要让x按照batch_size * (image_size//4)^2*depth[1]的方式来排布向量</span></span><br><span class="line">        x = x.view(<span class="number">-1</span>, image_size // <span class="number">4</span> * image_size // <span class="number">4</span> *depth[<span class="number">1</span>])</span><br><span class="line">        <span class="comment">#x的尺寸：（batch_size, depth[1]*image_width/4*image_height/4）</span></span><br><span class="line"></span><br><span class="line">        x = F.relu(self.fc1(x))<span class="comment">#第五层为全连接，ReLU激活函数</span></span><br><span class="line">        <span class="comment">#x的尺寸：（batch_size, 512）</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">#以默认0.5的概率对这一层进行dropout操作，防止过拟合</span></span><br><span class="line">        x = F.dropout(x, training=self.training)</span><br><span class="line">        x = self.fc2(x) <span class="comment">#全连接</span></span><br><span class="line">        <span class="comment">#x的尺寸：(batch_size, num_classes)</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">#输出层为log_softmax,即概率对数值log(p(x)),采用log_softmax可以使后面交叉熵计算更快</span></span><br><span class="line">        x = F.log_softmax(x, dim=<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">retrieve_features</span>(<span class="params">self, x</span>):</span></span><br><span class="line">        <span class="comment"># 该函数用于提取卷积神经网络的特征图，返回feature_map1, feature_map2为前两层卷积层的特征图</span></span><br><span class="line">        feature_map1 = F.relu(self.conv1(x)) <span class="comment">#完成第一层卷积</span></span><br><span class="line">        x = self.pool(feature_map1)</span><br><span class="line">        <span class="comment">#第二层卷积，两层特征图都存储到了feature_map1, feature_map2中</span></span><br><span class="line">        feature_map2 = F.relu(self.conv2(x))</span><br><span class="line">        <span class="keyword">return</span> (feature_map1, feature_map2)</span><br></pre></td></tr></table></figure>
+<p>  在以上代码中用到了dropout()函数，该函数用来防止神经网络的过拟合情况。在训练过程中，根据一定的概率随机将其中的一些神经元暂时丢弃，最后在测试的时候再使用全部的神经元，增强模型的泛化能力。</p>
+<h2 id="运行模型"><a href="#运行模型" class="headerlink" title="运行模型"></a>运行模型</h2><p>  构建好ConvNet之后，就可以读取数据并训练模型了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">net = ConvNet() <span class="comment">#新建一个卷积神经网络的实例，此时ConvNet的__init__()函数会被自动调用</span></span><br><span class="line"></span><br><span class="line">criterion = nn.CrossEntropyLoss() <span class="comment">#损失函数的定义，交叉熵</span></span><br><span class="line">optimizer = optim.SGD(net.parameters(), lr=<span class="number">0.001</span>, momentum=<span class="number">0.9</span>) <span class="comment">#定义优化器，普通的随机梯度下降算法</span></span><br><span class="line"></span><br><span class="line">record = [] <span class="comment">#记录准确率等数值的容器</span></span><br><span class="line">weights = [] <span class="comment">#每若干步就记录一次卷积核</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rightness</span>(<span class="params">output, target</span>):</span></span><br><span class="line">    preds = output.data.max(dim=<span class="number">1</span>, keepdim=<span class="literal">True</span>)[<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">return</span> preds.eq(target.data.view_as(preds)).cpu().sum(), len(target)</span><br><span class="line"></span><br><span class="line"><span class="comment">#开始训练循环</span></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(num_epochs):</span><br><span class="line"></span><br><span class="line">    train_rights = [] <span class="comment">#记录训练数据集准确率的容器</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;下面的enumerate起到构造枚举器的作用，在对train_loader做循环迭代时，enumerate会自动输出一个数字指示循环了几次</span></span><br><span class="line"><span class="string">    并记录在batch_idx中，它就等于0，1，2，...train_loader每迭代一次，就会输出一对数据data和target,分别对应一个批中的</span></span><br><span class="line"><span class="string">    手写数字图及对应的标签。&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> batch_idx, (data, target) <span class="keyword">in</span> enumerate(train_loader): <span class="comment">#针对容器中的每一批进行循环</span></span><br><span class="line">        <span class="comment">#将Tensor转化为Variable，data为一批图像，target为一批标签</span></span><br><span class="line">        data, target = Variable(data), Variable(target)</span><br><span class="line">        <span class="comment">#给网络模型做标记，标志着模型在训练集上训练</span></span><br><span class="line">        <span class="comment">#这种区分主要是为了打开关闭net的training标志，从而决定是否运行dropout</span></span><br><span class="line">        net.train()</span><br><span class="line"></span><br><span class="line">        output = net(data) <span class="comment">#神经网络完成一次前馈的计算过程，得到预测输出output</span></span><br><span class="line">        loss = criterion(output, target) <span class="comment">#将output与标签target比较，计算误差</span></span><br><span class="line">        optimizer.zero_grad() <span class="comment">#清空梯度</span></span><br><span class="line">        loss.backward() <span class="comment">#反向传播</span></span><br><span class="line">        optimizer.step() <span class="comment">#一步随机梯度下降算法</span></span><br><span class="line">        right = rightness(output, target) <span class="comment">#计算准确率所需数值，返回数值为（正确样例数，总样本数）</span></span><br><span class="line">        train_rights.append(right) <span class="comment">#将计算结果装到列表容器train_rights中</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> batch_idx % <span class="number">100</span> == <span class="number">0</span>: <span class="comment">#每隔100个batch执行一次打印操作</span></span><br><span class="line"></span><br><span class="line">            net.eval() <span class="comment">#给网络模型做标记，标志着模型在训练集上训练</span></span><br><span class="line">            val_rights = [] <span class="comment">#记录校验数据集准确率的标签</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">#开始在校验集上做循环，计算校验集上的准确度</span></span><br><span class="line">            <span class="keyword">for</span> (data, target) <span class="keyword">in</span> validation_loader:</span><br><span class="line">                data, target = Variable(data), Variable(target)</span><br><span class="line">                <span class="comment">#完成一次前馈计算过程，得到目前训练得到的模型net在校验集上的表现</span></span><br><span class="line">                output = net(data)</span><br><span class="line">                <span class="comment">#计算准确率所需数值，返回正确的数值为（正确样例数，总样本数）</span></span><br><span class="line">                right = rightness(output, target)</span><br><span class="line">                val_rights.append(right)</span><br><span class="line"></span><br><span class="line">            <span class="comment">#分别计算目前已经计算过的测试集以及全部校验集上模型的表现：分类准确率</span></span><br><span class="line">            <span class="comment">#train_r为一个二元组，分别记录经历过的所有训练集中分类正确的数量和该集合中总的样本数</span></span><br><span class="line">            <span class="comment">#train_r[0]/train_r[1]是训练集的分类准确度，val_r[0]/val_r[1]是校验集的分类准确度</span></span><br><span class="line">            train_r = (sum([tup[<span class="number">0</span>] <span class="keyword">for</span> tup <span class="keyword">in</span> train_rights]),sum([tup[<span class="number">1</span>] <span class="keyword">for</span> tup <span class="keyword">in</span> train_rights]))</span><br><span class="line">            <span class="comment">#val_r为一个二元组，分别记录校验集中分类正确的数量和该集合中的总样本数</span></span><br><span class="line">            val_r = (sum([tup[<span class="number">0</span>] <span class="keyword">for</span> tup <span class="keyword">in</span> val_rights]),sum([tup[<span class="number">1</span>] <span class="keyword">for</span> tup <span class="keyword">in</span> val_rights]))</span><br><span class="line"></span><br><span class="line">            <span class="comment">#打印准确率等数值，其中正确率为样本训练周期epoch开始后到目前批的正确率的平均值</span></span><br><span class="line">            <span class="comment">#print(&#x27;训练周期：&#123;&#125; [&#123;&#125;/&#123;&#125; (&#123;:.0f&#125;%)]\t, Loss:&#123;:.6f&#125;\t, 训练正确率：&#123;:.2f&#125;%\t, 校验正确率：&#123;:.2f&#125;%&#x27;.format(</span></span><br><span class="line">            <span class="comment">#     epoch, batch_idx * len(data), len(train_loader.dataset),</span></span><br><span class="line">            <span class="comment">#     100. * batch_idx / len(train_loader), loss.data[0],</span></span><br><span class="line">            <span class="comment">#     100. * train_r[0] / train_r[1],</span></span><br><span class="line">            <span class="comment">#     100. * val_r[0] / val_r[1]))</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">#将准确率和权重等数值加载到容器中，方便后续处理</span></span><br><span class="line">            record.append((<span class="number">100</span> - <span class="number">100.</span> * train_r[<span class="number">0</span>] / train_r[<span class="number">1</span>], <span class="number">100</span> - <span class="number">100.</span> * val_r[<span class="number">0</span>] / val_r[<span class="number">1</span>]))</span><br><span class="line"></span><br><span class="line">            <span class="comment">#wights记录了训练中其中所有卷积演化的过程，net.conv1.weight提取出了第一层卷积核的权重</span></span><br><span class="line">            <span class="comment">#clone是将weight.data中的数据做一个备份放到列表中</span></span><br><span class="line">            <span class="comment">#否则放weight.data变化时，列表中的每一项数值也会联动</span></span><br><span class="line">            <span class="comment">#这里使用clone这个函数很重要</span></span><br><span class="line">            weights.append([net.conv1.weight.data.clone(), net.conv1.bias.data.clone(),</span><br><span class="line">                            net.conv2.weight.data.clone(), net.conv2.bias.data.clone()])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>  以上代码中，net.train()会打开所有的dropout层，而net.eval()会关闭它们。</p>
+<h2 id="测试模型"><a href="#测试模型" class="headerlink" title="测试模型"></a>测试模型</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#在训练集上分批运行，并计算总的正确率</span></span><br><span class="line">net.eval() <span class="comment">#标志着模型当前的运行阶段</span></span><br><span class="line">vals = [] <span class="comment">#记录准确率所用列表</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#对测试数据集进行循环</span></span><br><span class="line"><span class="keyword">for</span> data, target <span class="keyword">in</span> test_loader:</span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        data = Variable(data)</span><br><span class="line">    target = Variable(target)</span><br><span class="line">    output = net(data) <span class="comment">#将特征数据输入网络，得到分类的输出</span></span><br><span class="line">    val = rightness(output, target) <span class="comment">#获得正确样本数以及总样本数</span></span><br><span class="line">    vals.append(val) <span class="comment">#记录结果</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#计算准确率</span></span><br><span class="line">rights = (sum([tup[<span class="number">0</span>] <span class="keyword">for</span> tup <span class="keyword">in</span> vals]),sum([tup[<span class="number">1</span>] <span class="keyword">for</span> tup <span class="keyword">in</span> vals]))</span><br><span class="line">right_rate = <span class="number">1.0</span> * rights[<span class="number">0</span>] / rights[<span class="number">1</span>]</span><br><span class="line">print(right_rate)</span><br><span class="line"></span><br><span class="line"><span class="comment">#绘制训练过程的误差曲线，校验集和测试集上的错误率</span></span><br><span class="line">plt.figure(figsize = (<span class="number">10</span>, <span class="number">7</span>))</span><br><span class="line">plt.plot(record) <span class="comment">#record记录了每一个打印周期记录的训练集和校验集上的准确度</span></span><br><span class="line">plt.xlabel(<span class="string">&#x27;Steps&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;Error rate&#x27;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>  最后，将训练过程中的误差曲线绘制出来。</p>
+<p><img src="pic1.png" alt="1"></p>
+<p>  图中左边浅色的为校验数据错误率曲线，右边深色的为测试数据错误率曲线。模型在测试集和校验集上的表现都很好，卷积神经网络的泛化能力也很强。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://music.163.com/song/media/outer/url?id=1432130357.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://music.163.com/song/media/outer/url?id=1430898876.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci='a3a33c2a30c8f056252b'
+        data-cs='7e3c9dce2acd3d4d59d679c980f33c24de2c29ad'
+        data-r='CommentData'
+        data-o='kasvii'
+        data-a='kasvii'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({"HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"], linebreaks: { automatic:true }, EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: { inlineMath: [ ["$", "$"], ["\\(","\\)"] ], processEscapes: true, ignoreClass: "tex2jax_ignore|dno",skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {  noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } }, Macros: { href: "{}" } },
+        messageStyle: "none"
+    });
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+
+</html>
+

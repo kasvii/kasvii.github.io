@@ -7,45 +7,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>YOLACT</title>
-    <url>/2021/01/30/YOLACT/</url>
-    <content><![CDATA[<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>因为项目的需要，就试着跑了YOLACT，把过程记录在这儿。</p>
-<p><strong>YOLACT：</strong><a href="https://github.com/dbolya/yolact">https://github.com/dbolya/yolact</a> </p>
-<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><h3 id="创建虚拟环境"><a href="#创建虚拟环境" class="headerlink" title="创建虚拟环境"></a>创建虚拟环境</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">conda create -n yolact python&#x3D;3.7</span><br><span class="line">source activate</span><br><span class="line">conda activate yolact</span><br></pre></td></tr></table></figure>
-<ul>
-<li>用conda创建一个yolact虚拟环境，这样可以搭建独立的python运行环境，使的每个项目的运行互不影响；</li>
-<li>激活该虚拟环境。</li>
-</ul>
-<h3 id="安装pytorch和其他的包"><a href="#安装pytorch和其他的包" class="headerlink" title="安装pytorch和其他的包"></a>安装pytorch和其他的包</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">conda install pytorch torchvision cudatoolkit&#x3D;8.0 </span><br><span class="line">pip install cython opencv-python pillow  matplotlib </span><br></pre></td></tr></table></figure>
-<ul>
-<li>cudatoolkit=x.x取决cuda版本，因为我用的是师兄的服务器，cuda是8.0的版本，所以cudatoolkit=8.0；</li>
-<li>conda install的好处是能够根据cudatoolkit的版本安装相对应版本的pytorch和torchvision，不用我们自己匹配。</li>
-</ul>
-<h3 id="安装COCOAPI"><a href="#安装COCOAPI" class="headerlink" title="安装COCOAPI"></a>安装COCOAPI</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd cocoapi&#x2F;PythonAPI</span><br><span class="line">python setup.py build_ext install</span><br></pre></td></tr></table></figure>
-<p>【注意】setup.py文件里第12行的</p>
-<p>​        extra_compile_args={‘gcc’: [‘/Qstd=c99’]},</p>
-<p>  改为<br>        extra_compile_args=[‘-std=c99’],</p>
-<h3 id="编译可变性卷积层（如果要使用YOLACT-）"><a href="#编译可变性卷积层（如果要使用YOLACT-）" class="headerlink" title="*编译可变性卷积层（如果要使用YOLACT++）"></a>*编译可变性卷积层（如果要使用YOLACT++）</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd ..&#x2F;..&#x2F;yolact-master&#x2F;external&#x2F;DCNv2</span><br><span class="line">python setup.py build develop</span><br></pre></td></tr></table></figure>
-<h2 id="运行YOLACT"><a href="#运行YOLACT" class="headerlink" title="运行YOLACT"></a>运行YOLACT</h2><h3 id="GPU设置"><a href="#GPU设置" class="headerlink" title="GPU设置"></a>GPU设置</h3><p>YOLACT源码默认使用多GPU，而我只用了一个GPU，所以在运行前要设置一下。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export CUDA_VISIBLE_DEVICES&#x3D;[gpus]</span><br></pre></td></tr></table></figure>
-<p>比如我用的是2号GPU，所以命令就是</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">export CUDA_VISIBLE_DEVICES&#x3D;2</span><br></pre></td></tr></table></figure>
-<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>运行前把github上的<a href="https://drive.google.com/file/d/15id0Qq5eqRbkD-N3ZjDZXdCvRyIaHpFB/view?usp=sharing">yolact_plus_base_54_800000.pth</a>下载到/.weigths文件夹里</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">python eval.py --trained_model&#x3D;weights&#x2F;yolact_base_54_800000.pth --score_threshold&#x3D;0.15 --top_k&#x3D;15 --image&#x3D;test.jpg</span><br></pre></td></tr></table></figure>
-<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="pic1.png" alt="1"></p>
-<p>可以看到识别出了一些车，速度也是比较快的。</p>
-<p>公众号“小鸡炖技术”整理了完整的压缩包，百度云链接：<a href="https://pan.baidu.com/s/1ZKxm9L4fqT0CqwPjEUaYBg">https://pan.baidu.com/s/1ZKxm9L4fqT0CqwPjEUaYBg</a> 提取码pket。</p>
-]]></content>
-      <categories>
-        <category>实例分割</category>
-      </categories>
-      <tags>
-        <tag>神经网络</tag>
-        <tag>实例分割</tag>
-        <tag>深度学习</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>矩阵求导</title>
     <url>/2020/10/07/matrix-derivative/</url>
     <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>第一次接触矩阵导数是暑期课Frontier Approaches of Control Science的作业用最小二乘法做线性回归。在控制理论和机器学习领域，矩阵求导更是一个常用的数学工具。</p>
@@ -135,6 +96,47 @@ L(\mathbf b)=\sum_{i=1}^n(y_i-\mathbf x_i^T\mathbf b)^2</script><p>用矩阵表�
       <tags>
         <tag>机器学习</tag>
         <tag>神经网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>YOLACT</title>
+    <url>/2021/01/30/YOLACT/</url>
+    <content><![CDATA[<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>因为项目的需要，就试着跑了YOLACT，把过程记录在这儿。</p>
+<p><strong>YOLACT：</strong><a href="https://github.com/dbolya/yolact">https://github.com/dbolya/yolact</a> </p>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><h3 id="创建虚拟环境"><a href="#创建虚拟环境" class="headerlink" title="创建虚拟环境"></a>创建虚拟环境</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">conda create -n yolact python=3.7</span><br><span class="line"><span class="built_in">source</span> activate</span><br><span class="line">conda activate yolact</span><br></pre></td></tr></table></figure>
+<ul>
+<li>用conda创建一个yolact虚拟环境，这样可以搭建独立的python运行环境，使的每个项目的运行互不影响；</li>
+<li>激活该虚拟环境。</li>
+</ul>
+<h3 id="安装pytorch和其他的包"><a href="#安装pytorch和其他的包" class="headerlink" title="安装pytorch和其他的包"></a>安装pytorch和其他的包</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">conda install pytorch torchvision cudatoolkit=8.0 </span><br><span class="line">pip install cython opencv-python pillow  matplotlib </span><br></pre></td></tr></table></figure>
+<ul>
+<li>cudatoolkit=x.x取决cuda版本，因为我用的是师兄的服务器，cuda是8.0的版本，所以cudatoolkit=8.0；</li>
+<li>conda install的好处是能够根据cudatoolkit的版本安装相对应版本的pytorch和torchvision，不用我们自己匹配。</li>
+</ul>
+<h3 id="安装COCOAPI"><a href="#安装COCOAPI" class="headerlink" title="安装COCOAPI"></a>安装COCOAPI</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> cocoapi/PythonAPI</span><br><span class="line">python setup.py build_ext install</span><br></pre></td></tr></table></figure>
+<p>【注意】setup.py文件里第12行的</p>
+<p>​        extra_compile_args={‘gcc’: [‘/Qstd=c99’]},</p>
+<p>  改为<br>        extra_compile_args=[‘-std=c99’],</p>
+<h3 id="编译可变性卷积层（如果要使用YOLACT-）"><a href="#编译可变性卷积层（如果要使用YOLACT-）" class="headerlink" title="*编译可变性卷积层（如果要使用YOLACT++）"></a>*编译可变性卷积层（如果要使用YOLACT++）</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ../../yolact-master/external/DCNv2</span><br><span class="line">python setup.py build develop</span><br></pre></td></tr></table></figure>
+<h2 id="运行YOLACT"><a href="#运行YOLACT" class="headerlink" title="运行YOLACT"></a>运行YOLACT</h2><h3 id="GPU设置"><a href="#GPU设置" class="headerlink" title="GPU设置"></a>GPU设置</h3><p>YOLACT源码默认使用多GPU，而我只用了一个GPU，所以在运行前要设置一下。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> CUDA_VISIBLE_DEVICES=[gpus]</span><br></pre></td></tr></table></figure>
+<p>比如我用的是2号GPU，所以命令就是</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> CUDA_VISIBLE_DEVICES=2</span><br></pre></td></tr></table></figure>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>运行前把github上的<a href="https://drive.google.com/file/d/15id0Qq5eqRbkD-N3ZjDZXdCvRyIaHpFB/view?usp=sharing">yolact_plus_base_54_800000.pth</a>下载到/.weigths文件夹里</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">python eval.py --trained_model=weights/yolact_base_54_800000.pth --score_threshold=0.15 --top_k=15 --image=test.jpg</span><br></pre></td></tr></table></figure>
+<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="pic1.png" alt="1"></p>
+<p>可以看到识别出了一些车，速度也是比较快的。</p>
+<h3 id="command"><a href="#command" class="headerlink" title="command"></a>command</h3><p>配置好环境后，以后再次运行yolact就只需要使用以下命令</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> activate</span><br><span class="line"></span><br><span class="line">conda activate yolact</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /home/youyx/yolacte_tutorials/yolact-master/</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> CUDA_VISIBLE_DEVICES=2</span><br><span class="line"></span><br><span class="line">python eval.py --trained_model=weights/yolact_base_54_800000.pth --score_threshold=0.15 --top_k=15 --image=test.jpg</span><br></pre></td></tr></table></figure>
+<p>公众号“小鸡炖技术”整理了完整的压缩包，百度云链接：<a href="https://pan.baidu.com/s/1ZKxm9L4fqT0CqwPjEUaYBg">https://pan.baidu.com/s/1ZKxm9L4fqT0CqwPjEUaYBg</a> 提取码pket。</p>
+]]></content>
+      <categories>
+        <category>实例分割</category>
+      </categories>
+      <tags>
+        <tag>神经网络</tag>
+        <tag>实例分割</tag>
+        <tag>深度学习</tag>
       </tags>
   </entry>
 </search>

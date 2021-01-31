@@ -2,9 +2,95 @@
 <search>
   <entry>
     <title>Hello World</title>
-    <url>/2021/01/30/hello-world/</url>
+    <url>/2021/01/31/hello-world/</url>
     <content><![CDATA[<p>Welcome to my blog!</p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>Gazebo仿真场景搭建+配置</title>
+    <url>/2021/01/31/Gazebo%E4%BB%BF%E7%9C%9F%E5%9C%BA%E6%99%AF%E6%90%AD%E5%BB%BA+%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[<h2 id="搭建场景"><a href="#搭建场景" class="headerlink" title="搭建场景"></a>搭建场景</h2><h3 id="打开Gazebo"><a href="#打开Gazebo" class="headerlink" title="打开Gazebo"></a>打开Gazebo</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">gazebo</span><br></pre></td></tr></table></figure>
+<h3 id="打开建筑编辑器"><a href="#打开建筑编辑器" class="headerlink" title="打开建筑编辑器"></a>打开建筑编辑器</h3><p>点击“Edit”-&gt;“Building Editor”或者使用快捷键“ctrl+B”</p>
+<p><img src="pic1.png" alt="pic1"></p>
+<h3 id="图形界面"><a href="#图形界面" class="headerlink" title="图形界面"></a>图形界面</h3><ul>
+<li>左栏可以选择建筑材料和特征</li>
+<li>上方的界面是二维视图，导入的floor plan可以在这里看到</li>
+<li>下方的界面是三维视图，能够预览建筑</li>
+</ul>
+<h3 id="导入floor-plan"><a href="#导入floor-plan" class="headerlink" title="导入floor plan"></a>导入floor plan</h3><p>导入一个建筑模板</p>
+<p>1.点击左栏的“import”</p>
+<p>2.选择电脑中的一张floor plan图片</p>
+<p><img src="pic2.png" alt="pic2"></p>
+<p>3.设置尺度</p>
+<p><img src="D:\yyx\Hexo-Blog\source\_posts\Gazebo仿真场景搭建+配置\pic3.png" alt="pic3"></p>
+<p>在图片中标记一段直线，并在左边输入其实际长度</p>
+<p>4.图片出现在二维界面中</p>
+<h3 id="添加墙、窗户和门"><a href="#添加墙、窗户和门" class="headerlink" title="添加墙、窗户和门"></a>添加墙、窗户和门</h3><p><img src="pic5.png" alt="pic5"></p>
+<p>添加窗户和门的时候有个bug，只能添加横向的窗和门，若添加纵向的gazebo就会闪退，关闭硬件加速或是升级gazebo都没解决。</p>
+<h3 id="编辑建筑"><a href="#编辑建筑" class="headerlink" title="编辑建筑"></a>编辑建筑</h3><p>双击墙、窗户和门，或者右键选择，即出现参数框</p>
+<p><img src="pic6.png" alt="pic6"></p>
+<p>可以调整位置、大小，还可以设置墙的颜色和纹理</p>
+<h3 id="保存建筑"><a href="#保存建筑" class="headerlink" title="保存建筑"></a>保存建筑</h3><p>保存会创建一个建筑的目录，SDF和配置文件。</p>
+<p>点击“File”-&gt;“Save”（ctrl+s）。注意：保存的位置要在gazebo/models下</p>
+<p><img src="pic7.png" alt="pic7"></p>
+<p>保存后就可以退出，一旦退出这个建筑就不能再编辑，只能往里面插入模型。</p>
+<p><img src="pic8.png" alt="pic8"></p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>在/usr/share/gazebo-9/worlds目录下创建house.world文件，添加以下代码</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">sdf</span> <span class="attr">version</span>=<span class="string">&quot;1.5&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">world</span> <span class="attr">name</span>=<span class="string">&quot;default&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">include</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">uri</span>&gt;</span>model://ground_plane<span class="tag">&lt;/<span class="name">uri</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">include</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">uri</span>&gt;</span>model://sun<span class="tag">&lt;/<span class="name">uri</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">include</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">uri</span>&gt;</span>model://house<span class="tag">&lt;/<span class="name">uri</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">world</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">sdf</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在/opt/ros/melodic/share/gazebo_ros/launch目录下创建house.launch文件，添加以下代码</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">launch</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">include</span> <span class="attr">file</span>=<span class="string">&quot;$(find gazebo_ros)/launch/empty_world.launch&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">arg</span> <span class="attr">name</span>=<span class="string">&quot;world_name&quot;</span> <span class="attr">value</span>=<span class="string">&quot;worlds/house.world&quot;</span>/&gt;</span> <span class="comment">&lt;!-- <span class="doctag">Note:</span> the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">arg</span> <span class="attr">name</span>=<span class="string">&quot;paused&quot;</span> <span class="attr">value</span>=<span class="string">&quot;false&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">arg</span> <span class="attr">name</span>=<span class="string">&quot;use_sim_time&quot;</span> <span class="attr">value</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">arg</span> <span class="attr">name</span>=<span class="string">&quot;gui&quot;</span> <span class="attr">value</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">arg</span> <span class="attr">name</span>=<span class="string">&quot;headless&quot;</span> <span class="attr">value</span>=<span class="string">&quot;false&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">arg</span> <span class="attr">name</span>=<span class="string">&quot;debug&quot;</span> <span class="attr">value</span>=<span class="string">&quot;false&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">launch</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>在命令行中输入</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">roslaunch gazebo_ros house.launch</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>gazebo</category>
+      </categories>
+      <tags>
+        <tag>gazebo</tag>
+        <tag>ROS</tag>
+        <tag>仿真</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>YOLACT</title>
+    <url>/2021/01/30/YOLACT/</url>
+    <content><![CDATA[<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>因为项目的需要，就试着跑了YOLACT，把过程记录在这儿。</p>
+<p><strong>YOLACT：</strong><a href="https://github.com/dbolya/yolact">https://github.com/dbolya/yolact</a> </p>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><h3 id="创建虚拟环境"><a href="#创建虚拟环境" class="headerlink" title="创建虚拟环境"></a>创建虚拟环境</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">conda create -n yolact python=3.7</span><br><span class="line"><span class="built_in">source</span> activate</span><br><span class="line">conda activate yolact</span><br></pre></td></tr></table></figure>
+<ul>
+<li>用conda创建一个yolact虚拟环境，这样可以搭建独立的python运行环境，使的每个项目的运行互不影响；</li>
+<li>激活该虚拟环境。</li>
+</ul>
+<h3 id="安装pytorch和其他的包"><a href="#安装pytorch和其他的包" class="headerlink" title="安装pytorch和其他的包"></a>安装pytorch和其他的包</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">conda install pytorch torchvision cudatoolkit=8.0 </span><br><span class="line">pip install cython opencv-python pillow  matplotlib </span><br></pre></td></tr></table></figure>
+<ul>
+<li>cudatoolkit=x.x取决cuda版本，因为我用的是师兄的服务器，cuda是8.0的版本，所以cudatoolkit=8.0；</li>
+<li>conda install的好处是能够根据cudatoolkit的版本安装相对应版本的pytorch和torchvision，不用我们自己匹配。</li>
+</ul>
+<h3 id="安装COCOAPI"><a href="#安装COCOAPI" class="headerlink" title="安装COCOAPI"></a>安装COCOAPI</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> cocoapi/PythonAPI</span><br><span class="line">python setup.py build_ext install</span><br></pre></td></tr></table></figure>
+<p>【注意】setup.py文件里第12行的</p>
+<p>​        extra_compile_args={‘gcc’: [‘/Qstd=c99’]},</p>
+<p>  改为<br>        extra_compile_args=[‘-std=c99’],</p>
+<h3 id="编译可变性卷积层（如果要使用YOLACT-）"><a href="#编译可变性卷积层（如果要使用YOLACT-）" class="headerlink" title="*编译可变性卷积层（如果要使用YOLACT++）"></a>*编译可变性卷积层（如果要使用YOLACT++）</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ../../yolact-master/external/DCNv2</span><br><span class="line">python setup.py build develop</span><br></pre></td></tr></table></figure>
+<h2 id="运行YOLACT"><a href="#运行YOLACT" class="headerlink" title="运行YOLACT"></a>运行YOLACT</h2><h3 id="GPU设置"><a href="#GPU设置" class="headerlink" title="GPU设置"></a>GPU设置</h3><p>YOLACT源码默认使用多GPU，而我只用了一个GPU，所以在运行前要设置一下。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> CUDA_VISIBLE_DEVICES=[gpus]</span><br></pre></td></tr></table></figure>
+<p>比如我用的是2号GPU，所以命令就是</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> CUDA_VISIBLE_DEVICES=2</span><br></pre></td></tr></table></figure>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>运行前把github上的<a href="https://drive.google.com/file/d/15id0Qq5eqRbkD-N3ZjDZXdCvRyIaHpFB/view?usp=sharing">yolact_plus_base_54_800000.pth</a>下载到/.weigths文件夹里</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">python eval.py --trained_model=weights/yolact_base_54_800000.pth --score_threshold=0.15 --top_k=15 --image=test.jpg</span><br></pre></td></tr></table></figure>
+<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="pic1.png" alt="1"></p>
+<p>可以看到识别出了一些车，速度也是比较快的。</p>
+<h3 id="command"><a href="#command" class="headerlink" title="command"></a>command</h3><p>配置好环境后，以后再次运行yolact就只需要使用以下命令</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> activate</span><br><span class="line"></span><br><span class="line">conda activate yolact</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /home/youyx/yolacte_tutorials/yolact-master/</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> CUDA_VISIBLE_DEVICES=2</span><br><span class="line"></span><br><span class="line">python eval.py --trained_model=weights/yolact_base_54_800000.pth --score_threshold=0.15 --top_k=15 --image=test.jpg</span><br></pre></td></tr></table></figure>
+<p>公众号“小鸡炖技术”整理了完整的压缩包，百度云链接：<a href="https://pan.baidu.com/s/1ZKxm9L4fqT0CqwPjEUaYBg">https://pan.baidu.com/s/1ZKxm9L4fqT0CqwPjEUaYBg</a> 提取码pket。</p>
+]]></content>
+      <categories>
+        <category>实例分割</category>
+      </categories>
+      <tags>
+        <tag>神经网络</tag>
+        <tag>实例分割</tag>
+        <tag>深度学习</tag>
+      </tags>
   </entry>
   <entry>
     <title>矩阵求导</title>
@@ -96,47 +182,6 @@ L(\mathbf b)=\sum_{i=1}^n(y_i-\mathbf x_i^T\mathbf b)^2</script><p>用矩阵表�
       <tags>
         <tag>机器学习</tag>
         <tag>神经网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>YOLACT</title>
-    <url>/2021/01/30/YOLACT/</url>
-    <content><![CDATA[<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>因为项目的需要，就试着跑了YOLACT，把过程记录在这儿。</p>
-<p><strong>YOLACT：</strong><a href="https://github.com/dbolya/yolact">https://github.com/dbolya/yolact</a> </p>
-<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><h3 id="创建虚拟环境"><a href="#创建虚拟环境" class="headerlink" title="创建虚拟环境"></a>创建虚拟环境</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">conda create -n yolact python=3.7</span><br><span class="line"><span class="built_in">source</span> activate</span><br><span class="line">conda activate yolact</span><br></pre></td></tr></table></figure>
-<ul>
-<li>用conda创建一个yolact虚拟环境，这样可以搭建独立的python运行环境，使的每个项目的运行互不影响；</li>
-<li>激活该虚拟环境。</li>
-</ul>
-<h3 id="安装pytorch和其他的包"><a href="#安装pytorch和其他的包" class="headerlink" title="安装pytorch和其他的包"></a>安装pytorch和其他的包</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">conda install pytorch torchvision cudatoolkit=8.0 </span><br><span class="line">pip install cython opencv-python pillow  matplotlib </span><br></pre></td></tr></table></figure>
-<ul>
-<li>cudatoolkit=x.x取决cuda版本，因为我用的是师兄的服务器，cuda是8.0的版本，所以cudatoolkit=8.0；</li>
-<li>conda install的好处是能够根据cudatoolkit的版本安装相对应版本的pytorch和torchvision，不用我们自己匹配。</li>
-</ul>
-<h3 id="安装COCOAPI"><a href="#安装COCOAPI" class="headerlink" title="安装COCOAPI"></a>安装COCOAPI</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> cocoapi/PythonAPI</span><br><span class="line">python setup.py build_ext install</span><br></pre></td></tr></table></figure>
-<p>【注意】setup.py文件里第12行的</p>
-<p>​        extra_compile_args={‘gcc’: [‘/Qstd=c99’]},</p>
-<p>  改为<br>        extra_compile_args=[‘-std=c99’],</p>
-<h3 id="编译可变性卷积层（如果要使用YOLACT-）"><a href="#编译可变性卷积层（如果要使用YOLACT-）" class="headerlink" title="*编译可变性卷积层（如果要使用YOLACT++）"></a>*编译可变性卷积层（如果要使用YOLACT++）</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ../../yolact-master/external/DCNv2</span><br><span class="line">python setup.py build develop</span><br></pre></td></tr></table></figure>
-<h2 id="运行YOLACT"><a href="#运行YOLACT" class="headerlink" title="运行YOLACT"></a>运行YOLACT</h2><h3 id="GPU设置"><a href="#GPU设置" class="headerlink" title="GPU设置"></a>GPU设置</h3><p>YOLACT源码默认使用多GPU，而我只用了一个GPU，所以在运行前要设置一下。</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> CUDA_VISIBLE_DEVICES=[gpus]</span><br></pre></td></tr></table></figure>
-<p>比如我用的是2号GPU，所以命令就是</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> CUDA_VISIBLE_DEVICES=2</span><br></pre></td></tr></table></figure>
-<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>运行前把github上的<a href="https://drive.google.com/file/d/15id0Qq5eqRbkD-N3ZjDZXdCvRyIaHpFB/view?usp=sharing">yolact_plus_base_54_800000.pth</a>下载到/.weigths文件夹里</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">python eval.py --trained_model=weights/yolact_base_54_800000.pth --score_threshold=0.15 --top_k=15 --image=test.jpg</span><br></pre></td></tr></table></figure>
-<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="pic1.png" alt="1"></p>
-<p>可以看到识别出了一些车，速度也是比较快的。</p>
-<h3 id="command"><a href="#command" class="headerlink" title="command"></a>command</h3><p>配置好环境后，以后再次运行yolact就只需要使用以下命令</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> activate</span><br><span class="line"></span><br><span class="line">conda activate yolact</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /home/youyx/yolacte_tutorials/yolact-master/</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> CUDA_VISIBLE_DEVICES=2</span><br><span class="line"></span><br><span class="line">python eval.py --trained_model=weights/yolact_base_54_800000.pth --score_threshold=0.15 --top_k=15 --image=test.jpg</span><br></pre></td></tr></table></figure>
-<p>公众号“小鸡炖技术”整理了完整的压缩包，百度云链接：<a href="https://pan.baidu.com/s/1ZKxm9L4fqT0CqwPjEUaYBg">https://pan.baidu.com/s/1ZKxm9L4fqT0CqwPjEUaYBg</a> 提取码pket。</p>
-]]></content>
-      <categories>
-        <category>实例分割</category>
-      </categories>
-      <tags>
-        <tag>神经网络</tag>
-        <tag>实例分割</tag>
-        <tag>深度学习</tag>
       </tags>
   </entry>
 </search>

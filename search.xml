@@ -2,9 +2,137 @@
 <search>
   <entry>
     <title>Hello World</title>
-    <url>/2021/03/02/hello-world/</url>
+    <url>/2021/03/09/hello-world/</url>
     <content><![CDATA[<p>Welcome to my blog!</p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>ORB_SLAM2配置</title>
+    <url>/2021/03/09/ORB_SLAM2%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[<h3 id="安装OpenCV"><a href="#安装OpenCV" class="headerlink" title="安装OpenCV"></a>安装OpenCV</h3><p>我装的是opencv 3.2.0</p>
+<h3 id="安装Pangolin"><a href="#安装Pangolin" class="headerlink" title="安装Pangolin"></a>安装Pangolin</h3><h3 id="安装Eigen3"><a href="#安装Eigen3" class="headerlink" title="安装Eigen3"></a>安装Eigen3</h3><h3 id="安装ROS"><a href="#安装ROS" class="headerlink" title="安装ROS"></a>安装ROS</h3><h3 id="建立ORB-SLAM2"><a href="#建立ORB-SLAM2" class="headerlink" title="建立ORB-SLAM2"></a>建立ORB-SLAM2</h3><p>复制项目<br>cd ~/catkin_ws/src<br>git clone <a href="https://github.com/raulmur/ORB_SLAM2.git">https://github.com/raulmur/ORB_SLAM2.git</a><br>或者<br>将ORB_SLAM2项目下载到~/catkin_ws/src下，解压<br>cd ORB_SLAM2<br>chmod +x build.sh<br>./build.sh<br>chmod +x build_ros.sh<br>./build_ros.sh</p>
+<h3 id="跑MONO-TUM数据集"><a href="#跑MONO-TUM数据集" class="headerlink" title="跑MONO_TUM数据集"></a>跑MONO_TUM数据集</h3><p>./Examples/Monocular/mono_tum Vocabulary/ORBvoc.txt Examples/Monocular/TUM3.yaml /home/sharon/Documents/rgbd_dataset_freiburg3_nostructure_texture_far/</p>
+<h3 id="跑RGBD-TUM数据集"><a href="#跑RGBD-TUM数据集" class="headerlink" title="跑RGBD_TUM数据集"></a>跑RGBD_TUM数据集</h3><p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt ./Examples/RGB-D/TUM2.yaml /home/sharon/Documents/rgbd_dataset_freiburg2_pioneer_360 associations.txt</p>
+<p>rosrun ORB_SLAM2 Mono /home/sharon/catkin_ws/src/ORB_SLAM2/Vocabulary/ORBvoc.txt /home/sharon/catkin_ws/src/ORB_SLAM2/Examples/Monocular/TUM2.yaml</p>
+]]></content>
+      <categories>
+        <category>ROS</category>
+        <category>ORB_SLAM2</category>
+      </categories>
+      <tags>
+        <tag>ROS</tag>
+        <tag>ORB_SLAM2</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ROS-launch-camera</title>
+    <url>/2021/03/08/ROS-launch-camera/</url>
+    <content><![CDATA[<h2 id="ROS启动摄像头"><a href="#ROS启动摄像头" class="headerlink" title="ROS启动摄像头"></a>ROS启动摄像头</h2><h3 id="设置usb-cam节点"><a href="#设置usb-cam节点" class="headerlink" title="设置usb_cam节点"></a>设置usb_cam节点</h3><p>cd ~/catkin_ws/src<br>git clone <a href="https://github.com/bosch-ros-pkg/usb_cam.git">https://github.com/bosch-ros-pkg/usb_cam.git</a> usb_cam<br>cd ..<br>catkin_make</p>
+<p>source ./devel/setup.bash</p>
+<p>roslaunch usb_cam usb_cam-test.launch<br><img src="pic1.png" alt="1"></p>
+<h3 id="编译ORB-SLAM2"><a href="#编译ORB-SLAM2" class="headerlink" title="编译ORB-SLAM2"></a>编译ORB-SLAM2</h3><p>1.将/home/sharon/catkin_ws/src/ORB_SLAM2/Examples/ROS/ORB_SLAM2/src的ros_mono.cc和/home/sharon/catkin_ws/src/ORB_SLAM2/Examples/ROS/ORB_SLAM2/src/AR的ros_mono_ar.cc中的ros::Subscriber sub = nodeHandler.subscribe(“/camera/image_raw”, 1, &amp;ImageGrabber::GrabImage,&amp;igb);<br>改为<br>ros::Subscriber sub = nodeHandler.subscribe(“/usb_cam/image_raw”, 1, &amp;ImageGrabber::GrabImage,&amp;igb);<br>因为ORB_SLAM默认订阅的话题为/camera/image_raw，而usb_cam节点发布的话题为/usb_cam/image_raw<br>2.改好之后再重新编译ORB_SLAM2<br>chmod +x build_ros.sh<br>./build_ros.sh</p>
+<h3 id="运行单目摄像头节点"><a href="#运行单目摄像头节点" class="headerlink" title="运行单目摄像头节点"></a>运行单目摄像头节点</h3><p>roslaunch usb_cam usb_cam-test.launch<br>rosrun ORB_SLAM2 Mono /home/sharon/catkin_ws/src/ORB_SLAM2/Vocabulary/ORBvoc.txt /home/sharon/catkin_ws/src/ORB_SLAM2/Examples/Monocular/TUM1.yaml<br><img src="pic2.png" alt="2"></p>
+]]></content>
+      <categories>
+        <category>ROS</category>
+        <category>ORB-SLAM2</category>
+      </categories>
+      <tags>
+        <tag>ROS</tag>
+        <tag>ORB-SLAM2</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ORB-SLAM2错误及解决方法</title>
+    <url>/2021/03/08/ORB-SLAM2%E9%94%99%E8%AF%AF%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>在ubantu 14.04上跑ORB-SLAM2，遇到了一些问题记录下来。</p>
+<h2 id="装OpenCV遇到的问题"><a href="#装OpenCV遇到的问题" class="headerlink" title="装OpenCV遇到的问题"></a>装OpenCV遇到的问题</h2><h3 id="1"><a href="#1" class="headerlink" title="1"></a>1</h3><p>问题：make编译时In file included from /home/youyx/Downloads/opencv-3.2.0/modules/core/src/hal_internal.cpp:49:0: /home/youyx/Downloads/opencv-3.2.0/build/opencv_lapack.h:2:45: fatal error: LAPACKE_H_PATHNOTFOUND/lapacke.h: No such file or directory #include “LAPACKE_H_PATH-NOTFOUND/lapacke.h”</p>
+<p>方法：</p>
+<p>sudo apt-get install liblapacke-dev checkinstall</p>
+<p>然后将opencv-3.2.0/build/opencv_lapack.h第二行中的<code>#include&quot;LAPACKE_H_PATH-NOTFOUND/lapacke.h&quot;</code> 改为<code>#include&quot;lapacke.h&quot;</code></p>
+<h3 id="2"><a href="#2" class="headerlink" title="2"></a>2</h3><p>问题：make编译时libopencv_highgui.so:undefined reference to `TIFFIsTiled@LIBTIFF_4.0’</p>
+<p>原因：OpenCV需要libtiff4库，然而Ubuntu14.04系统安装不会自带libtiff4,因此当以OpenCV为接口时编译可能会出现这个问题。</p>
+<p>方法：在cmake 编译OpenCV时</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cmake -D BUILD_TIFF=ON</span><br></pre></td></tr></table></figure>
+<p>便会自动编译libtiff4，然后再以OpenCV做接口编译时，Bug消除</p>
+<h3 id="3"><a href="#3" class="headerlink" title="3"></a>3</h3><p>问题：../../lib/libopencv_core.so.3.2.0: undefined reference to <code>dpotrf_&#39; ../../lib/libopencv_core.so.3.2.0: undefined reference to</code>dgesv_’<br>../../lib/libopencv_core.so.3.2.0: undefined reference to <code>sgels_&#39; ../../lib/libopencv_core.so.3.2.0: undefined reference to</code>sgesv_’<br>../../lib/libopencv_core.so.3.2.0: undefined reference to <code>sposv_&#39; ../../lib/libopencv_core.so.3.2.0: undefined reference to</code>dgetrf_’<br>../../lib/libopencv_core.so.3.2.0: undefined reference to <code>sgetrf_&#39; ../../lib/libopencv_core.so.3.2.0: undefined reference to</code>dgels_’<br>../../lib/libopencv_core.so.3.2.0: undefined reference to <code>dgeqrf_&#39; ../../lib/libopencv_core.so.3.2.0: undefined reference to</code>spotrf_’<br>../../lib/libopencv_core.so.3.2.0: undefined reference to <code>sgeqrf_&#39; ../../lib/libopencv_core.so.3.2.0: undefined reference to</code>sgesdd_’<br>../../lib/libopencv_core.so.3.2.0: undefined reference to <code>dgesdd_&#39; ../../lib/libopencv_core.so.3.2.0: undefined reference to</code>dposv_’</p>
+<p>方法：在cmake 编译OpenCV时</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">-D WITH_LAPACK=OFF</span><br></pre></td></tr></table></figure>
+<h3 id="4"><a href="#4" class="headerlink" title="4"></a>4</h3><p>问题：/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>PKCS12_PBE_add@OPENSSL_1.0.0&#39;                     
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>OCSP_basic_verify@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>BIO_puts@OPENSSL_1.0.0&#39;                           
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>SSL_get_peer_certificate@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>BIO_free@OPENSSL_1.0.0&#39;                           
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>SSLv3_client_method@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>ENGINE_get_id@OPENSSL_1.0.0&#39;                      
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>RAND_status@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>MD5_Final@OPENSSL_1.0.0&#39;                          
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>SSL_CTX_set_verify@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>ASN1_TIME_print@OPENSSL_1.0.0&#39;                    
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>ENGINE_ctrl@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>CONF_modules_free@OPENSSL_1.0.0&#39;                  
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>DES_set_key@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>SSL_set_session@OPENSSL_1.0.0&#39;                    
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>X509_EXTENSION_get_data@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>ERR_error_string_n@OPENSSL_1.0.0&#39;                 
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>OCSP_cert_status_str@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>SSL_CTX_free@OPENSSL_1.0.0&#39;                       
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>X509_check_issued@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>SSL_CTX_set_default_passwd_cb_userdata@OPENSSL_1.0
+.0&#39;                                                                                                             
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>OCSP_RESPONSE_free@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>X509_get_pubkey@OPENSSL_1.0.0&#39;                    
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>CRYPTO_malloc@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>SSL_CTX_use_certificate_chain_file@OPENSSL_1.0.0&#39; 
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>SSLeay@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>UI_method_get_opener@OPENSSL_1.0.0&#39;               
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>X509_load_crl_file@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>ENGINE_free@OPENSSL_1.0.0&#39;                        
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>ASN1_STRING_type@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>ASN1_STRING_data@OPENSSL_1.0.0&#39;                   
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>i2t_ASN1_OBJECT@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>SSL_get_error@OPENSSL_1.0.0&#39;                      
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>X509_NAME_get_entry@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>SSL_CTX_add_client_CA@OPENSSL_1.0.0&#39;              
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>SSL_get_privatekey@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>OPENSSL_load_builtin_modules@OPENSSL_1.0.0&#39;       
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>CRYPTO_free@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>RAND_add@OPENSSL_1.0.0&#39;                           
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>ASN1_STRING_length@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>SSL_CIPHER_get_name@OPENSSL_1.0.0&#39;                
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>ERR_peek_error@OPENSSL_1.0.0’                     </p>
+<p>方法：anaconda的库和系统默认的库冲突了，我暴力地把anaconda的文件名改了哈哈哈哈哈哈哈哈哈哈哈哈</p>
+<h3 id="5-ubantu18-04"><a href="#5-ubantu18-04" class="headerlink" title="5(ubantu18.04)"></a>5(ubantu18.04)</h3><p>问题：error: ‘usleep’ was not declared in this scope<br>             usleep(3000);</p>
+<p>方法：在/include/System.h文件中添加#include<unistd.h></p>
+<h3 id="6"><a href="#6" class="headerlink" title="6"></a>6</h3><p>问题：build_ros.sh遇到undefined reference to symbol ‘_ZN5boost6system15system_categoryEv’<br>方法：在Examples/ROS/ORB_SLAM2/文件夹下的CMakeLists.txt文件中<br>set(LIBS<br>${OpenCV_LIBS}<br>${EIGEN3_LIBS}<br>${Pangolin_LIBRARIES}<br>${PROJECT_SOURCE_DIR}/../../../Thirdparty/DBoW2/lib/libDBoW2.so<br>${PROJECT_SOURCE_DIR}/../../../Thirdparty/g2o/lib/libg2o.so<br>${PROJECT_SOURCE_DIR}/../../../lib/libORB_SLAM2.so<br>改为<br>set(LIBS<br>${OpenCV_LIBS}<br>${EIGEN3_LIBS}<br>${Pangolin_LIBRARIES}<br>${PROJECT_SOURCE_DIR}/../../../Thirdparty/DBoW2/lib/libDBoW2.so<br>${PROJECT_SOURCE_DIR}/../../../Thirdparty/g2o/lib/libg2o.so<br>${PROJECT_SOURCE_DIR}/../../../lib/libORB_SLAM2.so<br>-lboost_system<br>)</p>
+<h3 id="7"><a href="#7" class="headerlink" title="7"></a>7</h3><p>问题：[ERROR] [1571614395.918484166]: [registerPublisher] Failed to contact master at [localhost:11311]<br>方法：ros服务没开，再开一个终端输入<br>roscore</p>
+<h3 id="8"><a href="#8" class="headerlink" title="8"></a>8</h3><p>ORB-SLAM2编译报错：rospack found package “ORB_SLAM2” at “/opt/ros/kinetic/share/ORB_SLAM2”, but the….</p>
+<p><a href="https://blog.csdn.net/weixin_44401286/article/details/102752767">https://blog.csdn.net/weixin_44401286/article/details/102752767</a></p>
+<p>“原因分析及解决办法：<br>这是由于在ROS环境下编译使用了多个版本的ORB-SLAM2工程造成的，比如我运行了原版的ORB-SLAM2，然后拷贝了一份改了下文件名字，添加稠密重建模块，再对新的工程编译，就报了这个错误。因为原工程已经在/opt/ros/kinetic/share文件夹下建立了一个软连接ORB_SLAM2，这里包含有原工程的一些信息，我们需要做的就是把该软连接，替换为现在工程的软连接。”<br>(1)先cd到/opt/ros/kinetic/share目录下，删除原来的ORB_SLAM2软连接</p>
+<p>sudo rm -r ORB_SLAM2</p>
+<p>(2)对当前工程在/opt/ros/kinetic/share目录下建立软连接</p>
+<p>sudo ln -s /home/bruce/study/slam/orb/point_map/Examples/ROS/ORB_SLAM2 /opt/ros/kinetic/share/ORB_SLAM2</p>
+<h3 id="9"><a href="#9" class="headerlink" title="9"></a>9</h3><p>问题：catkin_make的时候’libavcodec’没找到</p>
+<p>Checking for module ‘libavcodec’<br>—   No package ‘libavcodec’ found<br>CMake Error at /usr/local/share/cmake-3.7/Modules/FindPkgConfig.cmake:415 (message):<br>  A required package was not found<br>Call Stack (most recent call first):<br>  /usr/local/share/cmake-3.7/Modules/FindPkgConfig.cmake:588 (_pkg_check_modules_internal)<br>  usb_cam/CMakeLists.txt:11 (pkg_check_modules)</p>
+<p>方法：1.sudo apt install libavcodec-dev</p>
+<p>如果1没用，那可能是它不在PKG_CONFIG_PATH，所以把它加进来。</p>
+<p>echo $PKG_CONFIG_PATH</p>
+<p>果然不在，那么</p>
+<p>export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/:$PKG_CONFIG_PATH</p>
+<h3 id="10"><a href="#10" class="headerlink" title="10"></a>10</h3><p>若在CMake中遇到该nullptr问题：</p>
+<p>要在CMake中使用C++11，只要在CMakeLists.txt中添加一行：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">add_definitions(-std&#x3D;c++11)</span><br></pre></td></tr></table></figure>
+<p>OR</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SET(CMAKE_CXX_FLAGS &quot;$&#123;CMAKE_CXX_FLAGS&#125; -std&#x3D;c++0x&quot;)</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>ROS</category>
+        <category>ORB-SLAM2</category>
+      </categories>
+      <tags>
+        <tag>ROS</tag>
+        <tag>ORB-SLAM2</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>semantic_slam</title>
+    <url>/2021/03/07/semantic_slam/</url>
+    <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cd semantic_slam_floatlazer</span><br><span class="line">cd ORB_SLAM2 </span><br><span class="line">.&#x2F;build.sh</span><br><span class="line">cd ..&#x2F;..&#x2F;..</span><br><span class="line"></span><br><span class="line">catkin_make</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>catkin_make的时候可能会遇到一些问题，比如</p>
+<p>CMake Error at /opt/ros/indigo/share/catkin/cmake/catkinConfig.cmake:83 (find_package):<br>  Could not find a package configuration file provided by “octomap_msgs” with<br>  any of the following names:</p>
+<p>​        octomap_msgsConfig.cmake<br>​        octomap_msgs-config.cmake</p>
+<p>  Add the installation prefix of “octomap_msgs” to CMAKE_PREFIX_PATH or set<br>  “octomap_msgs_DIR” to a directory containing one of the above files.  If<br>  “octomap_msgs” provides a separate development package or SDK, be sure it<br>  has been installed.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo apt install ros-indigo-octomap*</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>实例分割</category>
+        <category>SLAM</category>
+        <category>语义建图</category>
+      </categories>
+      <tags>
+        <tag>实例分割</tag>
+        <tag>SLAM</tag>
+        <tag>语义建图</tag>
+      </tags>
   </entry>
   <entry>
     <title>【转载】三维数据集整理</title>

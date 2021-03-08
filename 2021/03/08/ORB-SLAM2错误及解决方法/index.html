@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ORB-SLAM2错误及解决方法 - Kasvii Blog</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="kasvii,"> 
+    <meta name="description" content="写在前面在ubantu 14.04上跑ORB-SLAM2，遇到了一些问题记录下来。
+装OpenCV遇到的问题1问题：make编译时In file included from /home/youyx/,"> 
+    <meta name="author" content="kasvii"> 
+    <link rel="alternative" href="atom.xml" title="Kasvii Blog" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Kasvii Blog</span>
+    <div id="loader"></div>
+    <script type="text/javascript" src="/js/clicksakura.js"></script>
+    <script async src="/js/sakurafall.js"></script>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="https://kasvii.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">ORB-SLAM2错误及解决方法</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">ORB-SLAM2错误及解决方法</h1>
+        <div class="stuff">
+            <span>三月 08, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/ORB-SLAM2/" rel="tag">ORB-SLAM2</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/ROS/" rel="tag">ROS</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>在ubantu 14.04上跑ORB-SLAM2，遇到了一些问题记录下来。</p>
+<h2 id="装OpenCV遇到的问题"><a href="#装OpenCV遇到的问题" class="headerlink" title="装OpenCV遇到的问题"></a>装OpenCV遇到的问题</h2><h3 id="1"><a href="#1" class="headerlink" title="1"></a>1</h3><p>问题：make编译时In file included from /home/youyx/Downloads/opencv-3.2.0/modules/core/src/hal_internal.cpp:49:0: /home/youyx/Downloads/opencv-3.2.0/build/opencv_lapack.h:2:45: fatal error: LAPACKE_H_PATHNOTFOUND/lapacke.h: No such file or directory #include “LAPACKE_H_PATH-NOTFOUND/lapacke.h”</p>
+<p>方法：</p>
+<p>sudo apt-get install liblapacke-dev checkinstall</p>
+<p>然后将opencv-3.2.0/build/opencv_lapack.h第二行中的<code>#include&quot;LAPACKE_H_PATH-NOTFOUND/lapacke.h&quot;</code> 改为<code>#include&quot;lapacke.h&quot;</code></p>
+<h3 id="2"><a href="#2" class="headerlink" title="2"></a>2</h3><p>问题：make编译时libopencv_highgui.so:undefined reference to `TIFFIsTiled@LIBTIFF_4.0’</p>
+<p>原因：OpenCV需要libtiff4库，然而Ubuntu14.04系统安装不会自带libtiff4,因此当以OpenCV为接口时编译可能会出现这个问题。</p>
+<p>方法：在cmake 编译OpenCV时</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -D BUILD_TIFF=ON</span><br></pre></td></tr></table></figure>
+<p>便会自动编译libtiff4，然后再以OpenCV做接口编译时，Bug消除</p>
+<h3 id="3"><a href="#3" class="headerlink" title="3"></a>3</h3><p>问题：../../lib/libopencv_core.so.3.2.0: undefined reference to <code>dpotrf_&#39; ../../lib/libopencv_core.so.3.2.0: undefined reference to</code>dgesv_’<br>../../lib/libopencv_core.so.3.2.0: undefined reference to <code>sgels_&#39; ../../lib/libopencv_core.so.3.2.0: undefined reference to</code>sgesv_’<br>../../lib/libopencv_core.so.3.2.0: undefined reference to <code>sposv_&#39; ../../lib/libopencv_core.so.3.2.0: undefined reference to</code>dgetrf_’<br>../../lib/libopencv_core.so.3.2.0: undefined reference to <code>sgetrf_&#39; ../../lib/libopencv_core.so.3.2.0: undefined reference to</code>dgels_’<br>../../lib/libopencv_core.so.3.2.0: undefined reference to <code>dgeqrf_&#39; ../../lib/libopencv_core.so.3.2.0: undefined reference to</code>spotrf_’<br>../../lib/libopencv_core.so.3.2.0: undefined reference to <code>sgeqrf_&#39; ../../lib/libopencv_core.so.3.2.0: undefined reference to</code>sgesdd_’<br>../../lib/libopencv_core.so.3.2.0: undefined reference to <code>dgesdd_&#39; ../../lib/libopencv_core.so.3.2.0: undefined reference to</code>dposv_’</p>
+<p>方法：在cmake 编译OpenCV时</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-D WITH_LAPACK=OFF</span><br></pre></td></tr></table></figure>
+<h3 id="4"><a href="#4" class="headerlink" title="4"></a>4</h3><p>问题：/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>PKCS12_PBE_add@OPENSSL_1.0.0&#39;                     
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>OCSP_basic_verify@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>BIO_puts@OPENSSL_1.0.0&#39;                           
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>SSL_get_peer_certificate@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>BIO_free@OPENSSL_1.0.0&#39;                           
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>SSLv3_client_method@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>ENGINE_get_id@OPENSSL_1.0.0&#39;                      
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>RAND_status@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>MD5_Final@OPENSSL_1.0.0&#39;                          
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>SSL_CTX_set_verify@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>ASN1_TIME_print@OPENSSL_1.0.0&#39;                    
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>ENGINE_ctrl@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>CONF_modules_free@OPENSSL_1.0.0&#39;                  
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>DES_set_key@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>SSL_set_session@OPENSSL_1.0.0&#39;                    
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>X509_EXTENSION_get_data@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>ERR_error_string_n@OPENSSL_1.0.0&#39;                 
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>OCSP_cert_status_str@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>SSL_CTX_free@OPENSSL_1.0.0&#39;                       
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>X509_check_issued@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>SSL_CTX_set_default_passwd_cb_userdata@OPENSSL_1.0
+.0&#39;                                                                                                             
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>OCSP_RESPONSE_free@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>X509_get_pubkey@OPENSSL_1.0.0&#39;                    
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>CRYPTO_malloc@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>SSL_CTX_use_certificate_chain_file@OPENSSL_1.0.0&#39; 
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>SSLeay@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>UI_method_get_opener@OPENSSL_1.0.0&#39;               
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>X509_load_crl_file@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>ENGINE_free@OPENSSL_1.0.0&#39;                        
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>ASN1_STRING_type@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>ASN1_STRING_data@OPENSSL_1.0.0&#39;                   
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>i2t_ASN1_OBJECT@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>SSL_get_error@OPENSSL_1.0.0&#39;                      
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>X509_NAME_get_entry@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>SSL_CTX_add_client_CA@OPENSSL_1.0.0&#39;              
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>SSL_get_privatekey@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>OPENSSL_load_builtin_modules@OPENSSL_1.0.0&#39;       
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>CRYPTO_free@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>RAND_add@OPENSSL_1.0.0&#39;                           
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>ASN1_STRING_length@OPENSSL_1.0.0’<br>/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to <code>SSL_CIPHER_get_name@OPENSSL_1.0.0&#39;                
+/usr/lib/x86_64-linux-gnu/libcurl.so: undefined reference to</code>ERR_peek_error@OPENSSL_1.0.0’                     </p>
+<p>方法：anaconda的库和系统默认的库冲突了，我暴力地把anaconda的文件名改了哈哈哈哈哈哈哈哈哈哈哈哈</p>
+<h3 id="5-ubantu18-04"><a href="#5-ubantu18-04" class="headerlink" title="5(ubantu18.04)"></a>5(ubantu18.04)</h3><p>问题：error: ‘usleep’ was not declared in this scope<br>             usleep(3000);</p>
+<p>方法：在/include/System.h文件中添加#include<unistd.h></p>
+<h3 id="6"><a href="#6" class="headerlink" title="6"></a>6</h3><p>问题：build_ros.sh遇到undefined reference to symbol ‘_ZN5boost6system15system_categoryEv’<br>方法：在Examples/ROS/ORB_SLAM2/文件夹下的CMakeLists.txt文件中<br>set(LIBS<br>${OpenCV_LIBS}<br>${EIGEN3_LIBS}<br>${Pangolin_LIBRARIES}<br>${PROJECT_SOURCE_DIR}/../../../Thirdparty/DBoW2/lib/libDBoW2.so<br>${PROJECT_SOURCE_DIR}/../../../Thirdparty/g2o/lib/libg2o.so<br>${PROJECT_SOURCE_DIR}/../../../lib/libORB_SLAM2.so<br>改为<br>set(LIBS<br>${OpenCV_LIBS}<br>${EIGEN3_LIBS}<br>${Pangolin_LIBRARIES}<br>${PROJECT_SOURCE_DIR}/../../../Thirdparty/DBoW2/lib/libDBoW2.so<br>${PROJECT_SOURCE_DIR}/../../../Thirdparty/g2o/lib/libg2o.so<br>${PROJECT_SOURCE_DIR}/../../../lib/libORB_SLAM2.so<br>-lboost_system<br>)</p>
+<h3 id="7"><a href="#7" class="headerlink" title="7"></a>7</h3><p>问题：[ERROR] [1571614395.918484166]: [registerPublisher] Failed to contact master at [localhost:11311]<br>方法：ros服务没开，再开一个终端输入<br>roscore</p>
+<h3 id="8"><a href="#8" class="headerlink" title="8"></a>8</h3><p>ORB-SLAM2编译报错：rospack found package “ORB_SLAM2” at “/opt/ros/kinetic/share/ORB_SLAM2”, but the….</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44401286/article/details/102752767">https://blog.csdn.net/weixin_44401286/article/details/102752767</a></p>
+<p>“原因分析及解决办法：<br>这是由于在ROS环境下编译使用了多个版本的ORB-SLAM2工程造成的，比如我运行了原版的ORB-SLAM2，然后拷贝了一份改了下文件名字，添加稠密重建模块，再对新的工程编译，就报了这个错误。因为原工程已经在/opt/ros/kinetic/share文件夹下建立了一个软连接ORB_SLAM2，这里包含有原工程的一些信息，我们需要做的就是把该软连接，替换为现在工程的软连接。”<br>(1)先cd到/opt/ros/kinetic/share目录下，删除原来的ORB_SLAM2软连接</p>
+<p>sudo rm -r ORB_SLAM2</p>
+<p>(2)对当前工程在/opt/ros/kinetic/share目录下建立软连接</p>
+<p>sudo ln -s /home/bruce/study/slam/orb/point_map/Examples/ROS/ORB_SLAM2 /opt/ros/kinetic/share/ORB_SLAM2</p>
+<h3 id="9"><a href="#9" class="headerlink" title="9"></a>9</h3><p>问题：catkin_make的时候’libavcodec’没找到</p>
+<p>Checking for module ‘libavcodec’<br>—   No package ‘libavcodec’ found<br>CMake Error at /usr/local/share/cmake-3.7/Modules/FindPkgConfig.cmake:415 (message):<br>  A required package was not found<br>Call Stack (most recent call first):<br>  /usr/local/share/cmake-3.7/Modules/FindPkgConfig.cmake:588 (_pkg_check_modules_internal)<br>  usb_cam/CMakeLists.txt:11 (pkg_check_modules)</p>
+<p>方法：1.sudo apt install libavcodec-dev</p>
+<p>如果1没用，那可能是它不在PKG_CONFIG_PATH，所以把它加进来。</p>
+<p>echo $PKG_CONFIG_PATH</p>
+<p>果然不在，那么</p>
+<p>export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/:$PKG_CONFIG_PATH</p>
+<h3 id="10"><a href="#10" class="headerlink" title="10"></a>10</h3><p>若在CMake中遇到该nullptr问题：</p>
+<p>要在CMake中使用C++11，只要在CMakeLists.txt中添加一行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">add_definitions(-std&#x3D;c++11)</span><br></pre></td></tr></table></figure>
+<p>OR</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SET(CMAKE_CXX_FLAGS &quot;$&#123;CMAKE_CXX_FLAGS&#125; -std&#x3D;c++0x&quot;)</span><br></pre></td></tr></table></figure>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://music.163.com/song/media/outer/url?id=1432130357.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://music.163.com/song/media/outer/url?id=1430898876.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci='a3a33c2a30c8f056252b'
+        data-cs='7e3c9dce2acd3d4d59d679c980f33c24de2c29ad'
+        data-r='CommentData'
+        data-o='kasvii'
+        data-a='kasvii'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({"HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"], linebreaks: { automatic:true }, EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: { inlineMath: [ ["$", "$"], ["\\(","\\)"] ], processEscapes: true, ignoreClass: "tex2jax_ignore|dno",skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {  noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } }, Macros: { href: "{}" } },
+        messageStyle: "none"
+    });
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+
+</html>
+

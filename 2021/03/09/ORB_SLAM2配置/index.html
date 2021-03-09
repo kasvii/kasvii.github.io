@@ -10,8 +10,12 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="kasvii,"> 
-    <meta name="description" content="安装OpenCV我装的是opencv 3.2.0
-安装Pangolin安装Eigen3安装ROS建立ORB-SLAM2复制项目cd ~/catkin_ws/srcgit clone https://,"> 
+    <meta name="description" content="安装工具下载cmake、gcc、g++和git工具
+下载cmake
+1sudo apt-get install cmake
+下载git
+1sudo apt-get install git
+下载gcc,"> 
     <meta name="author" content="kasvii"> 
     <link rel="alternative" href="atom.xml" title="Kasvii Blog" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -67,11 +71,86 @@
 
         </div>
         <div class="content markdown">
-            <h3 id="安装OpenCV"><a href="#安装OpenCV" class="headerlink" title="安装OpenCV"></a>安装OpenCV</h3><p>我装的是opencv 3.2.0</p>
-<h3 id="安装Pangolin"><a href="#安装Pangolin" class="headerlink" title="安装Pangolin"></a>安装Pangolin</h3><h3 id="安装Eigen3"><a href="#安装Eigen3" class="headerlink" title="安装Eigen3"></a>安装Eigen3</h3><h3 id="安装ROS"><a href="#安装ROS" class="headerlink" title="安装ROS"></a>安装ROS</h3><h3 id="建立ORB-SLAM2"><a href="#建立ORB-SLAM2" class="headerlink" title="建立ORB-SLAM2"></a>建立ORB-SLAM2</h3><p>复制项目<br>cd ~/catkin_ws/src<br>git clone <a target="_blank" rel="noopener" href="https://github.com/raulmur/ORB_SLAM2.git">https://github.com/raulmur/ORB_SLAM2.git</a><br>或者<br>将ORB_SLAM2项目下载到~/catkin_ws/src下，解压<br>cd ORB_SLAM2<br>chmod +x build.sh<br>./build.sh<br>chmod +x build_ros.sh<br>./build_ros.sh</p>
-<h3 id="跑MONO-TUM数据集"><a href="#跑MONO-TUM数据集" class="headerlink" title="跑MONO_TUM数据集"></a>跑MONO_TUM数据集</h3><p>./Examples/Monocular/mono_tum Vocabulary/ORBvoc.txt Examples/Monocular/TUM3.yaml /home/sharon/Documents/rgbd_dataset_freiburg3_nostructure_texture_far/</p>
-<h3 id="跑RGBD-TUM数据集"><a href="#跑RGBD-TUM数据集" class="headerlink" title="跑RGBD_TUM数据集"></a>跑RGBD_TUM数据集</h3><p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt ./Examples/RGB-D/TUM2.yaml /home/sharon/Documents/rgbd_dataset_freiburg2_pioneer_360 associations.txt</p>
+            <h3 id="安装工具"><a href="#安装工具" class="headerlink" title="安装工具"></a>安装工具</h3><p>下载cmake、gcc、g++和git工具</p>
+<p>下载cmake</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install cmake</span><br></pre></td></tr></table></figure>
+<p>下载git</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install git</span><br></pre></td></tr></table></figure>
+<p>下载gcc和g++</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install gcc g++  </span><br></pre></td></tr></table></figure>
+<h3 id="安装Pangolin"><a href="#安装Pangolin" class="headerlink" title="安装Pangolin"></a>安装Pangolin</h3><p>先安装依赖项</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install libglew-dev</span><br><span class="line">sudo apt-get install libpython2.7-dev</span><br></pre></td></tr></table></figure>
+<p>下载Pangolin</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;stevenlovegrove&#x2F;Pangolin.git</span><br><span class="line">cd Pangolin</span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">cmake -DCPP11_NO_BOOSR&#x3D;1 ..</span><br></pre></td></tr></table></figure>
+<p>开始编译</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make -j8</span><br></pre></td></tr></table></figure>
+<p>编译好了后安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+<h3 id="安装OpenCV"><a href="#安装OpenCV" class="headerlink" title="安装OpenCV"></a>安装OpenCV</h3><p>我装的是opencv 3.2.0</p>
+<p>1.先安装依赖包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install libgtk2.0-dev  </span><br><span class="line">sudo apt install pkg-config</span><br></pre></td></tr></table></figure>
+<p>2.到opencv网站下载opencv 3.2.0</p>
+<p><a href="https://link.zhihu.com/?target=https%3A//opencv.org/releases.html">https://link.zhihu.com/?target=https%3A//opencv.org/releases.html</a></p>
+<p>3.开始安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">unzip opencv-3.2.0.zip</span><br><span class="line">cd opencv-3.2.0</span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br></pre></td></tr></table></figure>
+<p>4.开始编译</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -D CMAKE_BUILD_TYPE&#x3D;Release -D CMAKE_INSTALL_PREFIX&#x3D;&#x2F;usr&#x2F;local ..</span><br></pre></td></tr></table></figure>
+<p>这里可能会出现 以下问题</p>
+<p>Downloading ippicv_linux_20151201.tgz…<br>CMake Error at 3rdparty/ippicv/downloader.cmake:73 (file):<br>  file DOWNLOAD HASH mismatch</p>
+<p>手动下载ippicv_linux_20151201.tgz，替换到opencv-3.2.0/3rdparty/ippicv/downloads/linux-808b791a6eac9ed78d32a7666804320e文件下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo make -j8</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+<p>5.添加路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim &#x2F;etc&#x2F;ld.so.conf.d&#x2F;opencv.conf   </span><br></pre></td></tr></table></figure>
+<p>内容：</p>
+<p>/usr/local/lib</p>
+<p>6.添加环境变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim ~&#x2F;.profile</span><br></pre></td></tr></table></figure>
+<p>.profile最后一行添加：</p>
+<p>PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig<br>export PKG_CONFIG_PATH</p>
+<p>7.测试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd ..&#x2F;samples&#x2F;cpp&#x2F;example_cmake</span><br><span class="line">cmake .</span><br><span class="line">make</span><br><span class="line">.&#x2F;opencv_example</span><br></pre></td></tr></table></figure>
+<p>结果如下说明opencv安装成功</p>
+<p><img src="pic1.png" alt="1"></p>
+<h3 id="安装Eigen3"><a href="#安装Eigen3" class="headerlink" title="安装Eigen3"></a>安装Eigen3</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install libeigen3-dev</span><br></pre></td></tr></table></figure>
+<h3 id="安装ROS-melodic"><a href="#安装ROS-melodic" class="headerlink" title="安装ROS-melodic"></a>安装ROS-melodic</h3><p>参考以下博文：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41450811/article/details/99079041">https://blog.csdn.net/qq_41450811/article/details/99079041</a></p>
+<p>但是在初始化rosdep的时候，遇到了大麻烦：</p>
+<p>ERROR: cannot download default sources list from:<br><a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/sources.list.d/20-default.list">https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/sources.list.d/20-default.list</a><br>Website may be down.</p>
+<p>网上修改hosts的方法也行不通，最后根据以下博文手动把包下载下来，并修改源码：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/nanianwochengshui/article/details/105702188">https://blog.csdn.net/nanianwochengshui/article/details/105702188</a></p>
+<h3 id="建立ORB-SLAM2"><a href="#建立ORB-SLAM2" class="headerlink" title="建立ORB-SLAM2"></a>建立ORB-SLAM2</h3><p>建立ROS工作区catkin_ws</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd ~</span><br><span class="line"></span><br><span class="line">mkdir .&#x2F;catkin_ws</span><br><span class="line"></span><br><span class="line">cd catkin_ws</span><br><span class="line"></span><br><span class="line">mkdir src</span><br></pre></td></tr></table></figure>
+<p>方法1：复制项目<br>cd ~/catkin_ws/src<br>git clone <a target="_blank" rel="noopener" href="https://github.com/raulmur/ORB_SLAM2.git">https://github.com/raulmur/ORB_SLAM2.git</a> ORB_SLAM2</p>
+<p>但是经常会下载不下来，所以可以用方法2</p>
+<p>或者<br>方法2：将ORB_SLAM2项目下载到~/catkin_ws/src下，解压</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd ORB_SLAM2</span><br><span class="line">chmod +x build.sh</span><br><span class="line">.&#x2F;build.sh</span><br></pre></td></tr></table></figure>
+<p>这时候可能会出现以下问题：</p>
+<p>error: ‘usleep’ was not declared in this scope<br>             usleep(3000);</p>
+<p>方法：在./include/System.h文件中添加#include<unistd.h></p>
+<h3 id="跑MONO-TUM数据集"><a href="#跑MONO-TUM数据集" class="headerlink" title="跑MONO_TUM数据集"></a>跑MONO_TUM数据集</h3><p>下载tum数据集<a target="_blank" rel="noopener" href="http://vision.in.tum.de/data/datasets/rgbd-dataset/download，解压">http://vision.in.tum.de/data/datasets/rgbd-dataset/download，解压</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar zxvf rgbd_dataset_freiburg3_nostructure_texture_far.tgz -C .&#x2F;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd ~&#x2F;catkin_ws&#x2F;src&#x2F;ORB_SLAM2&#x2F;</span><br></pre></td></tr></table></figure>
+<p>(youyx)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;Examples&#x2F;Monocular&#x2F;mono_tum Vocabulary&#x2F;ORBvoc.txt .&#x2F;Examples&#x2F;Monocular&#x2F;TUM3.yaml &#x2F;home&#x2F;youyx&#x2F;data&#x2F;tum&#x2F;rgbd_dataset_freiburg3_nostructure_texture_far</span><br></pre></td></tr></table></figure>
+<p>(sharon)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;Examples&#x2F;Monocular&#x2F;mono_tum Vocabulary&#x2F;ORBvoc.txt Examples&#x2F;Monocular&#x2F;TUM3.yaml &#x2F;home&#x2F;sharon&#x2F;Documents&#x2F;rgbd_dataset_freiburg3_nostructure_texture_far&#x2F;</span><br></pre></td></tr></table></figure>
+<p>(weip)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;Examples&#x2F;Monocular&#x2F;mono_tum Vocabulary&#x2F;ORBvoc.txt Examples&#x2F;Monocular&#x2F;TUM3.yaml &#x2F;home&#x2F;youyx&#x2F;data&#x2F;tum&#x2F;rgbd_dataset_freiburg3_nostructure_texture_far&#x2F;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod +x build_ros.sh</span><br><span class="line">.&#x2F;build_ros.sh</span><br></pre></td></tr></table></figure>
+<p>(PS:运行到这里的时候才发现这台新电脑还没装ROS)</p>
+<p>fatal error: Eigen3/Core: 没有那个文件或目录</p>
+<p>建立软链接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ln -s &#x2F;usr&#x2F;include&#x2F;eigen3&#x2F;Eigen &#x2F;usr&#x2F;include&#x2F;Eigen</span><br></pre></td></tr></table></figure>
+<p>重新</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;build_ros.sh</span><br></pre></td></tr></table></figure>
+<p>又遇到问题：undefined reference to symbol ‘_ZN5boost6system15system_categoryEv’<br>方法：在Examples/ROS/ORB_SLAM2/文件夹下的CMakeLists.txt文件中<br>set(LIBS<br>${OpenCV_LIBS}<br>${EIGEN3_LIBS}<br>${Pangolin_LIBRARIES}<br>${PROJECT_SOURCE_DIR}/../../../Thirdparty/DBoW2/lib/libDBoW2.so<br>${PROJECT_SOURCE_DIR}/../../../Thirdparty/g2o/lib/libg2o.so<br>${PROJECT_SOURCE_DIR}/../../../lib/libORB_SLAM2.so<br>改为<br>set(LIBS<br>${OpenCV_LIBS}<br>${EIGEN3_LIBS}<br>${Pangolin_LIBRARIES}<br>${PROJECT_SOURCE_DIR}/../../../Thirdparty/DBoW2/lib/libDBoW2.so<br>${PROJECT_SOURCE_DIR}/../../../Thirdparty/g2o/lib/libg2o.so<br>${PROJECT_SOURCE_DIR}/../../../lib/libORB_SLAM2.so<br>-lboost_system<br>)</p>
+<p>完成！</p>
+<p>用ROS启动ORB_SLAM2</p>
+<p>（sharon）</p>
 <p>rosrun ORB_SLAM2 Mono /home/sharon/catkin_ws/src/ORB_SLAM2/Vocabulary/ORBvoc.txt /home/sharon/catkin_ws/src/ORB_SLAM2/Examples/Monocular/TUM2.yaml</p>
+<p>（youyx）</p>
+<p>rosrun ORB_SLAM2 Mono /home/sharon/catkin_ws/src/ORB_SLAM2/Vocabulary/ORBvoc.txt /home/sharon/catkin_ws/src/ORB_SLAM2/Examples/Monocular/TUM2.yaml</p>
+<h3 id="跑RGBD-TUM数据集"><a href="#跑RGBD-TUM数据集" class="headerlink" title="跑RGBD_TUM数据集"></a>跑RGBD_TUM数据集</h3><p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt ./Examples/RGB-D/TUM2.yaml /home/sharon/Documents/rgbd_dataset_freiburg2_pioneer_360 associations.txt</p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">

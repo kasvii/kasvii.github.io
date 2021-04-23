@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ORB_SLAM3配置 - Kasvii Blog</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="kasvii,"> 
+    <meta name="description" content="安装下载工具cmake、gcc、g++和git工具
+安装Pangolin安装OpenCV安装Eigen3以上详细过程见ORB_SLAM2配置
+建立ORB_SLAM31cd ~/catkin_ws/s,"> 
+    <meta name="author" content="kasvii"> 
+    <link rel="alternative" href="atom.xml" title="Kasvii Blog" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Kasvii Blog</span>
+    <div id="loader"></div>
+    <script type="text/javascript" src="/js/clicksakura.js"></script>
+    <script async src="/js/sakurafall.js"></script>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="https://kasvii.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">ORB_SLAM3配置</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">ORB_SLAM3配置</h1>
+        <div class="stuff">
+            <span>三月 15, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/ORB-SLAM/" rel="tag">ORB-SLAM</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h3 id="安装下载工具"><a href="#安装下载工具" class="headerlink" title="安装下载工具"></a>安装下载工具</h3><p>cmake、gcc、g++和git工具</p>
+<h3 id="安装Pangolin"><a href="#安装Pangolin" class="headerlink" title="安装Pangolin"></a>安装Pangolin</h3><h3 id="安装OpenCV"><a href="#安装OpenCV" class="headerlink" title="安装OpenCV"></a>安装OpenCV</h3><h3 id="安装Eigen3"><a href="#安装Eigen3" class="headerlink" title="安装Eigen3"></a>安装Eigen3</h3><p>以上详细过程见ORB_SLAM2配置</p>
+<h3 id="建立ORB-SLAM3"><a href="#建立ORB-SLAM3" class="headerlink" title="建立ORB_SLAM3"></a>建立ORB_SLAM3</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/catkin_ws/src</span><br></pre></td></tr></table></figure>
+<p>复制ORB_SLAM3到src文件夹下，两种方法</p>
+<p>方法一：git复制</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/UZ-SLAMLab/ORB_SLAM3.git ORB_SLAM3</span><br></pre></td></tr></table></figure>
+<p>方法二：手动下载，然后解压到src文件夹</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ORB_SLAM3</span><br><span class="line">chmod +x build.sh</span><br><span class="line">./build.sh</span><br></pre></td></tr></table></figure>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>下载EuRoC数据集</p>
+<p><a target="_blank" rel="noopener" href="https://projects.asl.ethz.ch/datasets/doku.php?id=kmavvisualinertialdatasets#the_euroc_mav_dataset">https://projects.asl.ethz.ch/datasets/doku.php?id=kmavvisualinertialdatasets#the_euroc_mav_dataset</a></p>
+<p>修改ORB-SLAM3/euroc_examples.sh文件中的数据集路径</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"><span class="comment">#pathDatasetEuroc=&#x27;/Datasets/EuRoC&#x27; #Example, it is necesary to change it by the dataset path</span></span><br><span class="line">pathDatasetEuroc=<span class="string">&#x27;/home/youyx/data/datasets/EuRoC/&#x27;</span> <span class="comment">#Example, it is necesary to change it by the dataset path</span></span><br></pre></td></tr></table></figure>
+<h4 id="Monocular"><a href="#Monocular" class="headerlink" title="Monocular"></a>Monocular</h4><p>MH</p>
+<p>./Examples/Monocular/mono_euroc ./Vocabulary/ORBvoc.txt ./Examples/Monocular/EuRoC.yaml /home/youyx/data/datasets/EuRoC/MH01 ./Examples/Monocular/EuRoC_TimeStamps/MH01.txt dataset-MH01_mono</p>
+<p>./Examples/Monocular/mono_euroc ./Vocabulary/ORBvoc.txt ./Examples/Monocular/EuRoC.yaml /home/youyx/data/datasets/EuRoC/MH02 ./Examples/Monocular/EuRoC_TimeStamps/MH02.txt dataset-MH02_mono</p>
+<p>./Examples/Monocular/mono_euroc ./Vocabulary/ORBvoc.txt ./Examples/Monocular/EuRoC.yaml /home/youyx/data/datasets/EuRoC/MH03 ./Examples/Monocular/EuRoC_TimeStamps/MH03.txt dataset-MH03_mono</p>
+<p>./Examples/Monocular/mono_euroc ./Vocabulary/ORBvoc.txt ./Examples/Monocular/EuRoC.yaml /home/youyx/data/datasets/EuRoC/MH04 ./Examples/Monocular/EuRoC_TimeStamps/MH04.txt dataset-MH04_mono</p>
+<p>./Examples/Monocular/mono_euroc ./Vocabulary/ORBvoc.txt ./Examples/Monocular/EuRoC.yaml /home/youyx/data/datasets/EuRoC/MH05 ./Examples/Monocular/EuRoC_TimeStamps/MH05.txt dataset-MH05_mono</p>
+<p>V1</p>
+<p>./Examples/Monocular/mono_euroc ./Vocabulary/ORBvoc.txt ./Examples/Monocular/EuRoC.yaml /home/youyx/data/datasets/EuRoC/V101 ./Examples/Monocular/EuRoC_TimeStamps/V101.txt dataset-V101_mono</p>
+<p>V2</p>
+<p>./Examples/Monocular/mono_euroc ./Vocabulary/ORBvoc.txt ./Examples/Monocular/EuRoC.yaml /home/youyx/data/datasets/EuRoC/V201 ./Examples/Monocular/EuRoC_TimeStamps/V201.txt dataset-V201_mono</p>
+<p>MultiSession Monocular</p>
+<p>./Examples/Monocular/mono_euroc ./Vocabulary/ORBvoc.txt ./Examples/Monocular/EuRoC.yaml /home/youyx/data/datasets/EuRoC/V101 ./Examples/Monocular/EuRoC_TimeStamps/V101.txt /home/youyx/data/datasets/EuRoC/V102 ./Examples/Monocular/EuRoC_TimeStamps/V102.txt /home/youyx/data/datasets/EuRoC/V103 ./Examples/Monocular/EuRoC_TimeStamps/V103.txt dataset-V101_to_V103_mono</p>
+<h4 id="Stereo"><a href="#Stereo" class="headerlink" title="Stereo"></a>Stereo</h4><p>./Examples/Stereo/stereo_euroc ./Vocabulary/ORBvoc.txt ./Examples/Stereo/EuRoC.yaml /home/youyx/data/datasets/EuRoC/V101 ./Examples/Stereo/EuRoC_TimeStamps/V101.txt dataset-V101_stereo</p>
+<h3 id="RGB-D"><a href="#RGB-D" class="headerlink" title="RGB-D"></a>RGB-D</h3><p>cd ./catkin_ws/src/ORB_SLAM3-dev_bugs_fixed</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt ./Examples/RGB-D/TUM1.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg1_xyz/ ./Examples/RGB-D/associations/fr1_xyz.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt ./Examples/RGB-D/TUM3.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg3_walking_xyz/ ./Examples/RGB-D/associations/fr3_wlk_xyz.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt ./Examples/RGB-D/TUM3.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg3_walking_static/ ./Examples/RGB-D/associations/fr3_wlk_stc.txt</p>
+<p>(sharon)<br>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt ./Examples/RGB-D/TUM3.yaml /home/sharon/Documents/TUM/rgbd_dataset_freiburg3_walking_static/ ./Examples/RGB-D/associations/fr3_wlk_stc.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt ./Examples/RGB-D/TUM3.yaml /home/sharon/Documents/TUM/rgbd_dataset_freiburg3_walking_xyz ./Examples/RGB-D/associations/fr3_wlk_xyz.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt ./Examples/RGB-D/TUM1.yaml /home/sharon/Documents/TUM/rgbd_dataset_freiburg1_xyz/ ./Examples/RGB-D/associations/fr1_xyz.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt ./Examples/RGB-D/TUM3.yaml /home/sharon/Documents/TUM/rgbd_dataset_freiburg3_nostructure_texture_far/ ./Examples/RGB-D/associations/fr3_nst_far.txt</p>
+<h3 id="ORB-SLAM3-amp-YOLACT-的语义建图"><a href="#ORB-SLAM3-amp-YOLACT-的语义建图" class="headerlink" title="ORB_SLAM3&amp;YOLACT++的语义建图"></a>ORB_SLAM3&amp;YOLACT++的语义建图</h3><p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt config/TUM1.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg1_xyz/ ./Examples/RGB-D/associations/fr1_xyz.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt config/TUM3.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg3_walking_static/ ./Examples/RGB-D/associations/fr3_wlk_stc.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt config/TUM3.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg3_walking_xyz/ ./Examples/RGB-D/associations/fr3_wlk_xyz.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt config/TUM3.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg3_sitting_static/ ./Examples/RGB-D/associations/fr3_sit_stc.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt config/TUM3.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg3_walking_xyz/ ./Examples/RGB-D/associations/fr3_wlk_xyz.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt config/TUM3.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg3_walking_static/ ./Examples/RGB-D/associations/fr3_wlk_stc.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt config/TUM3.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg3_walking_rpy/ ./Examples/RGB-D/associations/fr3_wlk_rpy.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt config/TUM3.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg3_walking_halfsphere/ ./Examples/RGB-D/associations/fr3_wlk_half.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt config/TUM3.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg3_sitting_xyz/ ./Examples/RGB-D/associations/fr3_sit_xyz.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt config/TUM3.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg3_sitting_static/ ./Examples/RGB-D/associations/fr3_sit_stc.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt config/TUM3.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg3_sitting_rpy/ ./Examples/RGB-D/associations/fr3_sit_rpy.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt config/TUM3.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg3_sitting_halfsphere/ ./Examples/RGB-D/associations/fr3_sit_half.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt config/TUM2.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg2_desk_with_person/ ./Examples/RGB-D/associations/fr2_dsk_psn.txt</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://music.163.com/song/media/outer/url?id=1432130357.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://music.163.com/song/media/outer/url?id=1430898876.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci='a3a33c2a30c8f056252b'
+        data-cs='7e3c9dce2acd3d4d59d679c980f33c24de2c29ad'
+        data-r='CommentData'
+        data-o='kasvii'
+        data-a='kasvii'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({"HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"], linebreaks: { automatic:true }, EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: { inlineMath: [ ["$", "$"], ["\\(","\\)"] ], processEscapes: true, ignoreClass: "tex2jax_ignore|dno",skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {  noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } }, Macros: { href: "{}" } },
+        messageStyle: "none"
+    });
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+
+</html>
+

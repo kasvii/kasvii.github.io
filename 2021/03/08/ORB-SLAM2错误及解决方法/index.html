@@ -10,8 +10,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="kasvii,"> 
-    <meta name="description" content="写在前面在ubantu 14.04上跑ORB-SLAM2，遇到了一些问题记录下来。
-装OpenCV遇到的问题1问题：make编译时In file included from /home/youyx/,"> 
+    <meta name="description" content="写在前面在ubantu 14.04上跑ORB-SLAM2，遇到了一些问题记录下来。（后面师兄给我换了ubantu18.08，问题果然就少了很多）
+装OpenCV遇到的问题1问题：make编译时In ,"> 
     <meta name="author" content="kasvii"> 
     <link rel="alternative" href="atom.xml" title="Kasvii Blog" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -67,7 +67,7 @@
 
         </div>
         <div class="content markdown">
-            <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>在ubantu 14.04上跑ORB-SLAM2，遇到了一些问题记录下来。</p>
+            <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>在ubantu 14.04上跑ORB-SLAM2，遇到了一些问题记录下来。（后面师兄给我换了ubantu18.08，问题果然就少了很多）</p>
 <h2 id="装OpenCV遇到的问题"><a href="#装OpenCV遇到的问题" class="headerlink" title="装OpenCV遇到的问题"></a>装OpenCV遇到的问题</h2><h3 id="1"><a href="#1" class="headerlink" title="1"></a>1</h3><p>问题：make编译时In file included from /home/youyx/Downloads/opencv-3.2.0/modules/core/src/hal_internal.cpp:49:0: /home/youyx/Downloads/opencv-3.2.0/build/opencv_lapack.h:2:45: fatal error: LAPACKE_H_PATHNOTFOUND/lapacke.h: No such file or directory #include “LAPACKE_H_PATH-NOTFOUND/lapacke.h”</p>
 <p>方法：</p>
 <p>sudo apt-get install liblapacke-dev checkinstall</p>

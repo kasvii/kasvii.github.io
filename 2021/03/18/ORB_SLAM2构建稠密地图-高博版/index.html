@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ORB_SLAM2构建稠密地图-高博版 - Kasvii Blog</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="kasvii,"> 
+    <meta name="description" content="准备工作操作系统： Ubuntu 18.04
+1.Opencv（3.2.0版本）
+2.PCL
+1sudo apt install libpcl-dev
+3.Eigen3（3.2版本）
+4.Pango,"> 
+    <meta name="author" content="kasvii"> 
+    <link rel="alternative" href="atom.xml" title="Kasvii Blog" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Kasvii Blog</span>
+    <div id="loader"></div>
+    <script type="text/javascript" src="/js/clicksakura.js"></script>
+    <script async src="/js/sakurafall.js"></script>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="https://kasvii.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">ORB_SLAM2构建稠密地图-高博版</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">ORB_SLAM2构建稠密地图-高博版</h1>
+        <div class="stuff">
+            <span>三月 18, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/ORB-SLAM/" rel="tag">ORB-SLAM</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/SLAM/" rel="tag">SLAM</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E7%82%B9%E4%BA%91%E5%9C%B0%E5%9B%BE/" rel="tag">点云地图</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>操作系统： Ubuntu 18.04</p>
+<p>1.Opencv（3.2.0版本）</p>
+<p>2.PCL</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install libpcl-dev</span><br></pre></td></tr></table></figure>
+<p>3.Eigen3（3.2版本）</p>
+<p>4.Pangolin</p>
+<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><p>1.下载源文件</p>
+<p>从高博github上<a target="_blank" rel="noopener" href="https://github.com/gaoxiang12/ORBSLAM2_with_pointcloud_map.git下载ORB_SLAM2_modified文件夹，将其中的ORB_SLAM2_modified子文件夹放到~/catkin_ws/src/下">https://github.com/gaoxiang12/ORBSLAM2_with_pointcloud_map.git下载ORB_SLAM2_modified文件夹，将其中的ORB_SLAM2_modified子文件夹放到~/catkin_ws/src/下</a></p>
+<p>2.拷贝Vocabulary文件夹</p>
+<p>将ORB_SLAM2中的Vocabulary文件夹复制到ORB_SLAM2_modified路径下</p>
+<p>3.删除build文件夹</p>
+<p>将~/catkin_ws/src/ORB_SLAM2_modified/build、~/catkin_ws/src/ORB_SLAM2_modified/Thirdparty/DBoW2/build 和 ~/catkin_ws/src/ORB_SLAM2_modified/Thirdparty/g2o/build删除</p>
+<p>4.运行build.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd ~&#x2F;catkin_ws&#x2F;src&#x2F;ORB_SLAM2_modified&#x2F;</span><br><span class="line">chmod +x .&#x2F;build.sh</span><br><span class="line">.&#x2F;build.sh</span><br></pre></td></tr></table></figure>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;bin&#x2F;rgbd_tum Vocabulary&#x2F;ORBvoc.bin Examples&#x2F;RGB-D&#x2F;TUM1.yaml &#x2F;home&#x2F;youyx&#x2F;data&#x2F;datasets&#x2F;TUM&#x2F;rgbd_dataset_freiburg1_xyz&#x2F; &#x2F;home&#x2F;youyx&#x2F;catkin_ws&#x2F;src&#x2F;ORB_SLAM2_modified&#x2F;Examples&#x2F;RGB-D&#x2F;associations&#x2F;fr1_xyz.txt</span><br></pre></td></tr></table></figure>
+<h3 id="彩色地图"><a href="#彩色地图" class="headerlink" title="彩色地图"></a>彩色地图</h3><p>运行后我们发现得到稠密点云地图是黑白地图。这里来构建彩色地图。</p>
+<p>1.修改Tracking.h文件</p>
+<p>Frame mCurrentFrame;<br>cv::Mat mImRGB;//declared<br>cv::Mat mImGray;</p>
+<p>2.修改Tracking.cc文件</p>
+<p>Modified place 1:<br>cv::Mat Tracking::GrabImageRGBD(const cv::Mat &amp;imRGB,const cv::Mat &amp;imD, const double &amp;timestamp)<br>{<br>mImRGB = imRGB;//Modified place 1<br>mImGray = imRGB;<br>……</p>
+<p>Modified place 2:<br>mpPointCloudMapping-&gt;insertKeyFrame( pKF, this-&gt;mImGray, this-&gt;mImDepth );//change the mImGray to mImRGB as next row<br>mpPointCloudMapping-&gt;insertKeyFrame( pKF, this-&gt;mImRGB, this-&gt;mImDepth );//Modified place 2</p>
+<p>3.修改后重新编译</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/ORB_SLAM2_modified/build</span><br><span class="line">make -j8</span><br></pre></td></tr></table></figure>
+<h3 id="保存地图"><a href="#保存地图" class="headerlink" title="保存地图"></a>保存地图</h3><p>高博的程序只能实时查看地图，不能保存。这里修改文件pointcloudmapping.cc，调用 PCL 库的 pcl::io::savePCDFileBinary 函数就可以保存点云地图了</p>
+<p>1.加入头文件</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pcl/io/pcd_io.h&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>2.调用pcl::io::savePCDFileBinary 函数</p>
+<p>在 void PointCloudMapping::viewer() 函数中（ 123 行附近）加入保存地图的命令：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">for</span> ( <span class="keyword">size_t</span> i=lastKeyframeSize; i&lt;N ; i++ )</span><br><span class="line">&#123;</span><br><span class="line">    PointCloud::Ptr p = generatePointCloud( keyframes[i], colorImgs[i], depthImgs[i] );</span><br><span class="line">    *globalMap += *p;</span><br><span class="line">&#125;</span><br><span class="line">pcl::io::savePCDFileBinary(<span class="string">&quot;vslam.pcd&quot;</span>, *globalMap);   <span class="comment">// 只需要加入这一句</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>3.修改后重新编译</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/ORB_SLAM2_modified/build</span><br><span class="line">make -j8</span><br></pre></td></tr></table></figure>
+<p>4.运行建图命令</p>
+<p>就在 ~/ORB_SLAM2_modified 路径下产生一个名为 vslam.pcd 的点云文件。</p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>1.若运行fr2和fr3数据集，要把参数PointCloudMapping.Resolution: 0.01加入到TUMX.yaml配置文件里</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://music.163.com/song/media/outer/url?id=1432130357.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://music.163.com/song/media/outer/url?id=1430898876.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci='a3a33c2a30c8f056252b'
+        data-cs='7e3c9dce2acd3d4d59d679c980f33c24de2c29ad'
+        data-r='CommentData'
+        data-o='kasvii'
+        data-a='kasvii'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({"HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"], linebreaks: { automatic:true }, EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: { inlineMath: [ ["$", "$"], ["\\(","\\)"] ], processEscapes: true, ignoreClass: "tex2jax_ignore|dno",skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {  noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } }, Macros: { href: "{}" } },
+        messageStyle: "none"
+    });
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+
+</html>
+

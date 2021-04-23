@@ -94,7 +94,7 @@
 <p>3.开始安装</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">unzip opencv-3.2.0.zip</span><br><span class="line">cd opencv-3.2.0</span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br></pre></td></tr></table></figure>
 <p>4.开始编译</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -D CMAKE_BUILD_TYPE&#x3D;Release -D CMAKE_INSTALL_PREFIX&#x3D;&#x2F;usr&#x2F;local ..</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -D CMAKE_BUILD_TYPE&#x3D;Release -D CMAKE_INSTALL_PREFIX&#x3D;&#x2F;usr&#x2F;local -D ENABLE_PRECOMPILED_HEADERS&#x3D;OFF ..</span><br></pre></td></tr></table></figure>
 <p>这里可能会出现 以下问题</p>
 <p>Downloading ippicv_linux_20151201.tgz…<br>CMake Error at 3rdparty/ippicv/downloader.cmake:73 (file):<br>  file DOWNLOAD HASH mismatch</p>
 <p>手动下载ippicv_linux_20151201.tgz，替换到opencv-3.2.0/3rdparty/ippicv/downloads/linux-808b791a6eac9ed78d32a7666804320e文件下</p>
@@ -119,7 +119,7 @@
 <p>网上修改hosts的方法也行不通，最后根据以下博文手动把包下载下来，并修改源码：</p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/nanianwochengshui/article/details/105702188">https://blog.csdn.net/nanianwochengshui/article/details/105702188</a></p>
 <h3 id="建立ORB-SLAM2"><a href="#建立ORB-SLAM2" class="headerlink" title="建立ORB-SLAM2"></a>建立ORB-SLAM2</h3><p>建立ROS工作区catkin_ws</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd ~</span><br><span class="line"></span><br><span class="line">mkdir .&#x2F;catkin_ws</span><br><span class="line"></span><br><span class="line">cd catkin_ws</span><br><span class="line"></span><br><span class="line">mkdir src</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd ~</span><br><span class="line">mkdir .&#x2F;catkin_ws</span><br><span class="line">cd catkin_ws</span><br><span class="line">mkdir src</span><br></pre></td></tr></table></figure>
 <p>方法1：复制项目<br>cd ~/catkin_ws/src<br>git clone <a target="_blank" rel="noopener" href="https://github.com/raulmur/ORB_SLAM2.git">https://github.com/raulmur/ORB_SLAM2.git</a> ORB_SLAM2</p>
 <p>但是经常会下载不下来，所以可以用方法2</p>
 <p>或者<br>方法2：将ORB_SLAM2项目下载到~/catkin_ws/src下，解压</p>
@@ -151,6 +151,9 @@
 <p>（youyx）</p>
 <p>rosrun ORB_SLAM2 Mono /home/sharon/catkin_ws/src/ORB_SLAM2/Vocabulary/ORBvoc.txt /home/sharon/catkin_ws/src/ORB_SLAM2/Examples/Monocular/TUM2.yaml</p>
 <h3 id="跑RGBD-TUM数据集"><a href="#跑RGBD-TUM数据集" class="headerlink" title="跑RGBD_TUM数据集"></a>跑RGBD_TUM数据集</h3><p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt ./Examples/RGB-D/TUM2.yaml /home/sharon/Documents/rgbd_dataset_freiburg2_pioneer_360 associations.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt ./Examples/RGB-D/TUM2.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg2_desk_with_person/ ./Examples/RGB-D/associations/fr2_dsk_psn.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt ./Examples/RGB-D/TUM3.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg3_walking_xyz/ ./Examples/RGB-D/associations/fr3_wlk_xyz.txt</p>
+<p>./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt ./Examples/RGB-D/TUM3.yaml /home/youyx/data/datasets/TUM/rgbd_dataset_freiburg3_sitting_xyz/ ./Examples/RGB-D/associations/fr3_sit_xyz.txt</p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">

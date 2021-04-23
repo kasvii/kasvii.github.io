@@ -74,10 +74,11 @@ YOLACT：https://github.com/dbolya/yolact
 <ul>
 <li>用conda创建一个yolact虚拟环境，这样可以搭建独立的python运行环境，使的每个项目的运行互不影响；</li>
 <li>激活该虚拟环境。</li>
+<li>add|新电脑上source ~/anaconda3/bin/activate</li>
 </ul>
-<h3 id="安装pytorch和其他的包"><a href="#安装pytorch和其他的包" class="headerlink" title="安装pytorch和其他的包"></a>安装pytorch和其他的包</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda install pytorch torchvision cudatoolkit=8.0 </span><br><span class="line">pip install cython opencv-python pillow  matplotlib </span><br></pre></td></tr></table></figure>
+<h3 id="安装pytorch和其他的包"><a href="#安装pytorch和其他的包" class="headerlink" title="安装pytorch和其他的包"></a>安装pytorch和其他的包</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda install pytorch torchvision cudatoolkit=10.0 </span><br><span class="line">pip install cython opencv-python pillow  matplotlib </span><br></pre></td></tr></table></figure>
 <ul>
-<li>cudatoolkit=x.x取决cuda版本，因为我用的是师兄的服务器，cuda是8.0的版本，所以cudatoolkit=8.0；</li>
+<li>cudatoolkit=x.x取决cuda版本，因为我用的是师兄的服务器，cuda是10.0的版本，所以cudatoolkit=10.0；</li>
 <li>conda install的好处是能够根据cudatoolkit的版本安装相对应版本的pytorch和torchvision，不用我们自己匹配。</li>
 </ul>
 <h3 id="安装COCOAPI"><a href="#安装COCOAPI" class="headerlink" title="安装COCOAPI"></a>安装COCOAPI</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> cocoapi/PythonAPI</span><br><span class="line">python setup.py build_ext install</span><br></pre></td></tr></table></figure>
@@ -89,8 +90,16 @@ YOLACT：https://github.com/dbolya/yolact
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> CUDA_VISIBLE_DEVICES=[gpus]</span><br></pre></td></tr></table></figure>
 <p>比如我用的是2号GPU，所以命令就是</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> CUDA_VISIBLE_DEVICES=2</span><br></pre></td></tr></table></figure>
-<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>运行前把github上的<a target="_blank" rel="noopener" href="https://drive.google.com/file/d/15id0Qq5eqRbkD-N3ZjDZXdCvRyIaHpFB/view?usp=sharing">yolact_plus_base_54_800000.pth</a>下载到/.weigths文件夹里</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python eval.py --trained_model=weights/yolact_base_54_800000.pth --score_threshold=0.15 --top_k=15 --image=test.jpg</span><br></pre></td></tr></table></figure>
+<p>add|换了新电脑就可以用多GPUS啦!</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> CUDA_VISIBLE_DEVICES=0,1,2,3</span><br></pre></td></tr></table></figure>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>运行前把github上的<a target="_blank" rel="noopener" href="https://drive.google.com/file/d/15id0Qq5eqRbkD-N3ZjDZXdCvRyIaHpFB/view?usp=sharing">yolact_plus_base_54_800000.pth</a>下载到/weights文件夹里</p>
+<p>如果运行yolact，进入eval.py所在文件夹    </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /..../yolact-master</span><br><span class="line">python eval.py --trained_model=weights/yolact_base_54_800000.pth --score_threshold=0.15 --top_k=15 --image=test.jpg</span><br></pre></td></tr></table></figure>
+<p>add|如果运行yolact++：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /..../yolact-master</span><br><span class="line">python eval.py --trained_model=weights/yolact_plus_base_54_800000.pth --score_threshold=0.15 --top_k=15 --image=test.jpg</span><br></pre></td></tr></table></figure>
+<p>python eval.py —trained_model=weights/yolact_plus_base_54_800000.pth —score_threshold=0.15 —top_k=15 —images=/home/youyx/data/datasets/TUM/rgbd_dataset_freiburg1_xyz/rgb/:/home/youyx/data/yolact_out_fr1_xyz</p>
+<p>python eval.py —trained_model=weights/yolact_plus_base_54_800000.pth —score_threshold=0.15 —top_k=15 —images=/home/youyx/data/datasets/double_3_1/:/home/youyx/data/double_3_1_out</p>
+<p>python eval.py —trained_model=weights/yolact_plus_resnet50_54_800000.pth —score_threshold=0.15 —top_k=15 —images=/home/youyx/data/datasets/double_3_1/:/home/youyx/data/double_3_1_out</p>
 <h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="pic1.png" alt="1"></p>
 <p>可以看到识别出了一些车，速度也是比较快的。</p>
 <h3 id="command"><a href="#command" class="headerlink" title="command"></a>command</h3><p>配置好环境后，以后再次运行yolact就只需要使用以下命令</p>

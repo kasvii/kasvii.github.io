@@ -2,9 +2,508 @@
 <search>
   <entry>
     <title>Hello！</title>
-    <url>/2021/10/09/hello-world/</url>
+    <url>/2021/10/26/hello-world/</url>
     <content><![CDATA[<p>Welcome to my blog!</p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>【论文阅读】TCMR</title>
+    <url>/2021/10/25/TCMR/</url>
+    <content><![CDATA[<h1 id="TCMR-Beyond-Static-Features-for-Temporally-Consistent-3D-Human-Pose-and-Shape-from-a-Video"><a href="#TCMR-Beyond-Static-Features-for-Temporally-Consistent-3D-Human-Pose-and-Shape-from-a-Video" class="headerlink" title="TCMR: Beyond Static Features for Temporally Consistent 3D Human Pose and Shape from a Video"></a>TCMR: Beyond Static Features for Temporally Consistent 3D Human Pose and Shape from a Video</h1><p>github：<a href="https://github.com/hongsukchoi/TCMR_RELEASE">https://github.com/hongsukchoi/TCMR_RELEASE</a></p>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>尽管近期在单图像人体三维重建上有很多成功的工作，但是从视频中重建具有时间一致性和光滑三维运动的人体仍然具有很大的挑战性。由于强烈地依赖当前帧的静态特征，基于视频的方法难以解决单图像方法中的时序不一致问题。在这点上，我们提出了一个时序连续网格重建系统（TCMR），能够高效地关注于过去帧和未来帧的时序信息，不被静态特征所主导。我们的TCMR比之前基于视频的方法有更好的每帧三维位姿和形状。</p>
+<h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>目前有许多工作从图像来分析人体，从简单的二维骨架估计到重建人体的三维姿态和形状。尽管有所进展，但是从二维图像重建三维人体依然充满挑战，特别是在单目的情况下，存在深度不确定、数据集有限、人体关节复杂的困难。</p>
+<p>之前的许多工作，比如Pose2Mesh[1]、I2L-MeshNet[2]基于参数化三维人体网格模型，直接从输入的单张图片回归模型参数。虽然在静态图片上有合理的输出，但是应用到视频上就会产生时序不一致和运动不平滑的问题。时序不稳定性是由于连续帧中不一致的三维位姿误差。误差可能大声在不同的三维方向，或者后续帧位姿输出可能保持相对不变，不能反映运动。</p>
+<p>[3] [4] [5]扩展了单张图像重建到视频的方法，他们把视频序列输入到预训练的单帧图像三维人体重建网络[6] [7]来获得序列的静态特征，然后再送到时序编码器，对每个输入帧编码一个时序特征。然后，人体参数回归器从相应时间步长的时序特征输出每帧SMPL参数。</p>
+<p>尽管这些工作极大提高了每帧三维位姿正确性和运动的平滑性，但仍然存在时序不一致性。重建失败的原因是因为对<strong>当前帧静态特征</strong>的强烈依赖。强烈依赖的原因是：</p>
+<ul>
+<li><p>当前帧静态特征和时序特征的残差连接。虽然参擦汗链接已经被验证能够促进学习过程，但是纯粹地将残差连接用于时间编码可能会阻碍系统学习有用的时序信息。假设静态特征是从预训练网络提取出来的，它包含了当前帧很重的SMPL参数，静态特征的残差连接恒等映射可能会使得SMPL参数回归器严重依赖于残差连接，而只是略微利用到时序特征，限制了时序编码器编码更有用的时序特征。</p>
+</li>
+<li><p>时序编码使用了所有帧的静态特征，当前帧的静态特征对当前时序特征有最大的影响潜力。当前工作尽管能够重建当前帧很高的人体精度，但是阻碍了时序编码器学习过去和未来的时序信息。因此基于视频的人体三维重建存在时序不一致的问题。</p>
+</li>
+</ul>
+<p>于是，我们提出TCMR - 时序连续网格重建系统，用来解决对当前静态特征的强烈依赖，以实现时序一致性和视频的平滑的三维人体运动输出。</p>
+<ul>
+<li>首先，fellow之前基于视频的工作[3] [4] [5]，但是移除了静态特征和时序特征之间的残差连接。</li>
+<li>引入PoseForecast，由两个时序编码器构成，分别利用过去和未来帧来预测当前帧的位姿。因此PoseForecast的时序特征不受当前静态特征影响。</li>
+<li>当前时序特征是从所有输入帧提取出来的。</li>
+<li>PoseForecast预测的时序特征和输入帧的时序特征融合，用来预测当前的SMPL参数。</li>
+</ul>
+<p>通过移除当前静态特征的强依赖，我们的SMPL回归器能够专注于过去和未来帧，而不是只有当前帧。</p>
+<p>论文的贡献：</p>
+<ul>
+<li>提出了一个时序一致的网格重建系统（TCMR），能够从视频中产生时序一致性和平滑的三维人体运动，高效地利用了过去和未来的时序信息，而不是只关注与当前帧的静态信息。</li>
+<li>虽然简单，TCRM不仅提高了三维人体运动的时序一致性，也提高了每帧的位姿和形状的准确性</li>
+</ul>
+<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><h3 id="基于单张图像的三维人体姿态和形状估计"><a href="#基于单张图像的三维人体姿态和形状估计" class="headerlink" title="基于单张图像的三维人体姿态和形状估计"></a>基于单张图像的三维人体姿态和形状估计</h3><p>许多单张图像的人体三维重建都是基于模型的方法，来预测预定义的三维人体网格模型SMPL的参数。[6]提出了一个<strong>端到端可训练的人体网格重建（HMR）</strong>系统，使用<strong>对抗性损失</strong>使得输出的人体三维网格是解剖学上合理的。[8]使用<strong>二维关节热图</strong>和轮廓来预测正确的SMPL参数。[9]使用<strong>人体部分分割</strong>来回归SMPL。[10]使用<strong>多视图颜色一致性</strong>来监督网络形成多视图几何。[11]引入<strong>自我改善系统</strong>来约束SMPL参数回归器并<strong>迭代拟合框架</strong>。[12]融合人体<strong>层次运动学先验</strong>到网络中。</p>
+<p>相反，无模型的方法直接估计形状而不是回归模型的参数。[13] BodyNet在<strong>三维体积空间</strong>中，评估三维人体形状。[14] 设计了一种<strong>图卷积人体网格回归系统</strong>，以<strong>模板人体网格</strong>作为输入，利用来自ResNet的图像特征预测网格顶点坐标系。[2] I2L-MeshNet引入了一种基于<strong>lixel</strong>（线+像素）的一维热图，以全卷积的方式来定位网格顶点。[1] Pose2Mesh提出从二维人体位姿重建三维人体位姿的<strong>图卷积网络</strong>。</p>
+<p>但基于图片的工作存在时序不一致性。</p>
+<h3 id="基于视频的三维人体位姿和形状估计"><a href="#基于视频的三维人体位姿和形状估计" class="headerlink" title="基于视频的三维人体位姿和形状估计"></a>基于视频的三维人体位姿和形状估计</h3><p>[15] HMMR使用<strong>一维全卷积时序编码器</strong>来提取静态特征并编码到时序特征。它通过预测附近的过去和未来帧的三维位姿，来学习时序上下文表达来减少三维预测的时序不一致性。[16] 利用<strong>光流</strong>和二维位姿序列来训练他们的网络，从而在视频上有很好的表现。[17] 提出<strong>骨架解耦框架</strong>，把三维人体姿态和形状分解成多层次的时空子问题。他们排序打乱的帧，来鼓励时间特征的学习。[4] VIBE使用<strong>双向GRU</strong>将输入帧的静态特征编码到时序特征，并将时序特征输入SMPL参数回归器，利用<strong>运动鉴别器</strong>来鼓励回归器产生真实的三维人体运动。[5]MEVA使用<strong>由粗到细的方式</strong>，他们的系统首先使用<strong>变分运动估计器（VME）</strong>评估粗糙的三维人体运动，然后使用运动<strong>残余回归器（MRR）</strong>预测残余的运动。</p>
+<h3 id="视频的时序一致三维人体运动"><a href="#视频的时序一致三维人体运动" class="headerlink" title="视频的时序一致三维人体运动"></a>视频的时序一致三维人体运动</h3><p>[15] HMMR引入了时序一致性和人体运动平滑性<strong>三维姿态加速度误差</strong>，和单张图像的方法相比，HMMR和VIBE降低了加速度误差。但是，他们在每帧的正确性和时序的一致性上做了<strong>权衡（trade-off）</strong>，HMMR输出了更加平滑的三维人体运动但是减少了每帧三维位姿的准确性。VIBE展示了较高的每帧三维位姿准确性，但是和HMMR相比在定量指标和定性结果上具有时序不一致性。</p>
+<p>[5] MEVA尝试建立每帧三维位姿准确性和时序平滑性的平衡，尽管在两个指标上都展示了更好的结果，但是定性结果依然暴露出不平滑的三维运动。原因是系统过于依赖当前的静态特征来估计当前三维位姿和形状。</p>
+<ul>
+<li>首先，MEVA建立了当前帧的静态特征和时序特征的残差连接；</li>
+<li>用<strong>运动残差回归器（MRR）</strong>来细化初始三维姿态和形状的时序特征，是从所有帧的静态特征编码来的，包括当前帧。这个过程会导致时序特征被当前静态特征主导。</li>
+<li>因此，这个精细化过程会收到当前静态特征的严重影响，连续帧的三维误差出现不一致。</li>
+</ul>
+<p>相反，TCMR被有意设计来减小对静态特征的严重依赖，残差连接被移除，PoseForecast网络预测来自过去和未来帧额外的时序特征。我们的方法减少了依赖并提供三维人体运动的时序一致性和准确性。</p>
+<h3 id="从图像中预测三维人体位姿"><a href="#从图像中预测三维人体位姿" class="headerlink" title="从图像中预测三维人体位姿"></a>从图像中预测三维人体位姿</h3><p>[15] [18] [19]提出从RGB输入预测人体未来三维位姿。[15]HMMR使用hallucinator（幻觉器？）从当前输入图像预测当前、未来和过去的三维姿态，并由以为全卷积时序编码器的输出进行自监督。[19] 提出神经自回归框架，以过去的视频帧为输入来预测未来的三维运动。 [18] 采用深度强化学习来预测未来三维人体位姿 。虽然目标大欧式预测未来三维位姿，我们的系统目标是从静态特征中解放出来，学习有用的时序特征。</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>TCMR的框架如下：</p>
+<p><img src="1.png" alt="1"></p>
+<h3 id="1-所有帧的时序编码"><a href="#1-所有帧的时序编码" class="headerlink" title="1. 所有帧的时序编码"></a>1. 所有帧的时序编码</h3><p>给定视频的RGB序列，经过[11]预训练的残差网络，提取每帧的静态特征。然后将残差网络的输出进行全局平均池化，得到$f$。ResNet网络的权重由所所有帧共享。</p>
+<p>利用所有输入帧的静态特征我们利用双向GRU计算当前帧的时序特征，这两个双向GRU从相反的时间方向上从输入静态特征中提取时序特征。</p>
+<ul>
+<li>两个双向GRU的输入分别是第一个$f_1$和最后一个的$f_T$，他们的初始隐藏状态都是零张量。</li>
+<li>然后，他们通过聚合下一帧的静态特征来反复更新隐藏状态。</li>
+<li>在当前帧的GRU的连接隐藏状态成为当前时序特征$g_{all}$。不像VIBE，我们没有在$f_{T/2}$和$g_{all}$之间加入残差连接，所以时序特征不会被静态特征主导。</li>
+</ul>
+<h3 id="2-PoseForecast的时序编码"><a href="#2-PoseForecast的时序编码" class="headerlink" title="2. PoseForecast的时序编码"></a>2. PoseForecast的时序编码</h3><p>PoseForecast网络使用两个额外的GRU，记为$G_{past}$和$G_{future}$，预测来自过去和未来帧额外的时序特征。过去帧定义为：1到当前帧-1，未来帧定义为：当前帧+1到结束帧。$G_{past}$的初始输入是$f1$，初始隐藏状态是零张量。然后通过不断聚合接下来的帧$f_2,…f_{T/2-1}$来反复更新隐藏状态。同样，$G_{future}$的初始输入是$f_T$，初始隐藏状态是零张量。然后通过不断聚合接下来的帧$f_{T-1},…f_{T/2+1}$来反复更新隐藏状态。</p>
+<h3 id="3-时序特征融合"><a href="#3-时序特征融合" class="headerlink" title="3. 时序特征融合"></a>3. 时序特征融合</h3><p>我们将所有帧的时序特征$g_{all}$、过去帧的时序特征$g_{past}$、未来帧的时序特征$g_{future}$进行融合得到最后的三维网格估计，如下图。</p>
+<p><img src="2.png" alt="2"></p>
+<ul>
+<li>每个时序特征都经过ReLU激活函数和全连接层，来改变维数到2048，输出记为$g’_{all}$、$g’_{past}$、$g’_{future}$</li>
+<li>然后，通过共享的全连接层将输出特征调整到256并连接</li>
+<li>连接后的特征通过许多全连接层，后面都跟着softmax激活函数，产生注意值$a_{all}$、$a_{past}$、$a_{future}$。注意值代表特征应该得到的权重。</li>
+<li>最后的的融合时序特征为：$g’_{int}=a_{all}g’_{all}+a_{past}g’_{past}+a_{future}g’_{future}$</li>
+</ul>
+<p>训练的时候，我们将$g’_{all}$、$g’_{past}$、$g’_{future}$扔到SMPL参数回归器，分别得到每个时序特征的参数。最后使用$\Theta_{int}$作为最后的三维人体网格。</p>
+<h3 id="4-损失函数"><a href="#4-损失函数" class="headerlink" title="4. 损失函数"></a>4. 损失函数</h3><p>L2损失函数：（1）预测值和真实值SMPL参数；（2）二维和三维关节坐标，跟VIBE一样，三维坐标由SMPL参数获得，二维关节坐标由三维关节坐标通过相机参数的反投影获得。</p>
+<h2 id="实施细节"><a href="#实施细节" class="headerlink" title="实施细节"></a>实施细节</h2><p>用预训练好的[20]SPIN作为backbone和回归器。权重使用Adam优化器优化。人体区域用之前的工作裁剪出来，并调整到224*224。对对象进行遮挡，以增强数据。用ResNet从裁剪的图像中计算静态特征。</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><h3 id="实验指标"><a href="#实验指标" class="headerlink" title="实验指标"></a>实验指标</h3><h4 id="每帧准确性的指标："><a href="#每帧准确性的指标：" class="headerlink" title="每帧准确性的指标："></a>每帧准确性的指标：</h4><ul>
+<li>mean per joint position error（MPJPE）、Procrustes-aligned MPJPE（PA-MPJPE）、mean per vertex position error（MPVPE）</li>
+<li>每个关节的平均位置误差，首先对齐根关节，然后测量估计值和真实值（mm）的误差</li>
+<li>程序对齐的MPJPE，作为每帧正确率的主要指标，因为它包括输出的尺度模糊性对误差的影响。</li>
+</ul>
+<h4 id="时序评估的指标"><a href="#时序评估的指标" class="headerlink" title="时序评估的指标"></a>时序评估的指标</h4><ul>
+<li>加速度误差：计算每个关节的平均预测和真实加速度的误差（$mm/s^2$）</li>
+</ul>
+<h3 id="消融实验"><a href="#消融实验" class="headerlink" title="消融实验"></a>消融实验</h3><h4 id="去除残差连接的有效性"><a href="#去除残差连接的有效性" class="headerlink" title="去除残差连接的有效性"></a>去除残差连接的有效性</h4><ul>
+<li><p>使用了和VIBE一样的baseline：只有一个双向GRU，编码所有输入帧的时序特征，静态和时序特征之间有残差连接。它可以预测所有输入帧的三维位姿和形状，但是没有使用运动鉴别器。</p>
+<p><img src="3.png" alt="3"></p>
+</li>
+<li><p>去除残差连接明显降低了加速度误差，说明残差连接中静态误差的恒等映射阻碍了模型学习有意义的时序特征</p>
+</li>
+<li><p>三维运动的时序一致性的提高也促进了每帧三维位姿的准确性。</p>
+</li>
+</ul>
+<h4 id="PoseForecast的有效性"><a href="#PoseForecast的有效性" class="headerlink" title="PoseForecast的有效性"></a>PoseForecast的有效性</h4><ul>
+<li><p>无论有残差连接如何，PoseForecast连续提高每帧和时序的指标。</p>
+<p><img src="4.png" alt="4"></p>
+</li>
+<li><p>保持时序特征和当前帧静态特征的无关性，能够提高时序一致性和运动平滑性</p>
+</li>
+<li><p>使用不用的监督方式对结果的影响，用当前帧参数监督效果最好</p>
+</li>
+</ul>
+<h4 id="和SOTA方法的对比"><a href="#和SOTA方法的对比" class="headerlink" title="和SOTA方法的对比"></a>和SOTA方法的对比</h4><ul>
+<li><p>和基于视频的方法比较</p>
+<p><img src="5.png" alt="5"></p>
+<p><img src="6.png" alt="6"></p>
+<p><img src="8.png" alt="8"></p>
+<p><img src="9.png" alt="9"></p>
+</li>
+<li><p>和基于单帧图像和视频方法的比较</p>
+<p><img src="7.png" alt="7"></p>
+</li>
+</ul>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>我们提出了从RGB视频中重建三维人体网格的TCMR模型。之前基于视频的工作由于强烈地依赖当前帧的静态特征，存在时序不一致的问题。我们通过移除静态特征和时序特征的残差连接，采用PoseForecast来预测过去帧和未来帧的时序特征，融合得到当前帧的时序特征。和其他基于视频的方法相比，TCMR提供了时序一致的三维运动和更准确的三维姿态估计。</p>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><ul>
+<li>3DPW：Timo von Marcard, Roberto Henschel, Michael Black, Bodo Rosenhahn,  and Gerard Pons-Moll. Recovering accurate 3d human pose in the wild using imus and a moving camera. <em>ECCV</em>, 2018.</li>
+<li>Human3.6M：Catalin Ionescu, Dragos Papava, Vlad Olaru, and Cristian Sminchisescu. Human3.6m: Large scale datasets and predictive methods for 3d human sensing in natural environments. <em>TPAMI</em>, 2014.</li>
+<li>MPI-INF-3DHP：Dushyant Mehta, Helge Rhodin, Dan Casas, Pascal Fua, Oleksandr Sotnychenko, Weipeng Xu, and Christian Theobalt. Monocular 3d human pose estimation in the wild using improved cnn supervision. <em>3DV</em>, 2017. </li>
+<li>Insta Variety：Angjoo Kanazawa, Jason Y Zhang, Panna Felsen, and Jitendra Malik. Learning 3D human dynamics from video. <em>CVPR</em>, 2019. </li>
+<li>Penn Ation：Weiyu Zhang, Menglong Zhu, and Konstantinos G Derpanis. From actemes to action: A strongly-supervised representation for detailed action understanding. <em>ICCV</em>, 2013.</li>
+<li>PoseTrack： Mykhaylo Andriluka, Umar Iqbal, Eldar Insafutdinov, Leonid Pishchulin, Anton Milan, Juergen Gall, and Bernt Schiele. Posetrack: A benchmark for human pose estimation and tracking. <em>CVPR</em>, 2018.</li>
+</ul>
+<p>3DPW是只有包括真实SMPL参数的数据集</p>
+<h2 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h2><p>temporal consistency - 时序一致性</p>
+<p>smooth 3D human motion - 光滑三维人体运动</p>
+<p>static feature - 静态特征</p>
+<p>depth ambiguity - 深度不确定性</p>
+<p><strong>residual connection - 残差连接</strong></p>
+<p>pretrained network - 预训练网络</p>
+<p>identity mapping - 恒等映射</p>
+<p>human mesh recovery system（HMR）- 人体网格重建系统</p>
+<p>anatomically plausible - 解剖学上合理</p>
+<p>2D joint heatmap - 二维关节热图</p>
+<p>human part segmentation - 人体部分分割</p>
+<p>multi-view color consistency - 多视图颜色一致性</p>
+<p>self-improving system - 自我改善系统</p>
+<p>3D volumetric space - 三维体积空间</p>
+<p>graph convolutional network - 图卷积网络</p>
+<p>lixel - 线+像素</p>
+<p>optical flow - 光流</p>
+<p>generalize well - 很好的推广</p>
+<p>skeleton-disentangling framework - 骨架解耦框架？？？</p>
+<p>multi-level spatial and temporal subproblems - 多层次的时空子问题</p>
+<p>variational motion estimator（VME）- 变分运动估计器</p>
+<p>motion residual regressor（MRR）- 运动残余回归器</p>
+<p>3D pose acceleration error - 三维姿态加速度误差</p>
+<p>trade-off - 权衡</p>
+<p>quantitative metrics - 定量指标</p>
+<p>qualitative results - 定性结果</p>
+<p>consecutive frame - 连续帧</p>
+<p>hallucinator - 幻觉器？？？</p>
+<p>neural autoregressive framework - 神经自回归框架</p>
+<p>global average pooling - 全局平均池化</p>
+<p>attention values - 注意值</p>
+<p>average filter - 平均过滤器</p>
+<p>spherical linear interpolation - 球面线性插值</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p> [1] Hongsuk Choi, Gyeongsik Moon, and Kyoung Mu Lee.</p>
+<p>Pose2Mesh: Graph convolutional network for 3D human</p>
+<p>pose and mesh recovery from a 2D human pose. <em>ECCV</em>,</p>
+<p>2020.</p>
+<p>[2] Gyeongsik Moon and Kyoung Mu Lee. I2L-MeshNet:</p>
+<p>Image-to-Lixel prediction network for accurate 3D human</p>
+<p>pose and mesh estimation from a single RGB image. <em>ECCV</em>,</p>
+<p>2020.</p>
+<p>[3] Angjoo Kanazawa, Jason Y Zhang, Panna Felsen, and Jiten</p>
+<p>dra Malik. Learning 3D human dynamics from video. <em>CVPR</em>,</p>
+<p>2019.</p>
+<p>[4] Muhammed Kocabas, Nikos Athanasiou, and Michael J</p>
+<p>Black. VIBE: Video inference for human body pose and</p>
+<p>shape estimation. <em>CVPR</em>, 2020. </p>
+<p>[5] Zhengyi Luo, S Alireza Golestaneh, and Kris M Kitani. 3D</p>
+<p>human motion estimation via motion compression and re-</p>
+<p>fifinement. <em>ACCV</em>, 2020. </p>
+<p>[6] Angjoo Kanazawa, Michael J Black, David W Jacobs, and</p>
+<p>Jitendra Malik. End-to-end recovery of human shape and</p>
+<p>pose. <em>CVPR</em>, 2018</p>
+<p>[7] Nikos Kolotouros, Georgios Pavlakos, Michael J Black, and</p>
+<p>Kostas Daniilidis. Learning to reconstruct 3D human pose</p>
+<p>and shape via model-fifitting in the loop. <em>ICCV</em>, 2019.</p>
+<p>[8] Georgios Pavlakos, Luyang Zhu, Xiaowei Zhou, and Kostas</p>
+<p>Daniilidis. Learning to estimate 3D human pose and shape</p>
+<p>from a single color image. <em>CVPR</em>, 2018. </p>
+<p>[9] Mohamed Omran, Christoph Lassner, Gerard Pons-Moll, Pe</p>
+<p>ter Gehler, and Bernt Schiele. Neural Body Fitting: Unifying</p>
+<p>deep learning and model based human pose and shape esti</p>
+<p>mation. <em>3DV</em>, 2018. </p>
+<p>[10] Georgios Pavlakos, Nikos Kolotouros, and Kostas Daniilidis.</p>
+<p>TexturePose: Supervising human mesh estimation with tex</p>
+<p>ture consistency. <em>ICCV</em>, 2019.</p>
+<p>[11] Nikos Kolotouros, Georgios Pavlakos, Michael J Black, and</p>
+<p>Kostas Daniilidis. Learning to reconstruct 3D human pose</p>
+<p>and shape via model-fifitting in the loop. <em>ICCV</em>, 2019. </p>
+<p>[12] Georgios Georgakis, Ren Li, Srikrishna Karanam, Terrence</p>
+<p>Chen, Jana Kosecka, and Ziyan Wu. Hierarchical kinematic</p>
+<p>human mesh recovery. <em>ECCV</em>, 2020.</p>
+<p>[13] Gul Varol, Duygu Ceylan, Bryan Russell, Jimei Yang, Ersin</p>
+<p>Yumer, Ivan Laptev, and Cordelia Schmid. BodyNet: Vol</p>
+<p>umetric inference of 3D human body shapes. <em>ECCV</em>, 2018.</p>
+<p>[14] Nikos Kolotouros, Georgios Pavlakos, and Kostas Dani</p>
+<p>ilidis. Convolutional mesh regression for single-image hu</p>
+<p>man shape reconstruction. <em>CVPR</em>, 2019. </p>
+<p>[15] Angjoo Kanazawa, Jason Y Zhang, Panna Felsen, and Jiten</p>
+<p>dra Malik. Learning 3D human dynamics from video. <em>CVPR</em>,</p>
+<p>2019.</p>
+<p>[16] Carl Doersch and Andrew Zisserman. Sim2real transfer</p>
+<p>learning for 3D human pose estimation: motion to the res</p>
+<p>cue. <em>NeurIPS</em>, 2019.</p>
+<p>[17]  </p>
+<p>Yu Sun, Yun Ye, Wu Liu, Wenpeng Gao, YiLi Fu, and Tao</p>
+<p>Mei. Human mesh recovery from monocular images via a</p>
+<p>skeleton-disentangled representation. <em>ICCV</em>, 2019.</p>
+<p>[18] Ye Yuan and Kris Kitani. Ego-pose estimation and forecast</p>
+<p>ing as real-time pd control. <em>ICCV</em>, 2019. 3</p>
+<p>[19] Jason Y Zhang, Panna Felsen, Angjoo Kanazawa, and Jiten</p>
+<p>dra Malik. Predicting 3d human dynamics from video. <em>ICCV</em>,</p>
+<p>\2019. </p>
+<p>[20] Nikos Kolotouros, Georgios Pavlakos, Michael J Black, and</p>
+<p>Kostas Daniilidis. Learning to reconstruct 3D human pose</p>
+<p>and shape via model-fifitting in the loop. <em>ICCV</em>, 2019.</p>
+<p>[21] Yi Zhou, Connelly Barnes, Jingwan Lu, Jimei Yang, and Hao</p>
+<p>Li. On the continuity of rotation representations in neural</p>
+<p>networks. <em>CVPR</em>, 2019.</p>
+]]></content>
+      <categories>
+        <category>论文阅读</category>
+        <category>人体三维重建</category>
+      </categories>
+      <tags>
+        <tag>人体三维重建</tag>
+        <tag>SMPL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【论文阅读】MEVA</title>
+    <url>/2021/10/19/MEVA/</url>
+    <content><![CDATA[<h1 id="MEVA-3D-Human-Motion-Estimation-via-Motion-Compression-and-Refifinement"><a href="#MEVA-3D-Human-Motion-Estimation-via-Motion-Compression-and-Refifinement" class="headerlink" title="MEVA: 3D Human Motion Estimation via Motion Compression and Refifinement"></a>MEVA: 3D Human Motion Estimation via Motion Compression and Refifinement</h1><p>github：<a href="https://github.com/ZhengyiLuo/MEVA">https://github.com/ZhengyiLuo/MEVA</a></p>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>我们提出了一个方法对于RGB视频序列输入，产生光滑和准确的人体姿态和运动估计。使用<strong>基于自动编码器的运动压缩</strong>和<strong>通过运动细化学习到的残差表示</strong>，将人类运动的时间序列分解为平滑运动表示。这两步编码将人类运动的捕获分为两个阶段：1. <strong>全局人体运动估计</strong>：用来捕获粗糙的一般运动；2. <strong>残差估计</strong>：添加人的特定运动细节。实验展示了我们的方法在三维人体姿态和运动的平滑性和准确性上有较好的性能。</p>
+<h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>从单个视频中估计三维人体姿态序列需要一个计算模型，该模型可以提取人体运动潜在的运动学，也可以保留被捕获人所特有的运动。人类具有相同的人体结构（相同的关节数量）和相似的物理约束（关节约束），所以能够学习一个<strong>广义的运动学模型</strong>与图像相匹配来推断一个人的一般运动。但是广义的运动模型不能给特定个人的运动建模，因此需要使用图像信息添加或细化广义运动的估计结果。我们提出了两阶段三维估计方法：<strong>首先，从视频中提取粗糙的运动序列</strong>；<strong>然后，细化这个序列来产生更准确的三维运动估计</strong>。我们将推理过程分解为（1）一般运动模型和（2）特定的运动模型，来获取更准确和平滑的估计。</p>
+<p>近几年，人体三维姿态估计获得了很大的进展，在<strong>单张图片</strong>和<strong>视频</strong>的人体网格重建有很好的结果。主要的指标有： Mean Per Joint Position Error (MPJPE)：平均每个关节位置误差。但缺少运动的时序平滑性的体现，存在抖动的现象，导致不自然的运动估计，优化的方法是使用抖动的姿态估计。</p>
+<p>时序平滑性的问题已经有部分被解决，包括，<strong>大尺度的运动数据集</strong>（比如AMAAS）和引入<strong>对抗性损失</strong>[1] [2]来监督学习，[3]预测帧顺序（？？？）。但是只在损失函数中使用先验知识难以在平滑性和准确性中找到平衡。</p>
+<p>我们认为在平滑度和精确度之间达到平衡可以通过<strong>粗糙</strong>和<strong>精细</strong>运动的分解来实现。首先我们通过观察人类运动的大数据集来学习粗糙的运动模型，因为<strong>人类的运动通常是平滑</strong>的。如果要将一个模型拟合到大量的人类运动中，那么大多数数据将位于一个运动平滑的子空间中。这意味着，如果我们要压缩人类运动的数据，它应该学习一个潜在的子空间，其中的运动是固有特性是平滑和粗糙的。以这个<strong>潜在子空间为回归目标</strong>，我们可以直接从输入视频中推理出粗糙的人体运动。但是这个运动子空间中，罕见的运动，比如突然的运动，被从运动数据中移除。为了保留这样的运动，我们还认为，产生最后的三维运动估计可以被视为一个<strong>细化步骤</strong>，将细节添加到粗运动序列中。</p>
+<p>为了验证我们的论点，我们提出两阶段人体运动估计方法，1. 首先使用<strong>变分自动编码器（VAE）</strong>从数据压缩中估计粗糙的人体姿态序列，称为<strong>变分运动估计器（VME）</strong>；2. 然后把VME的输出作为姿态回归器的输入，细化姿态估计，称为<strong>运动细化回归器（MRR）</strong>。</p>
+<p>我们提出一个基于视频的人体三维运动估计方法，聚焦产生平滑和准确的人体运动序列。主要贡献有：</p>
+<ul>
+<li>提出一个两阶段运动估计方法，保证时序平滑性和姿态估计准确定</li>
+<li>描述一个鲁棒的变分自动编码器的学习过程，作为潜在人体运动子空间，从视频中估计三维人体的粗运动</li>
+<li>我们在真实场景的3DPW数据集中进行姿态和运动估计的性能评测，减少了54.3%的加速度误差，同时实现了最先进的WPJPE结果。</li>
+</ul>
+<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><p>相关工作将介绍单张图像的<strong>人体形状和姿态恢复</strong>和视频<strong>人体运动恢复</strong>，后者是前者的子集，因为人体运动是人体姿态的一个序列。然后介绍现有方法是如何使用人体运动作为先验，和如何将运动序列映射到低维空间。</p>
+<h3 id="单张图像的三维人体姿态和形状恢复"><a href="#单张图像的三维人体姿态和形状恢复" class="headerlink" title="单张图像的三维人体姿态和形状恢复"></a>单张图像的三维人体姿态和形状恢复</h3><p>这里聚焦基于模型的方法，能够同时恢复形状和姿态，我们选择使用<strong>参数化三维人体模型</strong>（SMPL、SCAPE、SMPLify-X），因为它能够容易地转换成三维人体网格。近年来，参数化人体三维重建获得了大量关注，从剪影或者人工输入，到直接拟合模型参数到二维关节位置，到直接从图像估计形状和位姿。因为缺少三维标签的这是你hi之，这些方法使用弱监督的方式来拟合三维人体到二维关节位置、身体部位分割或者稠密像素关联[4]。这些方法由于缺乏<strong>时序信息</strong>，提取的运动往往不稳定。</p>
+<h3 id="基于视频的三维人体姿态和形状恢复"><a href="#基于视频的三维人体姿态和形状恢复" class="headerlink" title="基于视频的三维人体姿态和形状恢复"></a>基于视频的三维人体姿态和形状恢复</h3><p>视频人体三维重建是图像的自然拓展，[5]等（1）预测从二维到三维的关节位置，使用<strong>LSTM</strong>、<strong>时序信息</strong>和<strong>全连接层</strong>来探索时序信息。（2）HMMR、VIBE直接从图像中预测三维关节位置，并使用<strong>时序滤波器</strong>对运动序列进行后处理。<strong>HMMR</strong>通过让模型预测未来和过去帧的运动，来增强时序一致性；[4] <strong>Denserac</strong>预测被打乱的帧的顺序；<strong>VIBE</strong>使用GRU将特征的输入帧转换为一系列时间相关的潜在特征。</p>
+<h3 id="人体姿态和动作先验"><a href="#人体姿态和动作先验" class="headerlink" title="人体姿态和动作先验"></a>人体姿态和动作先验</h3><p>使用预先记录的人体运动序列作为先验，已经用在许多人体运动相关的任务上。（1）学习<strong>运动捕获MoCap</strong>来帮助<strong>三维运动跟踪</strong>；（2）使用<strong>对抗性鉴别器</strong>对每帧结果进行处理，保证恢复有效的人体姿态；（3）<strong>使用预训练的VAE</strong>潜在空间；（4）时序上的鉴别器，鉴别整个运动序列。以上的方法都是用对抗的方式使用姿态和运动先验，用在损失函数中。</p>
+<h3 id="人体运动表达"><a href="#人体运动表达" class="headerlink" title="人体运动表达"></a>人体运动表达</h3><p>将人体运动压缩到一个紧凑的潜在表达，能够用来生成人体运动和轨迹预测。目前的生成模型：1. <strong>VAE</strong> 2. <strong>生成流（generative flow）</strong> 3. <strong>GAN</strong></p>
+<p>【生成（generation）和表达（representation）的关系是什么？？？】</p>
+<h2 id="3-方法"><a href="#3-方法" class="headerlink" title="3. 方法"></a>3. 方法</h2><p>现有方法的问题：难以实现时序平滑性和精确性的平衡</p>
+<p><img src="1.png" alt="1"></p>
+<p>本文解决方法L提出MEVA，通过变分自动编码器进行运动估计，首先估计整体粗运动，然后添加细节运动作为残差。MEVA分三步处理输入：</p>
+<ul>
+<li>首先，使用<strong>时空特征提取器（STE）</strong>提取相关的<strong>时序特征</strong></li>
+<li>然后，使用<strong>变分运动估计器（VME）</strong>捕获<strong>全局粗运动</strong></li>
+<li>最后，使用<strong>运动残差回归器（MRR）</strong>增加精细运动的细节</li>
+</ul>
+<h3 id="3-1-公式"><a href="#3-1-公式" class="headerlink" title="3.1 公式"></a>3.1 公式</h3><p>$V_T=\{I_t\}^T_{t=1}$：视频输入</p>
+<p>$M_T=\{\theta_t\}^T_{t=1}$：运动序列，需要重建的</p>
+<p>直观上，从视频中重建人体运动不需要恢复人体形状，可以直接从视频映射到人体运动。但是和真实运动注释匹配的视频需要专业的捕捉设备，与二维姿态数据相比仍然比较罕见。在缺乏三维数据样本的情况下，我们的模型以半监督的方式学习运动序列（利用经过三维或者二维标记过关节位置的视频）。因此我们的运动估计目标就是学习函数：$V_T-&gt;M_T$</p>
+<h3 id="3-2-时空特征提取器（STE）"><a href="#3-2-时空特征提取器（STE）" class="headerlink" title="3.2 时空特征提取器（STE）"></a>3.2 时空特征提取器（STE）</h3><p>过去的运动可以提供关于未来工作的线索。因此，除了单独使用前馈卷积网络来提取每一帧的视觉特征，我们还能够产生时序相关特征来更好地进行运动序列建模。</p>
+<h3 id="3-3-变分运动估计器（VME）"><a href="#3-3-变分运动估计器（VME）" class="headerlink" title="3.3 变分运动估计器（VME）"></a>3.3 变分运动估计器（VME）</h3><h4 id="人体运动变分自动编码器"><a href="#人体运动变分自动编码器" class="headerlink" title="人体运动变分自动编码器"></a>人体运动变分自动编码器</h4><p>为了学习一个能够封装广泛<strong>人体运动的子空间</strong>，我们使用<strong>变分自动编码器（VAE）</strong>。VAE显示地将<strong>每个数据点映射到潜在的代码</strong>，能够高效地捕获大量可能的数据模式，对学习到的潜在空间施加一个<strong>高斯先验</strong>，相似运动的潜在代码将会相互接近。因此，VAE的潜在空间允许代码间更多的重合，能够加强潜在空间的平滑性。【具有一个平滑的潜在代码对于提高模型的通用性至关重要，因为可能的人体运动空间是高度相关和有限的？？？】。根据之前VAE的工作，目标是最大化对数似然的evidence lower bound（ELBO）</p>
+<p><img src="2.png" alt="2"></p>
+<p>编码器$E_{vae}$接收一系列SMPL姿态参数的人体运动的帧W，输出潜在代码$z$。解码器$D_{vae}$输入潜在代码$z$并重建运动$\hat M_W$，编码器$E_{vae}$和解码器$D_{vae}$使用GRUs。</p>
+<p><img src="3.png" alt="3"></p>
+<p>目标函数可以写成：</p>
+<p><img src="4.png" alt="4"></p>
+<h4 id="人体运动数据增强"><a href="#人体运动数据增强" class="headerlink" title="人体运动数据增强"></a>人体运动数据增强</h4><p>我们学习到的VAE应该能够推广到<strong>看不到的人体运动序列</strong>，并实现较高精度的重建，以确保学习到的潜在空间确实可以作为一个全面的人类运动子空间。我们用大规模人类运动数据集<strong>AMASS</strong>（13k不同长度的运动样本），但我们训练的VAE在看不见的序列上<strong>通用性</strong>很差。于是我们进行<strong>数据增强</strong>，来增强现有的运动并产生可行<strong>独特的人体运动</strong>序列。<strong>虽然数据增强在图像处理中得到了广泛的研究，但是在人体运动数据集方面的尝试却很少</strong>。在轨迹预测和人体运动生成的应用中，VAE潜在空间的通用性没有被广泛讨论，因为模型只需要生成新的运动序列，而不强调其编码看不见的运动序列的能力。</p>
+<p>我们采用以下的数据增强方案：</p>
+<ul>
+<li><strong>加速和减速</strong>：对帧进行均匀上采样或者下采样（加速和减速），仍能产生合理且自然的人体运动</li>
+<li><strong>左右翻转</strong>：对于相同的动作，使用左手或者右手，将仍是一个有效的人体运动，所以我们遵循SMPL模型的运动学树，<strong>镜像左右运动</strong>，生成一个新的运动序列。</li>
+<li><strong>随机根旋转</strong>：从单位球中随机选取一个根旋转，来捕获可能的人体运动中不同的根方向。不同的姿态估计器可能假设不同的基平面和坐标系，采样随机根旋转有助于模型处理不同坐标系的选择。</li>
+</ul>
+<h4 id="从视频中学习平滑运动"><a href="#从视频中学习平滑运动" class="headerlink" title="从视频中学习平滑运动"></a>从视频中学习平滑运动</h4><p>使用VAE学习了一个全面人体运动子空间之后，我们学习了一个额外的编码器$E_{motion}$，它可以直接从视频特征中提取出粗运动序列， 映射到与$E_{vae}$相同的潜在空间。</p>
+<p>输入一个视频特征序列$f_W=\{f_w\}^W_{w=1}$，编码器$E_{motion}$的作用是将输入特征压缩成一个潜在的代码$z$，将当前的观测结果表达为一个粗糙的人体运动序列。在VAE中预训练的解码器$D_{vae}$迫使编码器$E_{motion}$从预训练的运动子空间中采样，将编码器的潜在空间限制在预训练的人体运动子空间中提供一个很强的人体运动先验，有助于编码器$E_{motion}$的学习过程。结合编码器$E_{motion}$和解码器$D_{vae}$，构成了变分运动估计器（VME）</p>
+<h3 id="3-4-运动残差回归器（MRR）"><a href="#3-4-运动残差回归器（MRR）" class="headerlink" title="3.4 运动残差回归器（MRR）"></a>3.4 运动残差回归器（MRR）</h3><p>使用VAE的潜在空间作为目标学习的运动序列具备固有的平滑性和粗糙性，通过信息压缩捕获当前视频帧的整体运动特征。为了捕获细节，采用SMPL回归器来<strong>迭代细化</strong>估计的姿态。MEVA中回归变量用<strong>VME计算的姿态来初始化</strong>，而之前的方法都是用平均SMPL姿态来初始化。因此，回归变量的任务只是对粗糙估计做微小的修改，来增加在压缩步骤中丢失的运动细节。</p>
+<p>回归器的输入特征跟VIBE一样，使用时序视觉编码器，所以及时每帧的估计是分别计算的，但视觉特征已经是时序相关的。</p>
+<p>VME使用一般的运动模型从视频中计算<strong>全局粗运动</strong>，回归器（MRR）联合细化运动和人体形状估计，相当于在每帧中<strong>添加特定的运动细节</strong>。</p>
+<h3 id="3-5-训练和损失函数"><a href="#3-5-训练和损失函数" class="headerlink" title="3.5 训练和损失函数"></a>3.5 训练和损失函数</h3><p><img src="5.png" alt="5"></p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>介绍了三部分：1.数据集  2. 实验  3. 消融实验</p>
+<h4 id="4-1-数据集"><a href="#4-1-数据集" class="headerlink" title="4.1 数据集"></a>4.1 数据集</h4><p>VAE：</p>
+<ul>
+<li><p>训练AMASS</p>
+</li>
+<li><p>测试3DPW</p>
+</li>
+</ul>
+<p>视频训练：</p>
+<ul>
+<li><p>MPI-INF-3DPH, 3DPW and human 3.6M：有三维关节标注</p>
+</li>
+<li><p>InstaVariety、PennAction：有二维关节标注</p>
+</li>
+</ul>
+<h3 id="4-2-评估结果和分析"><a href="#4-2-评估结果和分析" class="headerlink" title="4.2 评估结果和分析"></a>4.2 评估结果和分析</h3><h4 id="运动变分编码器的生成"><a href="#运动变分编码器的生成" class="headerlink" title="运动变分编码器的生成"></a>运动变分编码器的生成</h4><p>记录了VAE对3DPW数据集中看不见的运动序列的重建误差运动VAE模型是使用所有三种形式的数据增强技术训练的性能最好的模型。结果表明，我们的VAE模型能够推广到看不见的序列，学习的子空间可以合理地展示人体运动空间。</p>
+<p><img src="6.png" alt="6"></p>
+<h4 id="定量结果"><a href="#定量结果" class="headerlink" title="定量结果"></a>定量结果</h4><p>表2展示了我们的方法在位置误差（MPJP和PA-MPJPE）取得了可比性的结果，同时显著提高了平滑度（加速度误差ACC-ERR），意味着在不牺牲精度的情况下进行更平滑、更自然的运动估计。为了进行更直接的比较，我们使用与我们方法完全相同的数据集重新训练了之前最先进的方法VIBE。之前平滑性最先进的模型是HMMR。</p>
+<p><img src="7.png" alt="7"></p>
+<h4 id="定性结果"><a href="#定性结果" class="headerlink" title="定性结果"></a>定性结果</h4><p><a href="https://youtu.be/YBb9NDz3ngM">https://youtu.be/YBb9NDz3ngM</a></p>
+<h3 id="4-3-消融实验"><a href="#4-3-消融实验" class="headerlink" title="4.3 消融实验"></a>4.3 消融实验</h3><h4 id="数据增强对运动VAE训练的效果"><a href="#数据增强对运动VAE训练的效果" class="headerlink" title="数据增强对运动VAE训练的效果"></a>数据增强对运动VAE训练的效果</h4><p>表格3展示了VAE在3DPW数据集中，使用不同数据增强方法后，对看不见序列的重建误差</p>
+<p><img src="8.png" alt="8"></p>
+<h4 id="粗运动与精细运动检索"><a href="#粗运动与精细运动检索" class="headerlink" title="粗运动与精细运动检索"></a>粗运动与精细运动检索</h4><p>MEVA从粗细运动的显式分解中受益，使用时序压缩来捕获给定序列的全局运动。表4展示了粗细运动信息的检索量。</p>
+<p><img src="9.png" alt="9"></p>
+<p><img src="10.png" alt="10"></p>
+<h4 id="预训练运动VAE的效果"><a href="#预训练运动VAE的效果" class="headerlink" title="预训练运动VAE的效果"></a>预训练运动VAE的效果</h4><p>MEVA从预训练的运动VAE的潜在空间中受益。预训练的VAE提供了一个人体运动子空间，帮助约束运动序列更自然可信。</p>
+<p><img src="11.png" alt="11"></p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>为了实现时序平滑和精确的三维人体姿态估计，（1）学习一个压缩模型，编码一般人体运动的光滑性，（2）同时学习一个基于图像的回归模型，来捕获特定的运动。我们提出两阶段模型，首先，训练一个变分自动编码器给粗糙/光滑的人体运动进行建模；然后学习人体特殊运动细化回归模块，来保留一般运动模型没有捕捉到的运动。通过全面的实验，验证了我们方法的平滑性和准确性。</p>
+<h2 id="指标"><a href="#指标" class="headerlink" title="指标"></a>指标</h2><p> <strong>Mean Per Joint Position Error (MPJPE)</strong>：平均每个关节位置误差</p>
+<ul>
+<li>根据视频每一帧计算的相对关节位置</li>
+<li><p>但缺少运动的时序平滑性的体现</p>
+<p><strong>MPJPE after Procrustes Alignment (PA-MPJPE)</strong>：执行程序对齐后的MPJPE</p>
+</li>
+<li><p>对齐三维关节的根位置（盆骨）后计算MPJPE</p>
+<p>MPJPE和PA-MPJPE都是运动估计器的准确性指标（$mm$）</p>
+</li>
+</ul>
+<p><strong>Acceleration error (ACC-ERR)</strong>：加速度误差</p>
+<ul>
+<li><p>测量预测结果和真实值中每个关键点的三维加速度误差（单位$mm/s^2$）</p>
+</li>
+<li><p>ACC-ERR是估计运动序列的主要的平滑度指标</p>
+</li>
+<li>加速度使用有限差分方法计算得到</li>
+</ul>
+<p>以上指标需要共同使用：低的<strong>位置误差</strong>表明运动的捕获<strong>整体的正确性</strong>，而好的<strong>加速度误差</strong>标志着<strong>平滑和自然</strong>的人体运动估计。</p>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><ul>
+<li>Archive of Motion Capture as Surface Shapes（AMAAS）：Mahmood, N., Ghorbani, N., Troje, N.F., Pons-Moll, G., Black, M.J.: Amass: Archive of motion capture as surface shapes. 2019 IEEE/CVF International Conference on Computer Vision (ICCV) (2019) 5441–5450</li>
+<li>MPI-INF-3DPH</li>
+<li>3DPW</li>
+<li>human 3.6M</li>
+<li>InstaVariety</li>
+<li>PennAction</li>
+</ul>
+<h2 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h2><p>smooth motion representation - 平滑运动表示</p>
+<p>auto-encoder-based motion compression - 基于自动编码器的运动压缩</p>
+<p>residual representation - 残差表示</p>
+<p>motion refinement - 运动细化</p>
+<p>generalized kinematic model - 广义运动学模型</p>
+<p>human mesh recovery - 人体三维重建</p>
+<p>adversarial loss - 对抗性损失</p>
+<p>data compression - 数据压缩</p>
+<p>【Variational Autoencoder（VAE）- 变分自动编码器】</p>
+<p>Variational Motion Estimator（VME）- 变分运动估计器</p>
+<p>Motion Residual Regressor（MRR）- 运动细化回归器</p>
+<p>body part segmentation - 身体部分分割</p>
+<p>dense pixel correspondence - 图像稠密像素关联</p>
+<p>LSTM</p>
+<p>temporal convolution - 时序卷积</p>
+<p>fully connected layers - 全连接层</p>
+<p>motion capture（MoCap）- 运动捕获</p>
+<p>3D motion tracking - 三维运动跟踪</p>
+<p>adversarial discriminator - 对抗性鉴别器</p>
+<p>human motion representation - 人体运动表达</p>
+<p>compact latent representation  - 紧凑的潜在表达</p>
+<p>spatio-temporal feature extractor（STE）- 时空特征提取器</p>
+<p>linear coefficient - 线性系数</p>
+<p>weak perspective camera - 弱视角相机</p>
+<p>feed-forward convolutional network - 前馈卷积网络</p>
+<p>human motion subspace - 人体运动子空间</p>
+<p>Gaussian prior - 高斯先验</p>
+<p>Gaussian parameterization of the VAE - VAE的高斯参数化</p>
+<p>data augmentation - 数据增强</p>
+<p>kinematic tree - 运动学树</p>
+<p>finite difference - 有限差分</p>
+<p>explicit breakdown - 显式分解</p>
+<p>kinematically invalid - 运动学无效</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] Kocabas, M., Athanasiou, N., Black, M.J.: Vibe: Video inference for human body pose and shape estimation. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. (2020) 5253–5263</p>
+<p>[2] Kanazawa, A., Zhang, J.Y., Felsen, P., Malik, J.: Learning 3d human dynamics from video. 2019 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) (2019) 5607–5616</p>
+<p>[3] Xu, Y., Zhu, S.C., Tung, T.: Denserac: Joint 3d pose and shape estimation by dense render-and-compare. 2019 IEEE/CVF International Conference on Computer Vision (ICCV) (2019) 7759–7769</p>
+<p>[4] Xu, Y., Zhu, S.C., Tung, T.: Denserac: Joint 3d pose and shape estimation by dense render-and-compare. 2019 IEEE/CVF International Conference on Computer Vision (ICCV) (2019) 7759–7769</p>
+<p>[5] Xu, J., Yu, Z., Ni, B., Yang, J., Yang, X., Zhang, W.: Deep kinematics analysis for monocular 3d human pose estimation. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR). (2020)</p>
+]]></content>
+      <categories>
+        <category>论文阅读</category>
+        <category>人体三维重建</category>
+      </categories>
+      <tags>
+        <tag>人体三维重建</tag>
+        <tag>GRU</tag>
+        <tag>SMPL</tag>
+        <tag>VAE</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【论文阅读】VIBE</title>
+    <url>/2021/10/15/VIBE/</url>
+    <content><![CDATA[<h1 id="VIBE-Video-Inference-for-Human-Body-Pose-and-Shape-Estimation"><a href="#VIBE-Video-Inference-for-Human-Body-Pose-and-Shape-Estimation" class="headerlink" title="VIBE: Video Inference for Human Body Pose and Shape Estimation"></a>VIBE: Video Inference for Human Body Pose and Shape Estimation</h1><p>github：<a href="https://github.com/mkocabas/VIBE">https://github.com/mkocabas/VIBE</a></p>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>因为缺少ground truth的三维运动数据来训练，所以目前SOTA的工作不能很好地产生自然正确的运动。我们利用大型运动捕获数据集AMASS，提出了基于视频的人体姿态和形状估计网络VIBE。创新点在于，利用AMASS来区分真实人类运动和我们时序位姿和形状回归网络产生的运动。我们提出一个创新的时序网络框架，使用了自我注意机制和对抗训练，在序列的水平上产生运动学合理的运动序列。</p>
+<h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>尽管目前有很多工作从单张图片中估计三维人体位姿和形状，但是人体动作才体现人的行为。我们关注于探索单目视频的时序信息来更好地评估人体运动。由于缺乏足够的训练数据，之前的时序网络没有捕获到人体复杂多变的运动。我们提出了新的时序神经网络和训练方法，来提高单目视频的三维人体位姿估计性能。</p>
+<p>[1]和[2]结合室内视频和二维gd或伪gd关键点标注的数据集，但室内三维数据集物体的数量、运动范围和图片复杂度都受到限制，标注的数量仍然不够充足，伪gd标签在建模人体运动上不够可靠。</p>
+<p>我们的灵感来自于[3]，[3]利用单张图片来估计位姿，只将二维关键点和未配对的静态三维人体形状和位姿用于对抗训练方法。在视频序列上，早已存在二维关键点标注的视频，接下来的问题是如何获得足够质量的真实的三维人体运动来进行对抗性训练。因此，我们使用大规模三维动作捕获数据集AMASS，该数据集足够丰富来学习人体的运动。</p>
+<p>我们的方法从真实场景的视频学习视频序列的三维人体重建，不仅能够区别估计的运动和数据集的运动的区别，也使用三维关键点。我们方法的输出是一个SMPL的pose和shape参数序列。具体地就是采用两个未配对的信息源（真实视频和AMASS数据集）来训练一个序列的生成对抗网络（GAN）[4]。我们训练一个时间模型来预测每一帧的SMPL身体模型的参数，而一个运动鉴别器来区分真实序列和回归序列。因此，通过最小化对抗训练损失回归器能够输出接近真实运动的位姿，而运动鉴别器作为一个弱监督。</p>
+<h3 id="训练过程"><a href="#训练过程" class="headerlink" title="训练过程"></a>训练过程</h3><p>输入：真实视频图像</p>
+<p>预测：预训练的单图像认为i位姿和形状卷积神经网络，由[3]的时序编码器和人体参数回归器组成，在GRUs上执行，来获取人体运动的序列特性。</p>
+<p>鉴别：运动鉴别器将预测的位姿和数据集采样的位姿进行对比，对每个序列输出real/fake标签，并采用了注意力机制来放大各自框架的贡献。</p>
+<p>输出：SMPL人体pose和shape参数</p>
+<p>损失函数：整个模型使用监督的方法，通过对抗损失和回归损失来最小化预测结果和gd在关键点、pose和shape参数上的误差。</p>
+<h3 id="测试过程"><a href="#测试过程" class="headerlink" title="测试过程"></a>测试过程</h3><p>给定一个视频，使用预训练的CNN和时序模型来预测每一帧SMPL的pose和shape的参数。</p>
+<h3 id="贡献"><a href="#贡献" class="headerlink" title="贡献"></a>贡献</h3><ul>
+<li>我们使用AMASS数据集来对抗性地训练VIBE，促进回归器产生真实准确的运动。</li>
+<li>在运动鉴别器中使用注意力机制，给不同的帧赋权重，来区分每帧的重要性。</li>
+</ul>
+<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><h3 id="单一图像的三维位姿和形状"><a href="#单一图像的三维位姿和形状" class="headerlink" title="单一图像的三维位姿和形状"></a>单一图像的三维位姿和形状</h3><p>参数人体模型，比如SMPL、SCAPE经常用在人体姿态估计，因为它们捕获到了人体的统计数据，能够提供三维网格模型。</p>
+<p>非参数人体模型，比如Bodynet用涂卷机网络直接回归顶点位置、PIFu隐函数像素对齐，但是在视频下会有不稳定的情况。</p>
+<h3 id="视频的三维位姿和形状"><a href="#视频的三维位姿和形状" class="headerlink" title="视频的三维位姿和形状"></a>视频的三维位姿和形状</h3><p>基于视频的人体运动捕获有很长的历史，但受限于简单的动作。最近的深度学习方法只关注于关节位置。有些使用二阶段的方法将现有的二维关键点对应到三维的关节位置。[5]和[6]VNect使用端到端直接回归三维关节点位置，在室内数据集中表现出色，但是在真实数据集中表现不好。许多方法通过扩展SMPLify从视频中重建SMPL的shape和pose参数来计算人体的一致性和平滑运动。[8] 展示了标记SMPLify的网络视频来提高微调时的HMR。[9]通过预测前后帧来学习人体运动学，他们展示了使用二维关键点检测器标记的网络视频可以缓解真实三维位姿标签的需要。[10]提出使用基于transformer的时序模型来提高性能。他们提出了一个无监督对抗训练策略，来为乱序的帧排序。</p>
+<h3 id="序列模型的生成对抗网络"><a href="#序列模型的生成对抗网络" class="headerlink" title="序列模型的生成对抗网络"></a>序列模型的生成对抗网络</h3><p>GAN对图像建模和合成有重要的意义。最近许多工作将GAN融入到序列-序列的任务，比如机器翻译。在运动建模中，结合顺序架构和对对抗训练，能够基于之前的的运动来预测未来的运动序列，或者产生人类运动序列。而我们专注于在序列输入数据下对抗性地细化预测的姿态。我们采用一个运动鉴别器，编码位姿和形状参数，来学习真实数据的优点。</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p><img src="1.png" alt="1"></p>
+<p><strong>输入</strong>：单人视频</p>
+<p><strong>预训练网络</strong>：预训练好的CNN，用来提取每帧图像的特征</p>
+<p><strong>训练的网络</strong>：双向GRU组成的时序编码器，输出包含过去和未来帧信息的潜在变量。</p>
+<p><strong>作用</strong>：这些特征被用来回归SMPL的参数。</p>
+<h4 id="SMPL参数"><a href="#SMPL参数" class="headerlink" title="SMPL参数"></a>SMPL参数</h4><ul>
+<li>pose：人体的全局旋转和23个关节的轴角，控制动作位姿</li>
+<li>shape：包括主成分分析PCA空间的的前十个系数，这里使用的是SMPL中的中性模型，控制高矮胖瘦</li>
+</ul>
+<h4 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h4><ul>
+<li>生成pose参数</li>
+<li>生成shape参数</li>
+<li>平均池化所有的输入序列，得到一个人体</li>
+<li>时序产生器生成和AMASS采样的模型进入到运动鉴别器，来去人真假样本。</li>
+</ul>
+<h3 id="时序编码器"><a href="#时序编码器" class="headerlink" title="时序编码器"></a>时序编码器</h3><p>intuition：使用循环结构的原因是视频的前位姿信息对未来帧可能有帮助，尤其是人体模糊或者遮挡的情况。之前帧能够解决和约束姿态的估计。</p>
+<p>时序编码器作为一个产生器，对于给定的<strong>输入序列</strong>，<strong>输出</strong>每帧对应的位姿和形状参数$\hat{\Theta} = [(\hat{\theta_1},…,\hat{\theta_T}), \hat{\beta}]$。</p>
+<p>序列T进入一个预训练的作为特征提取器的卷积网络，每帧输出一组2048维的向量 <em>f</em> 。这些向量被输入GRU层，每帧再输出潜在的特征向量 <em>g</em> 。然后将 <em>g</em> 输入到回归器进行迭代反馈。回归器初始化为平均位姿并将当前的位姿和特征 <em>g</em> 输入来迭代更新参数。</p>
+<p>时序编码器的损失函数由二维 <em>x</em> 、三维 X 、位姿 <em>θ</em> 和形状 <em>β</em> 误差组成：</p>
+<p><img src="2.png" alt="2"></p>
+<p>每个误差的计算公式为：</p>
+<p><img src="3.png" alt="3"></p>
+<p>其中二维关键点x_hat是通过三维关节点X_hat投影来的。</p>
+<h3 id="动作鉴别器"><a href="#动作鉴别器" class="headerlink" title="动作鉴别器"></a>动作鉴别器</h3><p>动作鉴别器的设计受到了End-to-end recovery of human shape ans pose的启发，他们设计了人体鉴别器和重投影误差，促进产生器来产生和二维关节点对齐的三维位姿。但是单图像不能约束序列的位姿，当忽略运动的时间连续性时，多个不准确的姿态可能被认为是有效的。于是我们提出了动作鉴别器$D_M$，来鉴别产生的序列是否和真实序列一致。</p>
+<p>输入：产生器输出的参数$\hat{\Theta} = [(\hat{\theta_1},…,\hat{\theta_T}), \hat{\beta}]$</p>
+<p>网络：多层GRU模型$f_M$，用来预测隐藏的编码$h_i = f_m(\hat{\Theta_i})$，如图3，为了汇总隐藏的状态$[h_i,…,h_T]$，引入了注意力机制。</p>
+<p>输出：一个线性层给出[0, 1]概率，表示$\hat{\Theta}$作为人类运动的合理性。</p>
+<p><img src="4.png" alt="4"></p>
+<p>传播给产生器的对抗损失为：</p>
+<p><img src="5.png" alt="5"></p>
+<p>其中，$p_R$是AMASS数据集中真实的运动序列，$p_G$是产生的运动序列。</p>
+<p>【E是期望】</p>
+<h4 id="MPoser"><a href="#MPoser" class="headerlink" title="MPoser"></a>MPoser</h4><p>把GAN换成VAE，测试效果，消融实验使用</p>
+<h4 id="自我注意机制"><a href="#自我注意机制" class="headerlink" title="自我注意机制"></a>自我注意机制</h4><p>给重要的帧赋予更高的权重</p>
+<h3 id="训练过程-1"><a href="#训练过程-1" class="headerlink" title="训练过程"></a>训练过程</h3><ul>
+<li>图像编码器：一个ResNet-50网络，输入单帧图像，输出2048维特征$f_i$</li>
+<li>时序编码器：2层GRU</li>
+<li>SMPL回归器：2层全连接层，最后一层输出SMPL参数向量$\hat\Theta$，有75+10=85个参数，包括位姿、形状和相机参数</li>
+<li>自我注意机制：2层MPL，学习权重，输出每个样本的真假概率</li>
+</ul>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p><img src="6.png" alt="6"></p>
+<p><img src="7.png" alt="7"></p>
+<p><img src="8.png" alt="8"></p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><h3 id="未来的工作"><a href="#未来的工作" class="headerlink" title="未来的工作"></a>未来的工作</h3><ul>
+<li>使用视频监督单帧方法，来细化HMR特征</li>
+<li>检验密集运动的线索，比如光流，是否有帮助</li>
+<li>使用运动来消除多人歧义</li>
+<li>在遮挡情况下，利用运动来跟踪</li>
+<li>尝试其他的编码方式，比如transformer，来更好地估计人体运动。</li>
+</ul>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p><strong>AMASS</strong>：Naureen Mahmood, Nima Ghorbani, Nikolaus F. Troje, Gerard Pons-Moll, and Michael J. Black. AMASS: Archive of motion capture as surface shapes. In <em>International Conference on Computer Vision</em>, 2019.</p>
+<p><strong>Human3.6M</strong>: Catalin Ionescu, Dragos Papava, Vlad Olaru, and Cristian Sminchisescu. Human3.6M: Large scale datasets and predictive methods for 3D human sensing in natural environments. In <em>IEEE Transaction on Pattern Analysis and Machine Intelligence</em>, 2014. </p>
+<p><strong>3DPW</strong>: Timo von Marcard, Roberto Henschel, Michael Black, Bodo Rosenhahn, and Gerard Pons-Moll. Recovering accurate 3D human pose in the wild using IMUs and a moving camera. In <em>European Conference on Computer Vision</em>, 2018.</p>
+<p><strong>MPI-INF-3DHP</strong>: Dushyant Mehta, Helge Rhodin, Dan Casas, Pascal Fua, Oleksandr Sotnychenko, Weipeng Xu, and Christian Theobalt. Monocular 3D human pose estimation in the wild using improved CNN supervision. In <em>International Conference on 3DVision</em>, 2017.</p>
+<p><strong>PennAction</strong>：Weiyu Zhang, Menglong Zhu, and Konstantinos G Derpanis. From actemes to action: A strongly-supervised representation for detailed action understanding. In <em>International Conference on Computer Vision</em>, 2013.</p>
+<p><strong>PoseTrack</strong>：Mykhaylo Andriluka, Umar Iqbal, Eldar Insafutdinov, Leonid Pishchulin, Anton Milan, Juergen Gall, and Bernt Schiele. Posetrack: A benchmark for human pose estimation and tracking. In <em>IEEE Conference on Computer Vision and Pattern Recognition</em>, June 2018.</p>
+<p><strong>InstaVariety</strong>：Angjoo Kanazawa, Jason Y. Zhang, Panna Felsen, and Jitendra Malik. Learning 3D human dynamics from video. In<em>IEEE Conference on Computer Vision and Pattern Recognition</em>, 2019.</p>
+<p><strong>Kinetics-400</strong>：Joao Carreira and Andrew Zisserman. Quo vadis, action recognition? a new model and the kinetics dataset. In <em>proceedings of the IEEE Conference on Computer Vision and Pattern Recognition</em>, 2017.</p>
+<h2 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h2><p>adversarial learning - 对抗学习</p>
+<p>self-attention mechanism - 自我注意机制</p>
+<p>kinematically plausible motion - 运动学合理运动</p>
+<p>non-trivial - 非平凡的</p>
+<p>unpaired dataset - 未匹配数据集</p>
+<p>generative adversarial network（GAN）- 生成对抗网络</p>
+<p>Gated Recurrent Units（GRUs）- ????</p>
+<p> off-the-shelf - 现有的</p>
+<p>HMR - human mesh recovery缩写</p>
+<p>synthesis - 合成</p>
+<p>corpus - 语料库</p>
+<p>recurrent architecture - 循环结构</p>
+<p>ambiguous - 模糊</p>
+<p>occluded - 遮挡</p>
+<p>iterative feedback - 迭代反馈</p>
+<p>weak-perspective - 弱视角</p>
+<p> orthographic projection - 正投影</p>
+<p>convex combination - 凸组合</p>
+<p>VAE（variational autoencoder） - 基于变分思想的生成模型</p>
+<p>Adam optimizer - Adam优化器</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] Angjoo Kanazawa, Jason Y. Zhang, Panna Felsen, and Jitendra Malik. Learning 3D human dynamics from video. In <em>IEEE Conference on Computer Vision and Pattern Recognition</em>, 2019.</p>
+<p>[2] Yu Sun, Yun Ye, Wu Liu, Wenpeng Gao, Yili Fu, and Tao Mei. Human mesh recovery from monocular images via a skeleton-disentangled representation. In <em>International Conference on Computer Vision</em>, 2019.</p>
+<p>[3] Angjoo Kanazawa, Michael J. Black, David W. Jacobs, and Jitendra Malik. End-to-end recovery of human shape and pose. In <em>IEEE Conference on Computer Vision and Pattern Recognition</em>, 2018.</p>
+<p>[4] Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio. Generative adversarial nets. In <em>Advances in Neural Information Processing</em>, 2014.</p>
+<p>[5] Dushyant Mehta, Oleksandr Sotnychenko, Franziska Mueller, Weipeng Xu, Srinath Sridhar, Gerard Pons-Moll, and Christian Theobalt. Single-shot multi-person 3D pose estimation from monocular RGB. In <em>International Conference on 3DVision</em>, 2018.</p>
+<p>[6] Dushyant Mehta, Srinath Sridhar, Oleksandr Sotnychenko, Helge Rhodin, Mohammad Shafifiei, Hans-Peter Seidel, Weipeng Xu, Dan Casas, and Christian Theobalt. VNect: Real-time 3D human pose estimation with a single RGB camera. In <em>SIGGRAPH</em>, July 2017.</p>
+<p>[7] Federica Bogo, Angjoo Kanazawa, Christoph Lassner, Peter Gehler, Javier Romero, and Michael J. Black. Keep it SMPL: Automatic estimation of 3D human pose and shape from a single image. In <em>European Conference on Computer Vision</em>, 2016. </p>
+<p>[8] Anurag Arnab, Carl Doersch, and Andrew Zisserman. Exploiting temporal context for 3D human pose estimation in the wild. In <em>IEEE Conference on Computer Vision and Pattern Recognition</em>, 2019. </p>
+<p>[9] Angjoo Kanazawa, Jason Y. Zhang, Panna Felsen, and Jitendra Malik. Learning 3D human dynamics from video. In<em>IEEE Conference on Computer Vision and Pattern Recognition</em>, 2019.</p>
+<p>[10] Yu Sun, Yun Ye, Wu Liu, Wenpeng Gao, Yili Fu, and Tao Mei. Human mesh recovery from monocular images via a skeleton-disentangled representation. In <em>International Conference on Computer Vision</em>, 2019.</p>
+]]></content>
+      <categories>
+        <category>论文阅读</category>
+        <category>人体三维重建</category>
+      </categories>
+      <tags>
+        <tag>人体三维重建</tag>
+        <tag>GAN</tag>
+        <tag>GRU</tag>
+        <tag>SMPL</tag>
+      </tags>
   </entry>
   <entry>
     <title>【记录】学生成绩管理系统</title>

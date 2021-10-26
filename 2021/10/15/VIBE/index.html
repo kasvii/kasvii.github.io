@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>【论文阅读】VIBE - Kasvii Blog</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="kasvii,"> 
+    <meta name="description" content="VIBE: Video Inference for Human Body Pose and Shape Estimationgithub：https://github.com/mkocabas/VI,"> 
+    <meta name="author" content="kasvii"> 
+    <link rel="alternative" href="atom.xml" title="Kasvii Blog" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Kasvii Blog</span>
+    <div id="loader"></div>
+    <script type="text/javascript" src="/js/clicksakura.js"></script>
+    <script async src="/js/sakurafall.js"></script>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="https://kasvii.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">【论文阅读】VIBE</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">【论文阅读】VIBE</h1>
+        <div class="stuff">
+            <span>十月 15, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/GRU/" rel="tag">GRU</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/SMPL/" rel="tag">SMPL</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E4%BA%BA%E4%BD%93%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA/" rel="tag">人体三维重建</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="VIBE-Video-Inference-for-Human-Body-Pose-and-Shape-Estimation"><a href="#VIBE-Video-Inference-for-Human-Body-Pose-and-Shape-Estimation" class="headerlink" title="VIBE: Video Inference for Human Body Pose and Shape Estimation"></a>VIBE: Video Inference for Human Body Pose and Shape Estimation</h1><p>github：<a target="_blank" rel="noopener" href="https://github.com/mkocabas/VIBE">https://github.com/mkocabas/VIBE</a></p>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>因为缺少ground truth的三维运动数据来训练，所以目前SOTA的工作不能很好地产生自然正确的运动。我们利用大型运动捕获数据集AMASS，提出了基于视频的人体姿态和形状估计网络VIBE。创新点在于，利用AMASS来区分真实人类运动和我们时序位姿和形状回归网络产生的运动。我们提出一个创新的时序网络框架，使用了自我注意机制和对抗训练，在序列的水平上产生运动学合理的运动序列。</p>
+<h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>尽管目前有很多工作从单张图片中估计三维人体位姿和形状，但是人体动作才体现人的行为。我们关注于探索单目视频的时序信息来更好地评估人体运动。由于缺乏足够的训练数据，之前的时序网络没有捕获到人体复杂多变的运动。我们提出了新的时序神经网络和训练方法，来提高单目视频的三维人体位姿估计性能。</p>
+<p>[1]和[2]结合室内视频和二维gd或伪gd关键点标注的数据集，但室内三维数据集物体的数量、运动范围和图片复杂度都受到限制，标注的数量仍然不够充足，伪gd标签在建模人体运动上不够可靠。</p>
+<p>我们的灵感来自于[3]，[3]利用单张图片来估计位姿，只将二维关键点和未配对的静态三维人体形状和位姿用于对抗训练方法。在视频序列上，早已存在二维关键点标注的视频，接下来的问题是如何获得足够质量的真实的三维人体运动来进行对抗性训练。因此，我们使用大规模三维动作捕获数据集AMASS，该数据集足够丰富来学习人体的运动。</p>
+<p>我们的方法从真实场景的视频学习视频序列的三维人体重建，不仅能够区别估计的运动和数据集的运动的区别，也使用三维关键点。我们方法的输出是一个SMPL的pose和shape参数序列。具体地就是采用两个未配对的信息源（真实视频和AMASS数据集）来训练一个序列的生成对抗网络（GAN）[4]。我们训练一个时间模型来预测每一帧的SMPL身体模型的参数，而一个运动鉴别器来区分真实序列和回归序列。因此，通过最小化对抗训练损失回归器能够输出接近真实运动的位姿，而运动鉴别器作为一个弱监督。</p>
+<h3 id="训练过程"><a href="#训练过程" class="headerlink" title="训练过程"></a>训练过程</h3><p>输入：真实视频图像</p>
+<p>预测：预训练的单图像认为i位姿和形状卷积神经网络，由[3]的时序编码器和人体参数回归器组成，在GRUs上执行，来获取人体运动的序列特性。</p>
+<p>鉴别：运动鉴别器将预测的位姿和数据集采样的位姿进行对比，对每个序列输出real/fake标签，并采用了注意力机制来放大各自框架的贡献。</p>
+<p>输出：SMPL人体pose和shape参数</p>
+<p>损失函数：整个模型使用监督的方法，通过对抗损失和回归损失来最小化预测结果和gd在关键点、pose和shape参数上的误差。</p>
+<h3 id="测试过程"><a href="#测试过程" class="headerlink" title="测试过程"></a>测试过程</h3><p>给定一个视频，使用预训练的CNN和时序模型来预测每一帧SMPL的pose和shape的参数。</p>
+<h3 id="贡献"><a href="#贡献" class="headerlink" title="贡献"></a>贡献</h3><ul>
+<li>我们使用AMASS数据集来对抗性地训练VIBE，促进回归器产生真实准确的运动。</li>
+<li>在运动鉴别器中使用注意力机制，给不同的帧赋权重，来区分每帧的重要性。</li>
+</ul>
+<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><h3 id="单一图像的三维位姿和形状"><a href="#单一图像的三维位姿和形状" class="headerlink" title="单一图像的三维位姿和形状"></a>单一图像的三维位姿和形状</h3><p>参数人体模型，比如SMPL、SCAPE经常用在人体姿态估计，因为它们捕获到了人体的统计数据，能够提供三维网格模型。</p>
+<p>非参数人体模型，比如Bodynet用涂卷机网络直接回归顶点位置、PIFu隐函数像素对齐，但是在视频下会有不稳定的情况。</p>
+<h3 id="视频的三维位姿和形状"><a href="#视频的三维位姿和形状" class="headerlink" title="视频的三维位姿和形状"></a>视频的三维位姿和形状</h3><p>基于视频的人体运动捕获有很长的历史，但受限于简单的动作。最近的深度学习方法只关注于关节位置。有些使用二阶段的方法将现有的二维关键点对应到三维的关节位置。[5]和[6]VNect使用端到端直接回归三维关节点位置，在室内数据集中表现出色，但是在真实数据集中表现不好。许多方法通过扩展SMPLify从视频中重建SMPL的shape和pose参数来计算人体的一致性和平滑运动。[8] 展示了标记SMPLify的网络视频来提高微调时的HMR。[9]通过预测前后帧来学习人体运动学，他们展示了使用二维关键点检测器标记的网络视频可以缓解真实三维位姿标签的需要。[10]提出使用基于transformer的时序模型来提高性能。他们提出了一个无监督对抗训练策略，来为乱序的帧排序。</p>
+<h3 id="序列模型的生成对抗网络"><a href="#序列模型的生成对抗网络" class="headerlink" title="序列模型的生成对抗网络"></a>序列模型的生成对抗网络</h3><p>GAN对图像建模和合成有重要的意义。最近许多工作将GAN融入到序列-序列的任务，比如机器翻译。在运动建模中，结合顺序架构和对对抗训练，能够基于之前的的运动来预测未来的运动序列，或者产生人类运动序列。而我们专注于在序列输入数据下对抗性地细化预测的姿态。我们采用一个运动鉴别器，编码位姿和形状参数，来学习真实数据的优点。</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p><img src="1.png" alt="1"></p>
+<p><strong>输入</strong>：单人视频</p>
+<p><strong>预训练网络</strong>：预训练好的CNN，用来提取每帧图像的特征</p>
+<p><strong>训练的网络</strong>：双向GRU组成的时序编码器，输出包含过去和未来帧信息的潜在变量。</p>
+<p><strong>作用</strong>：这些特征被用来回归SMPL的参数。</p>
+<h4 id="SMPL参数"><a href="#SMPL参数" class="headerlink" title="SMPL参数"></a>SMPL参数</h4><ul>
+<li>pose：人体的全局旋转和23个关节的轴角，控制动作位姿</li>
+<li>shape：包括主成分分析PCA空间的的前十个系数，这里使用的是SMPL中的中性模型，控制高矮胖瘦</li>
+</ul>
+<h4 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h4><ul>
+<li>生成pose参数</li>
+<li>生成shape参数</li>
+<li>平均池化所有的输入序列，得到一个人体</li>
+<li>时序产生器生成和AMASS采样的模型进入到运动鉴别器，来去人真假样本。</li>
+</ul>
+<h3 id="时序编码器"><a href="#时序编码器" class="headerlink" title="时序编码器"></a>时序编码器</h3><p>intuition：使用循环结构的原因是视频的前位姿信息对未来帧可能有帮助，尤其是人体模糊或者遮挡的情况。之前帧能够解决和约束姿态的估计。</p>
+<p>时序编码器作为一个产生器，对于给定的<strong>输入序列</strong>，<strong>输出</strong>每帧对应的位姿和形状参数$\hat{\Theta} = [(\hat{\theta_1},…,\hat{\theta_T}), \hat{\beta}]$。</p>
+<p>序列T进入一个预训练的作为特征提取器的卷积网络，每帧输出一组2048维的向量 <em>f</em> 。这些向量被输入GRU层，每帧再输出潜在的特征向量 <em>g</em> 。然后将 <em>g</em> 输入到回归器进行迭代反馈。回归器初始化为平均位姿并将当前的位姿和特征 <em>g</em> 输入来迭代更新参数。</p>
+<p>时序编码器的损失函数由二维 <em>x</em> 、三维 X 、位姿 <em>θ</em> 和形状 <em>β</em> 误差组成：</p>
+<p><img src="2.png" alt="2"></p>
+<p>每个误差的计算公式为：</p>
+<p><img src="3.png" alt="3"></p>
+<p>其中二维关键点x_hat是通过三维关节点X_hat投影来的。</p>
+<h3 id="动作鉴别器"><a href="#动作鉴别器" class="headerlink" title="动作鉴别器"></a>动作鉴别器</h3><p>动作鉴别器的设计受到了End-to-end recovery of human shape ans pose的启发，他们设计了人体鉴别器和重投影误差，促进产生器来产生和二维关节点对齐的三维位姿。但是单图像不能约束序列的位姿，当忽略运动的时间连续性时，多个不准确的姿态可能被认为是有效的。于是我们提出了动作鉴别器$D_M$，来鉴别产生的序列是否和真实序列一致。</p>
+<p>输入：产生器输出的参数$\hat{\Theta} = [(\hat{\theta_1},…,\hat{\theta_T}), \hat{\beta}]$</p>
+<p>网络：多层GRU模型$f_M$，用来预测隐藏的编码$h_i = f_m(\hat{\Theta_i})$，如图3，为了汇总隐藏的状态$[h_i,…,h_T]$，引入了注意力机制。</p>
+<p>输出：一个线性层给出[0, 1]概率，表示$\hat{\Theta}$作为人类运动的合理性。</p>
+<p><img src="4.png" alt="4"></p>
+<p>传播给产生器的对抗损失为：</p>
+<p><img src="5.png" alt="5"></p>
+<p>其中，$p_R$是AMASS数据集中真实的运动序列，$p_G$是产生的运动序列。</p>
+<p>【E是期望】</p>
+<h4 id="MPoser"><a href="#MPoser" class="headerlink" title="MPoser"></a>MPoser</h4><p>把GAN换成VAE，测试效果，消融实验使用</p>
+<h4 id="自我注意机制"><a href="#自我注意机制" class="headerlink" title="自我注意机制"></a>自我注意机制</h4><p>给重要的帧赋予更高的权重</p>
+<h3 id="训练过程-1"><a href="#训练过程-1" class="headerlink" title="训练过程"></a>训练过程</h3><ul>
+<li>图像编码器：一个ResNet-50网络，输入单帧图像，输出2048维特征$f_i$</li>
+<li>时序编码器：2层GRU</li>
+<li>SMPL回归器：2层全连接层，最后一层输出SMPL参数向量$\hat\Theta$，有75+10=85个参数，包括位姿、形状和相机参数</li>
+<li>自我注意机制：2层MPL，学习权重，输出每个样本的真假概率</li>
+</ul>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p><img src="6.png" alt="6"></p>
+<p><img src="7.png" alt="7"></p>
+<p><img src="8.png" alt="8"></p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><h3 id="未来的工作"><a href="#未来的工作" class="headerlink" title="未来的工作"></a>未来的工作</h3><ul>
+<li>使用视频监督单帧方法，来细化HMR特征</li>
+<li>检验密集运动的线索，比如光流，是否有帮助</li>
+<li>使用运动来消除多人歧义</li>
+<li>在遮挡情况下，利用运动来跟踪</li>
+<li>尝试其他的编码方式，比如transformer，来更好地估计人体运动。</li>
+</ul>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p><strong>AMASS</strong>：Naureen Mahmood, Nima Ghorbani, Nikolaus F. Troje, Gerard Pons-Moll, and Michael J. Black. AMASS: Archive of motion capture as surface shapes. In <em>International Conference on Computer Vision</em>, 2019.</p>
+<p><strong>Human3.6M</strong>: Catalin Ionescu, Dragos Papava, Vlad Olaru, and Cristian Sminchisescu. Human3.6M: Large scale datasets and predictive methods for 3D human sensing in natural environments. In <em>IEEE Transaction on Pattern Analysis and Machine Intelligence</em>, 2014. </p>
+<p><strong>3DPW</strong>: Timo von Marcard, Roberto Henschel, Michael Black, Bodo Rosenhahn, and Gerard Pons-Moll. Recovering accurate 3D human pose in the wild using IMUs and a moving camera. In <em>European Conference on Computer Vision</em>, 2018.</p>
+<p><strong>MPI-INF-3DHP</strong>: Dushyant Mehta, Helge Rhodin, Dan Casas, Pascal Fua, Oleksandr Sotnychenko, Weipeng Xu, and Christian Theobalt. Monocular 3D human pose estimation in the wild using improved CNN supervision. In <em>International Conference on 3DVision</em>, 2017.</p>
+<p><strong>PennAction</strong>：Weiyu Zhang, Menglong Zhu, and Konstantinos G Derpanis. From actemes to action: A strongly-supervised representation for detailed action understanding. In <em>International Conference on Computer Vision</em>, 2013.</p>
+<p><strong>PoseTrack</strong>：Mykhaylo Andriluka, Umar Iqbal, Eldar Insafutdinov, Leonid Pishchulin, Anton Milan, Juergen Gall, and Bernt Schiele. Posetrack: A benchmark for human pose estimation and tracking. In <em>IEEE Conference on Computer Vision and Pattern Recognition</em>, June 2018.</p>
+<p><strong>InstaVariety</strong>：Angjoo Kanazawa, Jason Y. Zhang, Panna Felsen, and Jitendra Malik. Learning 3D human dynamics from video. In<em>IEEE Conference on Computer Vision and Pattern Recognition</em>, 2019.</p>
+<p><strong>Kinetics-400</strong>：Joao Carreira and Andrew Zisserman. Quo vadis, action recognition? a new model and the kinetics dataset. In <em>proceedings of the IEEE Conference on Computer Vision and Pattern Recognition</em>, 2017.</p>
+<h2 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h2><p>adversarial learning - 对抗学习</p>
+<p>self-attention mechanism - 自我注意机制</p>
+<p>kinematically plausible motion - 运动学合理运动</p>
+<p>non-trivial - 非平凡的</p>
+<p>unpaired dataset - 未匹配数据集</p>
+<p>generative adversarial network（GAN）- 生成对抗网络</p>
+<p>Gated Recurrent Units（GRUs）- ????</p>
+<p> off-the-shelf - 现有的</p>
+<p>HMR - human mesh recovery缩写</p>
+<p>synthesis - 合成</p>
+<p>corpus - 语料库</p>
+<p>recurrent architecture - 循环结构</p>
+<p>ambiguous - 模糊</p>
+<p>occluded - 遮挡</p>
+<p>iterative feedback - 迭代反馈</p>
+<p>weak-perspective - 弱视角</p>
+<p> orthographic projection - 正投影</p>
+<p>convex combination - 凸组合</p>
+<p>VAE（variational autoencoder） - 基于变分思想的生成模型</p>
+<p>Adam optimizer - Adam优化器</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] Angjoo Kanazawa, Jason Y. Zhang, Panna Felsen, and Jitendra Malik. Learning 3D human dynamics from video. In <em>IEEE Conference on Computer Vision and Pattern Recognition</em>, 2019.</p>
+<p>[2] Yu Sun, Yun Ye, Wu Liu, Wenpeng Gao, Yili Fu, and Tao Mei. Human mesh recovery from monocular images via a skeleton-disentangled representation. In <em>International Conference on Computer Vision</em>, 2019.</p>
+<p>[3] Angjoo Kanazawa, Michael J. Black, David W. Jacobs, and Jitendra Malik. End-to-end recovery of human shape and pose. In <em>IEEE Conference on Computer Vision and Pattern Recognition</em>, 2018.</p>
+<p>[4] Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio. Generative adversarial nets. In <em>Advances in Neural Information Processing</em>, 2014.</p>
+<p>[5] Dushyant Mehta, Oleksandr Sotnychenko, Franziska Mueller, Weipeng Xu, Srinath Sridhar, Gerard Pons-Moll, and Christian Theobalt. Single-shot multi-person 3D pose estimation from monocular RGB. In <em>International Conference on 3DVision</em>, 2018.</p>
+<p>[6] Dushyant Mehta, Srinath Sridhar, Oleksandr Sotnychenko, Helge Rhodin, Mohammad Shafifiei, Hans-Peter Seidel, Weipeng Xu, Dan Casas, and Christian Theobalt. VNect: Real-time 3D human pose estimation with a single RGB camera. In <em>SIGGRAPH</em>, July 2017.</p>
+<p>[7] Federica Bogo, Angjoo Kanazawa, Christoph Lassner, Peter Gehler, Javier Romero, and Michael J. Black. Keep it SMPL: Automatic estimation of 3D human pose and shape from a single image. In <em>European Conference on Computer Vision</em>, 2016. </p>
+<p>[8] Anurag Arnab, Carl Doersch, and Andrew Zisserman. Exploiting temporal context for 3D human pose estimation in the wild. In <em>IEEE Conference on Computer Vision and Pattern Recognition</em>, 2019. </p>
+<p>[9] Angjoo Kanazawa, Jason Y. Zhang, Panna Felsen, and Jitendra Malik. Learning 3D human dynamics from video. In<em>IEEE Conference on Computer Vision and Pattern Recognition</em>, 2019.</p>
+<p>[10] Yu Sun, Yun Ye, Wu Liu, Wenpeng Gao, Yili Fu, and Tao Mei. Human mesh recovery from monocular images via a skeleton-disentangled representation. In <em>International Conference on Computer Vision</em>, 2019.</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://music.163.com/song/media/outer/url?id=1432130357.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://music.163.com/song/media/outer/url?id=1430898876.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci='a3a33c2a30c8f056252b'
+        data-cs='7e3c9dce2acd3d4d59d679c980f33c24de2c29ad'
+        data-r='CommentData'
+        data-o='kasvii'
+        data-a='kasvii'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#VIBE-Video-Inference-for-Human-Body-Pose-and-Shape-Estimation"><span class="toc-number">1.</span> <span class="toc-text">VIBE: Video Inference for Human Body Pose and Shape Estimation</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">1.1.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E5%85%A5"><span class="toc-number">1.2.</span> <span class="toc-text">引入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B"><span class="toc-number">1.2.1.</span> <span class="toc-text">训练过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E8%BF%87%E7%A8%8B"><span class="toc-number">1.2.2.</span> <span class="toc-text">测试过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%A1%E7%8C%AE"><span class="toc-number">1.2.3.</span> <span class="toc-text">贡献</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.3.</span> <span class="toc-text">相关工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E4%B8%80%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E4%BD%8D%E5%A7%BF%E5%92%8C%E5%BD%A2%E7%8A%B6"><span class="toc-number">1.3.1.</span> <span class="toc-text">单一图像的三维位姿和形状</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E7%9A%84%E4%B8%89%E7%BB%B4%E4%BD%8D%E5%A7%BF%E5%92%8C%E5%BD%A2%E7%8A%B6"><span class="toc-number">1.3.2.</span> <span class="toc-text">视频的三维位姿和形状</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%8F%E5%88%97%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%94%9F%E6%88%90%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9C"><span class="toc-number">1.3.3.</span> <span class="toc-text">序列模型的生成对抗网络</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">1.4.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#SMPL%E5%8F%82%E6%95%B0"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">SMPL参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B"><span class="toc-number">1.4.0.2.</span> <span class="toc-text">过程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%B6%E5%BA%8F%E7%BC%96%E7%A0%81%E5%99%A8"><span class="toc-number">1.4.1.</span> <span class="toc-text">时序编码器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E4%BD%9C%E9%89%B4%E5%88%AB%E5%99%A8"><span class="toc-number">1.4.2.</span> <span class="toc-text">动作鉴别器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#MPoser"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">MPoser</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E6%88%91%E6%B3%A8%E6%84%8F%E6%9C%BA%E5%88%B6"><span class="toc-number">1.4.2.2.</span> <span class="toc-text">自我注意机制</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B-1"><span class="toc-number">1.4.3.</span> <span class="toc-text">训练过程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.5.</span> <span class="toc-text">实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">1.6.</span> <span class="toc-text">结论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AA%E6%9D%A5%E7%9A%84%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.6.1.</span> <span class="toc-text">未来的工作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">1.7.</span> <span class="toc-text">数据集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E8%AF%8D"><span class="toc-number">1.8.</span> <span class="toc-text">关键词</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">1.9.</span> <span class="toc-text">参考文献</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({"HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"], linebreaks: { automatic:true }, EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: { inlineMath: [ ["$", "$"], ["\\(","\\)"] ], processEscapes: true, ignoreClass: "tex2jax_ignore|dno",skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {  noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } }, Macros: { href: "{}" } },
+        messageStyle: "none"
+    });
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+
+</html>
+

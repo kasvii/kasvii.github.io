@@ -1,0 +1,424 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>【论文阅读】TCMR - Kasvii Blog</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="kasvii,"> 
+    <meta name="description" content="TCMR: Beyond Static Features for Temporally Consistent 3D Human Pose and Shape from a Videogithub：h,"> 
+    <meta name="author" content="kasvii"> 
+    <link rel="alternative" href="atom.xml" title="Kasvii Blog" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Kasvii Blog</span>
+    <div id="loader"></div>
+    <script type="text/javascript" src="/js/clicksakura.js"></script>
+    <script async src="/js/sakurafall.js"></script>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="https://kasvii.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">【论文阅读】TCMR</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">【论文阅读】TCMR</h1>
+        <div class="stuff">
+            <span>十月 25, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/SMPL/" rel="tag">SMPL</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E4%BA%BA%E4%BD%93%E4%B8%89%E7%BB%B4%E9%87%8D%E5%BB%BA/" rel="tag">人体三维重建</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="TCMR-Beyond-Static-Features-for-Temporally-Consistent-3D-Human-Pose-and-Shape-from-a-Video"><a href="#TCMR-Beyond-Static-Features-for-Temporally-Consistent-3D-Human-Pose-and-Shape-from-a-Video" class="headerlink" title="TCMR: Beyond Static Features for Temporally Consistent 3D Human Pose and Shape from a Video"></a>TCMR: Beyond Static Features for Temporally Consistent 3D Human Pose and Shape from a Video</h1><p>github：<a target="_blank" rel="noopener" href="https://github.com/hongsukchoi/TCMR_RELEASE">https://github.com/hongsukchoi/TCMR_RELEASE</a></p>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>尽管近期在单图像人体三维重建上有很多成功的工作，但是从视频中重建具有时间一致性和光滑三维运动的人体仍然具有很大的挑战性。由于强烈地依赖当前帧的静态特征，基于视频的方法难以解决单图像方法中的时序不一致问题。在这点上，我们提出了一个时序连续网格重建系统（TCMR），能够高效地关注于过去帧和未来帧的时序信息，不被静态特征所主导。我们的TCMR比之前基于视频的方法有更好的每帧三维位姿和形状。</p>
+<h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>目前有许多工作从图像来分析人体，从简单的二维骨架估计到重建人体的三维姿态和形状。尽管有所进展，但是从二维图像重建三维人体依然充满挑战，特别是在单目的情况下，存在深度不确定、数据集有限、人体关节复杂的困难。</p>
+<p>之前的许多工作，比如Pose2Mesh[1]、I2L-MeshNet[2]基于参数化三维人体网格模型，直接从输入的单张图片回归模型参数。虽然在静态图片上有合理的输出，但是应用到视频上就会产生时序不一致和运动不平滑的问题。时序不稳定性是由于连续帧中不一致的三维位姿误差。误差可能大声在不同的三维方向，或者后续帧位姿输出可能保持相对不变，不能反映运动。</p>
+<p>[3] [4] [5]扩展了单张图像重建到视频的方法，他们把视频序列输入到预训练的单帧图像三维人体重建网络[6] [7]来获得序列的静态特征，然后再送到时序编码器，对每个输入帧编码一个时序特征。然后，人体参数回归器从相应时间步长的时序特征输出每帧SMPL参数。</p>
+<p>尽管这些工作极大提高了每帧三维位姿正确性和运动的平滑性，但仍然存在时序不一致性。重建失败的原因是因为对<strong>当前帧静态特征</strong>的强烈依赖。强烈依赖的原因是：</p>
+<ul>
+<li><p>当前帧静态特征和时序特征的残差连接。虽然参擦汗链接已经被验证能够促进学习过程，但是纯粹地将残差连接用于时间编码可能会阻碍系统学习有用的时序信息。假设静态特征是从预训练网络提取出来的，它包含了当前帧很重的SMPL参数，静态特征的残差连接恒等映射可能会使得SMPL参数回归器严重依赖于残差连接，而只是略微利用到时序特征，限制了时序编码器编码更有用的时序特征。</p>
+</li>
+<li><p>时序编码使用了所有帧的静态特征，当前帧的静态特征对当前时序特征有最大的影响潜力。当前工作尽管能够重建当前帧很高的人体精度，但是阻碍了时序编码器学习过去和未来的时序信息。因此基于视频的人体三维重建存在时序不一致的问题。</p>
+</li>
+</ul>
+<p>于是，我们提出TCMR - 时序连续网格重建系统，用来解决对当前静态特征的强烈依赖，以实现时序一致性和视频的平滑的三维人体运动输出。</p>
+<ul>
+<li>首先，fellow之前基于视频的工作[3] [4] [5]，但是移除了静态特征和时序特征之间的残差连接。</li>
+<li>引入PoseForecast，由两个时序编码器构成，分别利用过去和未来帧来预测当前帧的位姿。因此PoseForecast的时序特征不受当前静态特征影响。</li>
+<li>当前时序特征是从所有输入帧提取出来的。</li>
+<li>PoseForecast预测的时序特征和输入帧的时序特征融合，用来预测当前的SMPL参数。</li>
+</ul>
+<p>通过移除当前静态特征的强依赖，我们的SMPL回归器能够专注于过去和未来帧，而不是只有当前帧。</p>
+<p>论文的贡献：</p>
+<ul>
+<li>提出了一个时序一致的网格重建系统（TCMR），能够从视频中产生时序一致性和平滑的三维人体运动，高效地利用了过去和未来的时序信息，而不是只关注与当前帧的静态信息。</li>
+<li>虽然简单，TCRM不仅提高了三维人体运动的时序一致性，也提高了每帧的位姿和形状的准确性</li>
+</ul>
+<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><h3 id="基于单张图像的三维人体姿态和形状估计"><a href="#基于单张图像的三维人体姿态和形状估计" class="headerlink" title="基于单张图像的三维人体姿态和形状估计"></a>基于单张图像的三维人体姿态和形状估计</h3><p>许多单张图像的人体三维重建都是基于模型的方法，来预测预定义的三维人体网格模型SMPL的参数。[6]提出了一个<strong>端到端可训练的人体网格重建（HMR）</strong>系统，使用<strong>对抗性损失</strong>使得输出的人体三维网格是解剖学上合理的。[8]使用<strong>二维关节热图</strong>和轮廓来预测正确的SMPL参数。[9]使用<strong>人体部分分割</strong>来回归SMPL。[10]使用<strong>多视图颜色一致性</strong>来监督网络形成多视图几何。[11]引入<strong>自我改善系统</strong>来约束SMPL参数回归器并<strong>迭代拟合框架</strong>。[12]融合人体<strong>层次运动学先验</strong>到网络中。</p>
+<p>相反，无模型的方法直接估计形状而不是回归模型的参数。[13] BodyNet在<strong>三维体积空间</strong>中，评估三维人体形状。[14] 设计了一种<strong>图卷积人体网格回归系统</strong>，以<strong>模板人体网格</strong>作为输入，利用来自ResNet的图像特征预测网格顶点坐标系。[2] I2L-MeshNet引入了一种基于<strong>lixel</strong>（线+像素）的一维热图，以全卷积的方式来定位网格顶点。[1] Pose2Mesh提出从二维人体位姿重建三维人体位姿的<strong>图卷积网络</strong>。</p>
+<p>但基于图片的工作存在时序不一致性。</p>
+<h3 id="基于视频的三维人体位姿和形状估计"><a href="#基于视频的三维人体位姿和形状估计" class="headerlink" title="基于视频的三维人体位姿和形状估计"></a>基于视频的三维人体位姿和形状估计</h3><p>[15] HMMR使用<strong>一维全卷积时序编码器</strong>来提取静态特征并编码到时序特征。它通过预测附近的过去和未来帧的三维位姿，来学习时序上下文表达来减少三维预测的时序不一致性。[16] 利用<strong>光流</strong>和二维位姿序列来训练他们的网络，从而在视频上有很好的表现。[17] 提出<strong>骨架解耦框架</strong>，把三维人体姿态和形状分解成多层次的时空子问题。他们排序打乱的帧，来鼓励时间特征的学习。[4] VIBE使用<strong>双向GRU</strong>将输入帧的静态特征编码到时序特征，并将时序特征输入SMPL参数回归器，利用<strong>运动鉴别器</strong>来鼓励回归器产生真实的三维人体运动。[5]MEVA使用<strong>由粗到细的方式</strong>，他们的系统首先使用<strong>变分运动估计器（VME）</strong>评估粗糙的三维人体运动，然后使用运动<strong>残余回归器（MRR）</strong>预测残余的运动。</p>
+<h3 id="视频的时序一致三维人体运动"><a href="#视频的时序一致三维人体运动" class="headerlink" title="视频的时序一致三维人体运动"></a>视频的时序一致三维人体运动</h3><p>[15] HMMR引入了时序一致性和人体运动平滑性<strong>三维姿态加速度误差</strong>，和单张图像的方法相比，HMMR和VIBE降低了加速度误差。但是，他们在每帧的正确性和时序的一致性上做了<strong>权衡（trade-off）</strong>，HMMR输出了更加平滑的三维人体运动但是减少了每帧三维位姿的准确性。VIBE展示了较高的每帧三维位姿准确性，但是和HMMR相比在定量指标和定性结果上具有时序不一致性。</p>
+<p>[5] MEVA尝试建立每帧三维位姿准确性和时序平滑性的平衡，尽管在两个指标上都展示了更好的结果，但是定性结果依然暴露出不平滑的三维运动。原因是系统过于依赖当前的静态特征来估计当前三维位姿和形状。</p>
+<ul>
+<li>首先，MEVA建立了当前帧的静态特征和时序特征的残差连接；</li>
+<li>用<strong>运动残差回归器（MRR）</strong>来细化初始三维姿态和形状的时序特征，是从所有帧的静态特征编码来的，包括当前帧。这个过程会导致时序特征被当前静态特征主导。</li>
+<li>因此，这个精细化过程会收到当前静态特征的严重影响，连续帧的三维误差出现不一致。</li>
+</ul>
+<p>相反，TCMR被有意设计来减小对静态特征的严重依赖，残差连接被移除，PoseForecast网络预测来自过去和未来帧额外的时序特征。我们的方法减少了依赖并提供三维人体运动的时序一致性和准确性。</p>
+<h3 id="从图像中预测三维人体位姿"><a href="#从图像中预测三维人体位姿" class="headerlink" title="从图像中预测三维人体位姿"></a>从图像中预测三维人体位姿</h3><p>[15] [18] [19]提出从RGB输入预测人体未来三维位姿。[15]HMMR使用hallucinator（幻觉器？）从当前输入图像预测当前、未来和过去的三维姿态，并由以为全卷积时序编码器的输出进行自监督。[19] 提出神经自回归框架，以过去的视频帧为输入来预测未来的三维运动。 [18] 采用深度强化学习来预测未来三维人体位姿 。虽然目标大欧式预测未来三维位姿，我们的系统目标是从静态特征中解放出来，学习有用的时序特征。</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>TCMR的框架如下：</p>
+<p><img src="1.png" alt="1"></p>
+<h3 id="1-所有帧的时序编码"><a href="#1-所有帧的时序编码" class="headerlink" title="1. 所有帧的时序编码"></a>1. 所有帧的时序编码</h3><p>给定视频的RGB序列，经过[11]预训练的残差网络，提取每帧的静态特征。然后将残差网络的输出进行全局平均池化，得到$f$。ResNet网络的权重由所所有帧共享。</p>
+<p>利用所有输入帧的静态特征我们利用双向GRU计算当前帧的时序特征，这两个双向GRU从相反的时间方向上从输入静态特征中提取时序特征。</p>
+<ul>
+<li>两个双向GRU的输入分别是第一个$f_1$和最后一个的$f_T$，他们的初始隐藏状态都是零张量。</li>
+<li>然后，他们通过聚合下一帧的静态特征来反复更新隐藏状态。</li>
+<li>在当前帧的GRU的连接隐藏状态成为当前时序特征$g_{all}$。不像VIBE，我们没有在$f_{T/2}$和$g_{all}$之间加入残差连接，所以时序特征不会被静态特征主导。</li>
+</ul>
+<h3 id="2-PoseForecast的时序编码"><a href="#2-PoseForecast的时序编码" class="headerlink" title="2. PoseForecast的时序编码"></a>2. PoseForecast的时序编码</h3><p>PoseForecast网络使用两个额外的GRU，记为$G_{past}$和$G_{future}$，预测来自过去和未来帧额外的时序特征。过去帧定义为：1到当前帧-1，未来帧定义为：当前帧+1到结束帧。$G_{past}$的初始输入是$f1$，初始隐藏状态是零张量。然后通过不断聚合接下来的帧$f_2,…f_{T/2-1}$来反复更新隐藏状态。同样，$G_{future}$的初始输入是$f_T$，初始隐藏状态是零张量。然后通过不断聚合接下来的帧$f_{T-1},…f_{T/2+1}$来反复更新隐藏状态。</p>
+<h3 id="3-时序特征融合"><a href="#3-时序特征融合" class="headerlink" title="3. 时序特征融合"></a>3. 时序特征融合</h3><p>我们将所有帧的时序特征$g_{all}$、过去帧的时序特征$g_{past}$、未来帧的时序特征$g_{future}$进行融合得到最后的三维网格估计，如下图。</p>
+<p><img src="2.png" alt="2"></p>
+<ul>
+<li>每个时序特征都经过ReLU激活函数和全连接层，来改变维数到2048，输出记为$g’_{all}$、$g’_{past}$、$g’_{future}$</li>
+<li>然后，通过共享的全连接层将输出特征调整到256并连接</li>
+<li>连接后的特征通过许多全连接层，后面都跟着softmax激活函数，产生注意值$a_{all}$、$a_{past}$、$a_{future}$。注意值代表特征应该得到的权重。</li>
+<li>最后的的融合时序特征为：$g’_{int}=a_{all}g’_{all}+a_{past}g’_{past}+a_{future}g’_{future}$</li>
+</ul>
+<p>训练的时候，我们将$g’_{all}$、$g’_{past}$、$g’_{future}$扔到SMPL参数回归器，分别得到每个时序特征的参数。最后使用$\Theta_{int}$作为最后的三维人体网格。</p>
+<h3 id="4-损失函数"><a href="#4-损失函数" class="headerlink" title="4. 损失函数"></a>4. 损失函数</h3><p>L2损失函数：（1）预测值和真实值SMPL参数；（2）二维和三维关节坐标，跟VIBE一样，三维坐标由SMPL参数获得，二维关节坐标由三维关节坐标通过相机参数的反投影获得。</p>
+<h2 id="实施细节"><a href="#实施细节" class="headerlink" title="实施细节"></a>实施细节</h2><p>用预训练好的[20]SPIN作为backbone和回归器。权重使用Adam优化器优化。人体区域用之前的工作裁剪出来，并调整到224*224。对对象进行遮挡，以增强数据。用ResNet从裁剪的图像中计算静态特征。</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><h3 id="实验指标"><a href="#实验指标" class="headerlink" title="实验指标"></a>实验指标</h3><h4 id="每帧准确性的指标："><a href="#每帧准确性的指标：" class="headerlink" title="每帧准确性的指标："></a>每帧准确性的指标：</h4><ul>
+<li>mean per joint position error（MPJPE）、Procrustes-aligned MPJPE（PA-MPJPE）、mean per vertex position error（MPVPE）</li>
+<li>每个关节的平均位置误差，首先对齐根关节，然后测量估计值和真实值（mm）的误差</li>
+<li>程序对齐的MPJPE，作为每帧正确率的主要指标，因为它包括输出的尺度模糊性对误差的影响。</li>
+</ul>
+<h4 id="时序评估的指标"><a href="#时序评估的指标" class="headerlink" title="时序评估的指标"></a>时序评估的指标</h4><ul>
+<li>加速度误差：计算每个关节的平均预测和真实加速度的误差（$mm/s^2$）</li>
+</ul>
+<h3 id="消融实验"><a href="#消融实验" class="headerlink" title="消融实验"></a>消融实验</h3><h4 id="去除残差连接的有效性"><a href="#去除残差连接的有效性" class="headerlink" title="去除残差连接的有效性"></a>去除残差连接的有效性</h4><ul>
+<li><p>使用了和VIBE一样的baseline：只有一个双向GRU，编码所有输入帧的时序特征，静态和时序特征之间有残差连接。它可以预测所有输入帧的三维位姿和形状，但是没有使用运动鉴别器。</p>
+<p><img src="3.png" alt="3"></p>
+</li>
+<li><p>去除残差连接明显降低了加速度误差，说明残差连接中静态误差的恒等映射阻碍了模型学习有意义的时序特征</p>
+</li>
+<li><p>三维运动的时序一致性的提高也促进了每帧三维位姿的准确性。</p>
+</li>
+</ul>
+<h4 id="PoseForecast的有效性"><a href="#PoseForecast的有效性" class="headerlink" title="PoseForecast的有效性"></a>PoseForecast的有效性</h4><ul>
+<li><p>无论有残差连接如何，PoseForecast连续提高每帧和时序的指标。</p>
+<p><img src="4.png" alt="4"></p>
+</li>
+<li><p>保持时序特征和当前帧静态特征的无关性，能够提高时序一致性和运动平滑性</p>
+</li>
+<li><p>使用不用的监督方式对结果的影响，用当前帧参数监督效果最好</p>
+</li>
+</ul>
+<h4 id="和SOTA方法的对比"><a href="#和SOTA方法的对比" class="headerlink" title="和SOTA方法的对比"></a>和SOTA方法的对比</h4><ul>
+<li><p>和基于视频的方法比较</p>
+<p><img src="5.png" alt="5"></p>
+<p><img src="6.png" alt="6"></p>
+<p><img src="8.png" alt="8"></p>
+<p><img src="9.png" alt="9"></p>
+</li>
+<li><p>和基于单帧图像和视频方法的比较</p>
+<p><img src="7.png" alt="7"></p>
+</li>
+</ul>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>我们提出了从RGB视频中重建三维人体网格的TCMR模型。之前基于视频的工作由于强烈地依赖当前帧的静态特征，存在时序不一致的问题。我们通过移除静态特征和时序特征的残差连接，采用PoseForecast来预测过去帧和未来帧的时序特征，融合得到当前帧的时序特征。和其他基于视频的方法相比，TCMR提供了时序一致的三维运动和更准确的三维姿态估计。</p>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><ul>
+<li>3DPW：Timo von Marcard, Roberto Henschel, Michael Black, Bodo Rosenhahn,  and Gerard Pons-Moll. Recovering accurate 3d human pose in the wild using imus and a moving camera. <em>ECCV</em>, 2018.</li>
+<li>Human3.6M：Catalin Ionescu, Dragos Papava, Vlad Olaru, and Cristian Sminchisescu. Human3.6m: Large scale datasets and predictive methods for 3d human sensing in natural environments. <em>TPAMI</em>, 2014.</li>
+<li>MPI-INF-3DHP：Dushyant Mehta, Helge Rhodin, Dan Casas, Pascal Fua, Oleksandr Sotnychenko, Weipeng Xu, and Christian Theobalt. Monocular 3d human pose estimation in the wild using improved cnn supervision. <em>3DV</em>, 2017. </li>
+<li>Insta Variety：Angjoo Kanazawa, Jason Y Zhang, Panna Felsen, and Jitendra Malik. Learning 3D human dynamics from video. <em>CVPR</em>, 2019. </li>
+<li>Penn Ation：Weiyu Zhang, Menglong Zhu, and Konstantinos G Derpanis. From actemes to action: A strongly-supervised representation for detailed action understanding. <em>ICCV</em>, 2013.</li>
+<li>PoseTrack： Mykhaylo Andriluka, Umar Iqbal, Eldar Insafutdinov, Leonid Pishchulin, Anton Milan, Juergen Gall, and Bernt Schiele. Posetrack: A benchmark for human pose estimation and tracking. <em>CVPR</em>, 2018.</li>
+</ul>
+<p>3DPW是只有包括真实SMPL参数的数据集</p>
+<h2 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h2><p>temporal consistency - 时序一致性</p>
+<p>smooth 3D human motion - 光滑三维人体运动</p>
+<p>static feature - 静态特征</p>
+<p>depth ambiguity - 深度不确定性</p>
+<p><strong>residual connection - 残差连接</strong></p>
+<p>pretrained network - 预训练网络</p>
+<p>identity mapping - 恒等映射</p>
+<p>human mesh recovery system（HMR）- 人体网格重建系统</p>
+<p>anatomically plausible - 解剖学上合理</p>
+<p>2D joint heatmap - 二维关节热图</p>
+<p>human part segmentation - 人体部分分割</p>
+<p>multi-view color consistency - 多视图颜色一致性</p>
+<p>self-improving system - 自我改善系统</p>
+<p>3D volumetric space - 三维体积空间</p>
+<p>graph convolutional network - 图卷积网络</p>
+<p>lixel - 线+像素</p>
+<p>optical flow - 光流</p>
+<p>generalize well - 很好的推广</p>
+<p>skeleton-disentangling framework - 骨架解耦框架？？？</p>
+<p>multi-level spatial and temporal subproblems - 多层次的时空子问题</p>
+<p>variational motion estimator（VME）- 变分运动估计器</p>
+<p>motion residual regressor（MRR）- 运动残余回归器</p>
+<p>3D pose acceleration error - 三维姿态加速度误差</p>
+<p>trade-off - 权衡</p>
+<p>quantitative metrics - 定量指标</p>
+<p>qualitative results - 定性结果</p>
+<p>consecutive frame - 连续帧</p>
+<p>hallucinator - 幻觉器？？？</p>
+<p>neural autoregressive framework - 神经自回归框架</p>
+<p>global average pooling - 全局平均池化</p>
+<p>attention values - 注意值</p>
+<p>average filter - 平均过滤器</p>
+<p>spherical linear interpolation - 球面线性插值</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p> [1] Hongsuk Choi, Gyeongsik Moon, and Kyoung Mu Lee.</p>
+<p>Pose2Mesh: Graph convolutional network for 3D human</p>
+<p>pose and mesh recovery from a 2D human pose. <em>ECCV</em>,</p>
+<p>2020.</p>
+<p>[2] Gyeongsik Moon and Kyoung Mu Lee. I2L-MeshNet:</p>
+<p>Image-to-Lixel prediction network for accurate 3D human</p>
+<p>pose and mesh estimation from a single RGB image. <em>ECCV</em>,</p>
+<p>2020.</p>
+<p>[3] Angjoo Kanazawa, Jason Y Zhang, Panna Felsen, and Jiten</p>
+<p>dra Malik. Learning 3D human dynamics from video. <em>CVPR</em>,</p>
+<p>2019.</p>
+<p>[4] Muhammed Kocabas, Nikos Athanasiou, and Michael J</p>
+<p>Black. VIBE: Video inference for human body pose and</p>
+<p>shape estimation. <em>CVPR</em>, 2020. </p>
+<p>[5] Zhengyi Luo, S Alireza Golestaneh, and Kris M Kitani. 3D</p>
+<p>human motion estimation via motion compression and re-</p>
+<p>fifinement. <em>ACCV</em>, 2020. </p>
+<p>[6] Angjoo Kanazawa, Michael J Black, David W Jacobs, and</p>
+<p>Jitendra Malik. End-to-end recovery of human shape and</p>
+<p>pose. <em>CVPR</em>, 2018</p>
+<p>[7] Nikos Kolotouros, Georgios Pavlakos, Michael J Black, and</p>
+<p>Kostas Daniilidis. Learning to reconstruct 3D human pose</p>
+<p>and shape via model-fifitting in the loop. <em>ICCV</em>, 2019.</p>
+<p>[8] Georgios Pavlakos, Luyang Zhu, Xiaowei Zhou, and Kostas</p>
+<p>Daniilidis. Learning to estimate 3D human pose and shape</p>
+<p>from a single color image. <em>CVPR</em>, 2018. </p>
+<p>[9] Mohamed Omran, Christoph Lassner, Gerard Pons-Moll, Pe</p>
+<p>ter Gehler, and Bernt Schiele. Neural Body Fitting: Unifying</p>
+<p>deep learning and model based human pose and shape esti</p>
+<p>mation. <em>3DV</em>, 2018. </p>
+<p>[10] Georgios Pavlakos, Nikos Kolotouros, and Kostas Daniilidis.</p>
+<p>TexturePose: Supervising human mesh estimation with tex</p>
+<p>ture consistency. <em>ICCV</em>, 2019.</p>
+<p>[11] Nikos Kolotouros, Georgios Pavlakos, Michael J Black, and</p>
+<p>Kostas Daniilidis. Learning to reconstruct 3D human pose</p>
+<p>and shape via model-fifitting in the loop. <em>ICCV</em>, 2019. </p>
+<p>[12] Georgios Georgakis, Ren Li, Srikrishna Karanam, Terrence</p>
+<p>Chen, Jana Kosecka, and Ziyan Wu. Hierarchical kinematic</p>
+<p>human mesh recovery. <em>ECCV</em>, 2020.</p>
+<p>[13] Gul Varol, Duygu Ceylan, Bryan Russell, Jimei Yang, Ersin</p>
+<p>Yumer, Ivan Laptev, and Cordelia Schmid. BodyNet: Vol</p>
+<p>umetric inference of 3D human body shapes. <em>ECCV</em>, 2018.</p>
+<p>[14] Nikos Kolotouros, Georgios Pavlakos, and Kostas Dani</p>
+<p>ilidis. Convolutional mesh regression for single-image hu</p>
+<p>man shape reconstruction. <em>CVPR</em>, 2019. </p>
+<p>[15] Angjoo Kanazawa, Jason Y Zhang, Panna Felsen, and Jiten</p>
+<p>dra Malik. Learning 3D human dynamics from video. <em>CVPR</em>,</p>
+<p>2019.</p>
+<p>[16] Carl Doersch and Andrew Zisserman. Sim2real transfer</p>
+<p>learning for 3D human pose estimation: motion to the res</p>
+<p>cue. <em>NeurIPS</em>, 2019.</p>
+<p>[17]  </p>
+<p>Yu Sun, Yun Ye, Wu Liu, Wenpeng Gao, YiLi Fu, and Tao</p>
+<p>Mei. Human mesh recovery from monocular images via a</p>
+<p>skeleton-disentangled representation. <em>ICCV</em>, 2019.</p>
+<p>[18] Ye Yuan and Kris Kitani. Ego-pose estimation and forecast</p>
+<p>ing as real-time pd control. <em>ICCV</em>, 2019. 3</p>
+<p>[19] Jason Y Zhang, Panna Felsen, Angjoo Kanazawa, and Jiten</p>
+<p>dra Malik. Predicting 3d human dynamics from video. <em>ICCV</em>,</p>
+<p>\2019. </p>
+<p>[20] Nikos Kolotouros, Georgios Pavlakos, Michael J Black, and</p>
+<p>Kostas Daniilidis. Learning to reconstruct 3D human pose</p>
+<p>and shape via model-fifitting in the loop. <em>ICCV</em>, 2019.</p>
+<p>[21] Yi Zhou, Connelly Barnes, Jingwan Lu, Jimei Yang, and Hao</p>
+<p>Li. On the continuity of rotation representations in neural</p>
+<p>networks. <em>CVPR</em>, 2019.</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://music.163.com/song/media/outer/url?id=1432130357.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://music.163.com/song/media/outer/url?id=1430898876.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci='a3a33c2a30c8f056252b'
+        data-cs='7e3c9dce2acd3d4d59d679c980f33c24de2c29ad'
+        data-r='CommentData'
+        data-o='kasvii'
+        data-a='kasvii'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#TCMR-Beyond-Static-Features-for-Temporally-Consistent-3D-Human-Pose-and-Shape-from-a-Video"><span class="toc-number">1.</span> <span class="toc-text">TCMR: Beyond Static Features for Temporally Consistent 3D Human Pose and Shape from a Video</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">1.1.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E5%85%A5"><span class="toc-number">1.2.</span> <span class="toc-text">引入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.3.</span> <span class="toc-text">相关工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E5%8D%95%E5%BC%A0%E5%9B%BE%E5%83%8F%E7%9A%84%E4%B8%89%E7%BB%B4%E4%BA%BA%E4%BD%93%E5%A7%BF%E6%80%81%E5%92%8C%E5%BD%A2%E7%8A%B6%E4%BC%B0%E8%AE%A1"><span class="toc-number">1.3.1.</span> <span class="toc-text">基于单张图像的三维人体姿态和形状估计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E8%A7%86%E9%A2%91%E7%9A%84%E4%B8%89%E7%BB%B4%E4%BA%BA%E4%BD%93%E4%BD%8D%E5%A7%BF%E5%92%8C%E5%BD%A2%E7%8A%B6%E4%BC%B0%E8%AE%A1"><span class="toc-number">1.3.2.</span> <span class="toc-text">基于视频的三维人体位姿和形状估计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E7%9A%84%E6%97%B6%E5%BA%8F%E4%B8%80%E8%87%B4%E4%B8%89%E7%BB%B4%E4%BA%BA%E4%BD%93%E8%BF%90%E5%8A%A8"><span class="toc-number">1.3.3.</span> <span class="toc-text">视频的时序一致三维人体运动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E5%9B%BE%E5%83%8F%E4%B8%AD%E9%A2%84%E6%B5%8B%E4%B8%89%E7%BB%B4%E4%BA%BA%E4%BD%93%E4%BD%8D%E5%A7%BF"><span class="toc-number">1.3.4.</span> <span class="toc-text">从图像中预测三维人体位姿</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">1.4.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%89%80%E6%9C%89%E5%B8%A7%E7%9A%84%E6%97%B6%E5%BA%8F%E7%BC%96%E7%A0%81"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 所有帧的时序编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-PoseForecast%E7%9A%84%E6%97%B6%E5%BA%8F%E7%BC%96%E7%A0%81"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. PoseForecast的时序编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%97%B6%E5%BA%8F%E7%89%B9%E5%BE%81%E8%9E%8D%E5%90%88"><span class="toc-number">1.4.3.</span> <span class="toc-text">3. 时序特征融合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">1.4.4.</span> <span class="toc-text">4. 损失函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%96%BD%E7%BB%86%E8%8A%82"><span class="toc-number">1.5.</span> <span class="toc-text">实施细节</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.6.</span> <span class="toc-text">实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E6%8C%87%E6%A0%87"><span class="toc-number">1.6.1.</span> <span class="toc-text">实验指标</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AF%8F%E5%B8%A7%E5%87%86%E7%A1%AE%E6%80%A7%E7%9A%84%E6%8C%87%E6%A0%87%EF%BC%9A"><span class="toc-number">1.6.1.1.</span> <span class="toc-text">每帧准确性的指标：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%B6%E5%BA%8F%E8%AF%84%E4%BC%B0%E7%9A%84%E6%8C%87%E6%A0%87"><span class="toc-number">1.6.1.2.</span> <span class="toc-text">时序评估的指标</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.6.2.</span> <span class="toc-text">消融实验</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%BB%E9%99%A4%E6%AE%8B%E5%B7%AE%E8%BF%9E%E6%8E%A5%E7%9A%84%E6%9C%89%E6%95%88%E6%80%A7"><span class="toc-number">1.6.2.1.</span> <span class="toc-text">去除残差连接的有效性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PoseForecast%E7%9A%84%E6%9C%89%E6%95%88%E6%80%A7"><span class="toc-number">1.6.2.2.</span> <span class="toc-text">PoseForecast的有效性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%92%8CSOTA%E6%96%B9%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">1.6.2.3.</span> <span class="toc-text">和SOTA方法的对比</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">1.7.</span> <span class="toc-text">结论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">1.8.</span> <span class="toc-text">数据集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E8%AF%8D"><span class="toc-number">1.9.</span> <span class="toc-text">关键词</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">1.10.</span> <span class="toc-text">参考文献</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({"HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"], linebreaks: { automatic:true }, EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: { inlineMath: [ ["$", "$"], ["\\(","\\)"] ], processEscapes: true, ignoreClass: "tex2jax_ignore|dno",skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {  noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } }, Macros: { href: "{}" } },
+        messageStyle: "none"
+    });
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+
+</html>
+

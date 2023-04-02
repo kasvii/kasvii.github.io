@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>学生成绩管理系统 - Kasvii Blog</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="kasvii,"> 
+    <meta name="description" content="学生成绩管理系统项目和环境项目地址：https://github.com/bojiangzhou/lyyzoo-ssms
+环境配置：
+
+操作系统：Windows10
+开发平台：Eclipse oxy,"> 
+    <meta name="author" content="kasvii"> 
+    <link rel="alternative" href="atom.xml" title="Kasvii Blog" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Kasvii Blog</span>
+    <div id="loader"></div>
+    <script type="text/javascript" src="/js/clicksakura.js"></script>
+    <script async src="/js/sakurafall.js"></script>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="https://kasvii.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">学生成绩管理系统</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">学生成绩管理系统</h1>
+        <div class="stuff">
+            <span>十月 09, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/Eclipse/" rel="tag">Eclipse</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/Java/" rel="tag">Java</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/MySQL/" rel="tag">MySQL</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/tomcat/" rel="tag">tomcat</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="学生成绩管理系统"><a href="#学生成绩管理系统" class="headerlink" title="学生成绩管理系统"></a>学生成绩管理系统</h1><h2 id="项目和环境"><a href="#项目和环境" class="headerlink" title="项目和环境"></a>项目和环境</h2><p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/bojiangzhou/lyyzoo-ssms">https://github.com/bojiangzhou/lyyzoo-ssms</a></p>
+<p>环境配置：</p>
+<ul>
+<li>操作系统：Windows10</li>
+<li>开发平台：Eclipse oxygen </li>
+<li>Java版本：JDK 1.8</li>
+<li>服务器：tomcat 7.0</li>
+<li>数据库：MySQL 5.1</li>
+</ul>
+<p>安装包已上传到网盘<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1rjorX4O1zOSxhK89rNTQsQ，提取码：muws">https://pan.baidu.com/s/1rjorX4O1zOSxhK89rNTQsQ，提取码：muws</a></p>
+<h2 id="Java安装及配置"><a href="#Java安装及配置" class="headerlink" title="Java安装及配置"></a>Java安装及配置</h2><h3 id="安装Java"><a href="#安装Java" class="headerlink" title="安装Java"></a>安装Java</h3><p>从网盘中下载安装包 jdk-8u202-windows-x64.exe，双击开始安装</p>
+<p><img src="java1.jpg" alt="java1"></p>
+<p>可以更改选择安装路径，注意不要有中文字符的路径，记住安装的路径，后面配置环境的时候会用到</p>
+<p>选择好确定后，下一步</p>
+<p><img src="java2.jpg" alt="java2"></p>
+<p>这一步是选择 JRE 的安装目录，也可以更改，也要路径注意不能有中文字符</p>
+<p><img src="java3.jpg" alt="java3"></p>
+<p>安装成功！</p>
+<p><img src="java4.jpg" alt="java4"></p>
+<h3 id="Java的环境配置"><a href="#Java的环境配置" class="headerlink" title="Java的环境配置"></a>Java的环境配置</h3><p>配置 Java 环境变量</p>
+<p>此电脑—&gt;计算机—&gt;系统属性—&gt;高级系统设置—&gt;环境变量—&gt;系统变量—&gt;新建</p>
+<p>变量名：JAVA_HOME</p>
+<p>变量值：C:\Program Files\Java\jdk1.8.0_202</p>
+<p><img src="java5.png" alt="java5" style="zoom:75%;" /></p>
+<p>继续在系统变量里面新建一个变量</p>
+<p>变量名：CLASSPATH</p>
+<p>变量值：.;%JAVA_HOME%\lib;%JAVA_HOME%\lib\tools.jar</p>
+<p><img src="java6.png" alt="java6" style="zoom:75%;" /></p>
+<p>确定保存配置后，win+R打开电脑运行输入cmd进入命令行窗口输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -vesion</span><br></pre></td></tr></table></figure>
+<p>正确输出java版本，安装完成</p>
+<p><img src="java7.png" alt="java7"></p>
+<h2 id="Eclipse的安装"><a href="#Eclipse的安装" class="headerlink" title="Eclipse的安装"></a>Eclipse的安装</h2><p>下载Eclipse的oxygen版本的安装包 eclipse-java-oxygen-3a-win32-x86_64.zip，解压到任一位置，打开eclipse.exe即可</p>
+<p><img src="eclipse1.png" alt="eclipse1" style="zoom:67%;" /></p>
+<h2 id="tomcat的安装和配置"><a href="#tomcat的安装和配置" class="headerlink" title="tomcat的安装和配置"></a>tomcat的安装和配置</h2><p>下载tomcat 7.0的安装包 apache-tomcat-7.0.96.zip，解压到任一位置</p>
+<p>【注意】如果文件路径在C盘，要把权限打开。右键属性—&gt;安全—&gt;编辑—&gt;Users—&gt;完全控制—&gt;确定</p>
+<p><img src="tomcat1.png" alt="tomcat1"></p>
+<p>点击bin\startup.bat即可打开</p>
+<h2 id="MySQL安装"><a href="#MySQL安装" class="headerlink" title="MySQL安装"></a>MySQL安装</h2><p>下载MySQL 5.1安装包mysql-essential-5.1.46-winx64.msi</p>
+<p>具体安装过程参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/tang_chuanlin/article/details/79603063">https://blog.csdn.net/tang_chuanlin/article/details/79603063</a></p>
+<h2 id="使用成绩管理系统"><a href="#使用成绩管理系统" class="headerlink" title="使用成绩管理系统"></a>使用成绩管理系统</h2><h3 id="导入数据库"><a href="#导入数据库" class="headerlink" title="导入数据库"></a>导入数据库</h3><p>新建数据库ssms</p>
+<p>win+R打开运行，输入cmd打开命令行，输入MySQL的路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd C:\Program Files\MySQL\MySQL Server 5.1\bin </span><br><span class="line">mysql -u root -p </span><br></pre></td></tr></table></figure>
+<p>输入密码后进入MySQL</p>
+<p><img src="mysql1.png" alt="mysql1"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">create database ssms;</span><br><span class="line">use ssms;</span><br><span class="line">set names utf8;</span><br><span class="line">source D:\FirstTerm\lyyzoo-ssms\doc\ssms.sql</span><br></pre></td></tr></table></figure>
+<p>输入show tables检查，成功导入数据库</p>
+<p><img src="mysql2.png" alt="mysql2"></p>
+<h3 id="启动tomcat"><a href="#启动tomcat" class="headerlink" title="启动tomcat"></a>启动tomcat</h3><p>ssms.war可以从eclipse导出，同时也已经保存在网盘中，可以直接使用</p>
+<p>打开ssms.war\WEB-INF\classes\c3p0-config.xml文件，修改服务器所在数据库用户名和密码</p>
+<p>将ssms.war文件放入tomcat/webapps目录下</p>
+<p>打开 apache-tomcat-7.0.96\bin\startup.bat，启动tomcat服务器</p>
+<p>打开浏览器，输入 localhost:8080/ssms 进入登录界面</p>
+<p><img src="tomcat2.png" alt="tomcat2"></p>
+<h3 id="用户名和密码"><a href="#用户名和密码" class="headerlink" title="用户名和密码"></a>用户名和密码</h3><p><strong>管理员账号</strong>：admin</p>
+<p><strong>教师账号：</strong><br>        2012<br>        2011<br>        2010<br>        2009<br>        2008<br><strong>学生账号：</strong><br>        201301001<br>        201302002<br>        201401001<br>        201402002<br><strong>密码都为：</strong>111111</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://music.163.com/song/media/outer/url?id=1432130357.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://music.163.com/song/media/outer/url?id=1430898876.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='false'
+        data-ci='a3a33c2a30c8f056252b'
+        data-cs='7e3c9dce2acd3d4d59d679c980f33c24de2c29ad'
+        data-r='CommentData'
+        data-o='kasvii'
+        data-a='kasvii'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%A6%E7%94%9F%E6%88%90%E7%BB%A9%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.</span> <span class="toc-text">学生成绩管理系统</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E5%92%8C%E7%8E%AF%E5%A2%83"><span class="toc-number">1.1.</span> <span class="toc-text">项目和环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE"><span class="toc-number">1.2.</span> <span class="toc-text">Java安装及配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Java"><span class="toc-number">1.2.1.</span> <span class="toc-text">安装Java</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E7%9A%84%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">1.2.2.</span> <span class="toc-text">Java的环境配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Eclipse%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-number">1.3.</span> <span class="toc-text">Eclipse的安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tomcat%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE"><span class="toc-number">1.4.</span> <span class="toc-text">tomcat的安装和配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL%E5%AE%89%E8%A3%85"><span class="toc-number">1.5.</span> <span class="toc-text">MySQL安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%88%90%E7%BB%A9%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.6.</span> <span class="toc-text">使用成绩管理系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BC%E5%85%A5%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">1.6.1.</span> <span class="toc-text">导入数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8tomcat"><span class="toc-number">1.6.2.</span> <span class="toc-text">启动tomcat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81"><span class="toc-number">1.6.3.</span> <span class="toc-text">用户名和密码</span></a></li></ol></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({"HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"], linebreaks: { automatic:true }, EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: { inlineMath: [ ["$", "$"], ["\\(","\\)"] ], processEscapes: true, ignoreClass: "tex2jax_ignore|dno",skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {  noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } }, Macros: { href: "{}" } },
+        messageStyle: "none"
+    });
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+
+</html>
+

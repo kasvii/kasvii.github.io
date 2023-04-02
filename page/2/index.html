@@ -113,34 +113,17 @@
     </div>
     
     <div id="post0">
-        <p>三月 18, 2021</p>
-        <h2><a href="/2021/03/18/ORB_SLAM2%E6%9E%84%E5%BB%BA%E7%A8%A0%E5%AF%86%E5%9C%B0%E5%9B%BE-%E9%AB%98%E5%8D%9A%E7%89%88/" title="ORB_SLAM2构建稠密地图-高博版" class="posttitle">ORB_SLAM2构建稠密地图-高博版</a></h2>
-        <p class="summary">准备工作操作系统： Ubuntu 18.04
-1.Opencv（3.2.0版本）
-2.PCL
-1sudo apt ...</p>
+        <p>三月 15, 2021</p>
+        <h2><a href="/2021/03/15/deeplab+ORB_SLAM2%E7%9A%84%E8%AF%AD%E4%B9%89%E5%BB%BA%E5%9B%BE/" title="deeplab+ORB_SLAM2的语义建图" class="posttitle">deeplab+ORB_SLAM2的语义建图</a></h2>
+        <p class="summary">服务端语义分割作为服务端，在终端1：
+1.调整~/.bashrc至anaconda3
+2.打开conda的deep...</p>
     </div>
     
 </div>
 
     <div id="primary">
         
-<div class="post">
-    <a href="/2021/03/18/ORB_SLAM2%E6%9E%84%E5%BB%BA%E7%A8%A0%E5%AF%86%E5%9C%B0%E5%9B%BE-%E9%AB%98%E5%8D%9A%E7%89%88/" title="ORB_SLAM2构建稠密地图-高博版">
-        <img src="/img/ORB_SLAM2%E6%9E%84%E5%BB%BA%E7%A8%A0%E5%AF%86%E5%9C%B0%E5%9B%BE%E9%AB%98%E5%8D%9A%E7%89%88.jpg" class="cover" width="680" height="440">
-    </a>
-    <div class="else">
-        <p>三月 18, 2021</p>
-        <h3><a href="/2021/03/18/ORB_SLAM2%E6%9E%84%E5%BB%BA%E7%A8%A0%E5%AF%86%E5%9C%B0%E5%9B%BE-%E9%AB%98%E5%8D%9A%E7%89%88/" title="ORB_SLAM2构建稠密地图-高博版" class="posttitle">ORB_SLAM2构建稠密地图-高博版</a></h3>
-        <p>准备工作操作系统： Ubuntu 18.04
-1.Opencv（3.2.0版本）
-2.PCL
-1sudo apt install libpcl-dev
-3...</p>
-    </div>
-</div>
-
-
 <div class="post">
     <a href="/2021/03/15/deeplab+ORB_SLAM2%E7%9A%84%E8%AF%AD%E4%B9%89%E5%BB%BA%E5%9B%BE/" title="deeplab+ORB_SLAM2的语义建图">
         <img src="/img/deeplab+ORB_SLAM2%E7%9A%84%E8%AF%AD%E4%B9%89%E5%BB%BA%E5%9B%BE.jpg" class="cover" width="680" height="440">
@@ -254,6 +237,20 @@ YOLACT：https://github.com/dbolya/yolact
 
 
 <div class="post">
+    <a href="/2020/10/11/num-recognizer/" title="手写数字识别器">
+        <img src="/img/num-recognizer.jpg" class="cover" width="680" height="440">
+    </a>
+    <div class="else">
+        <p>十月 11, 2020</p>
+        <h3><a href="/2020/10/11/num-recognizer/" title="手写数字识别器" class="posttitle">手写数字识别器</a></h3>
+        <p>写在前面  手写数字识别器是一个经典的卷积神经网络问题，这里将利用PyTorch实验手写数字识别器的任务。
+数据准备  首先导入所有需要的库
+123456...</p>
+    </div>
+</div>
+
+
+<div class="post">
     <a href="/2020/10/07/matrix-derivative/" title="矩阵求导">
         <img src="/img/matrix-derivative.jpg" class="cover" width="680" height="440">
     </a>
@@ -267,13 +264,26 @@ YOLACT：https://github.com/dbolya/yolact
 
     </div>
     
-    <div id="pager"><a href="/page/3/" class="more">加载更多</a></div>
-    
 </div>
 <div id="preview"></div>
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 
 <script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>

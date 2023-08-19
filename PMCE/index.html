@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="description"
-        content="Learning Generalizable Model-based Neural Radiance Fields from Multi-view Images.">
-  <meta name="keywords" content="GM-NeRF, SMPL">
+        content="Co-Evolution of Pose and Mesh for 3D Human Body Estimation from Video.">
+  <meta name="keywords" content="PMCE, 3D Human Reconstruction">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>GM-NeRF: Learning Generalizable Model-based Neural Radiance Fields from Multi-view Images</title>
+  <title>Co-Evolution of Pose and Mesh for 3D Human Body Estimation from Video</title>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
@@ -79,34 +79,37 @@
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          <h1 class="title is-2 publication-title">GM-NeRF: Learning Generalizable Model-based Neural Radiance Fields from Multi-view Images</h1>
-            <h1 class="title is-size-3" style="color:#5a6268;">CVPR 2023</h1>
+          <h1 class="title is-2 publication-title">Co-Evolution of Pose and Mesh for 3D Human Body Estimation from Video</h1>
+            <h1 class="title is-size-3" style="color:#5a6268;">ICCV 2023</h1>
           <div class="is-size-5 publication-authors">
             <span class="author-block">
-              <a href="">Jianchuan Chen</a><sup>1</sup>,</span>
+              <a href="">Yingxuan You</a><sup>1</sup>,</span>
             <span class="author-block">
-              <a href="">Wentao Yi</a><sup>1</sup>,</span>
+              <a href="https://scholar.google.com/citations?hl=zh-CN&user=4CQKG8oAAAAJ">Hong Liu</a><sup>1</sup>,</span>
             <span class="author-block">
-              <a href="https://charliememory.github.io">Liqian Ma</a><sup>2</sup>,
+              <a href="">Ti Wang</a><sup>2</sup>,
             </span>
             <span class="author-block">
-              <a href="https://stephenjia.github.io">Xu Jia</a><sup>1</sup>,
+              <a href="https://vegetebird.github.io/">Wenhao Li</a><sup>1</sup>,
             </span>
             <span class="author-block">
-              <a href="https://ice.dlut.edu.cn/IIAU/index.html">Huchuan Lu</a><sup>1</sup>,
+              <a href="">Runwei Ding</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://xialipku.github.io/">Xia Li</a><sup>1</sup>,
             </span>
           </div>
 
           <div class="is-size-5 publication-authors">
-            <span class="author-block"><sup>1</sup>Dalian University of Technology, China</span>
-            <span class="author-block"><sup>2</sup>ZMO AI Inc.</span>
+            <span class="author-block"><sup>1</sup>Peking University, China</span>
+            <span class="author-block"><sup>2</sup>ETH Zurich, Switzerland</span>
           </div>
 
           <div class="column has-text-centered">
             <div class="publication-links">
               <!-- PDF Link. -->
               <span class="link-block">
-                <a href="https://openaccess.thecvf.com/content/CVPR2023/papers/Chen_GM-NeRF_Learning_Generalizable_Model-Based_Neural_Radiance_Fields_From_Multi-View_Images_CVPR_2023_paper.pdf"
+                <a href="https://arxiv.org/pdf/2303.05652.pdf"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fas fa-file-pdf"></i>
@@ -115,7 +118,7 @@
                 </a>
               </span>
               <span class="link-block">
-                <a href="https://arxiv.org/abs/2303.13777"
+                <a href="https://arxiv.org/pdf/2303.05652.pdf"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="ai ai-arxiv"></i>
@@ -135,7 +138,7 @@
               </span>
               <!-- Code Link. -->
               <span class="link-block">
-                <a href="https://github.com/JanaldoChen/GM-NeRF"
+                <a href="https://github.com/kasvii/PMCE"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fab fa-github"></i>
@@ -180,21 +183,17 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            In this work, we focus on synthesizing high-fidelity novel 
-            view images for arbitrary human performers, given a set
-            of sparse multi-view images. It is a challenging task due to
-            the large variation among articulated body poses and heavy
-            self-occlusions. To alleviate this, we introduce an effective generalizable framework Generalizable Model-based
-            Neural Radiance Fields (GM-NeRF) to synthesize free-viewpoint images. Specifically, 
-            we propose a geometry-guided attention mechanism to register the appearance
-            code from multi-view 2D images to a geometry proxy which
-            can alleviate the misalignment between inaccurate geometry prior and pixel space. On top of that, we further conduct
-            neural rendering and partial gradient backpropagation for
-            efficient perceptual supervision and improvement of the perceptual quality of synthesis. To evaluate our method, we
-            conduct experiments on synthesized datasets THuman2.0
-            and Multi-garment, and real-world datasets Genebody and
-            ZJUMocap. The results demonstrate that our approach outperforms state-of-the-art methods in terms of novel view
-            synthesis and geometric reconstruction.
+            Despite significant progress in single image-based 3D human mesh recovery, accurately and smoothly recovering 3D human
+            motion from a video remains challenging. Existing video-based methods generally recover human mesh by estimating the
+            complex pose and shape parameters from coupled image features, whose high complexity and low representation ability
+            often result in inconsistent pose motion and limited shape patterns. To alleviate this issue, we introduce 3D pose as
+            the intermediary and propose a Pose and Mesh Co-Evolution network (PMCE) that decouples this task into two parts: (1)
+            video-based 3D human pose estimation and (2) mesh vertices regression from the estimated 3D pose and temporal image
+            feature. Specifically, we propose a two-stream encoder that estimates mid-frame 3D pose and extracts a temporal image
+            feature from the input image sequence. In addition, we design a co-evolution decoder that performs pose and mesh
+            interactions with the image-guided Adaptive Layer Normalization (AdaLN) to make pose and mesh fit the human body shape.
+            Extensive experiments demonstrate that the proposed PMCE outperforms previous state-of-the-art methods in terms of both
+            per-frame accuracy and temporal consistency on three benchmark datasets: 3DPW, Human3.6M, and MPI-INF-3DHP.
           </p>
         </div>
       </div>
@@ -202,7 +201,7 @@
     <!--/ Abstract. -->
 
     <!-- Paper video. -->
-    <div class="columns is-centered has-text-centered">
+    <!-- <div class="columns is-centered has-text-centered">
         <div class="column is-four-fifths">
             <h2 class="title is-3">Video</h2>
             <div class="publication-video">
@@ -210,7 +209,7 @@
                     frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
         </div>
-    </div>
+    </div> -->
     <!--/ Paper video. -->
   </div>
 </section>
@@ -228,13 +227,12 @@
                  alt="GM-NeRF architecture."/>
           </div>
           <p>
-            Given m calibrated multi-view images and registered SMPL, we build the generalizable
-            model-based neural human radiance field. First, we utilize the image encoder to extract multi-view image features, which are used to
-            provide geometric and appearance information, respectively. In order to adequately exploit the geometric prior, we propose the visibility-based attention mechanism to construct a structured geometric body embedding, which is further diffused to form a geometric feature
-            volume. For any spatial point x, we trilinearly interpolate the feature volume G to obtain the geometric code g(x). In addition, we also
-            propose geometry-guided attention to obtain the appearance code a(x, d) directly from the multi-view image features. We then feed the
-            geometric code g(x) and appearance code a(x, d) into the MLP network to build the neural feature field (f, σ) = F(g(x), a(x, d)).
-            Finally, we employ volume rendering and neural rendering to generate the novel view image.
+            Architecture of the proposed PMCE. Given a video sequence, static image features are extracted by a pre-trained
+            CNN, and 2D poses are detected by an off-the-shelf 2D pose
+            detector. The two-stream encoder leverages dual parallel modules to generate a
+            temporal feature and estimate the mid-frame 3D pose, respectively. Then, the co-evolution decoder
+            regresses the mesh vertices through the pose and mesh interactions guided by our proposed AdaLN, which makes the pose
+            and mesh fit the body shape.
           </p>
         </div>
 
@@ -261,7 +259,7 @@
               <div>
                 <div class="item item-1">
                   <video poster="" id="case1" autoplay controls muted loop playsinline height="100%">
-                    <source src="./videos/Comparsions_Case1.mp4"
+                    <source src="./videos/demo1.mp4"
                             type="video/mp4">
                   </video>
                 </div>
@@ -270,7 +268,7 @@
               <div>
                 <div class="item item-2">
                   <video poster="" id="case2" autoplay controls muted loop playsinline height="100%">
-                    <source src="./videos/Comparsions_Case2.mp4"
+                    <source src="./videos/demo2.mp4"
                             type="video/mp4">
                   </video>
                 </div>
@@ -279,20 +277,20 @@
               <div>
                 <div class="item item-3">
                   <video poster="" id="case3" autoplay controls muted loop playsinline height="100%">
-                    <source src="./videos/Comparsions_Case3.mp4"
+                    <source src="./videos/demo3.mp4"
                             type="video/mp4">
                   </video>
                 </div>
               </div>
       
-              <div>
+              <!-- <div>
                 <div class="item item-4">
                   <video poster="" id="case4" autoplay controls muted loop playsinline height="100%">
                     <source src="./videos/Comparsions_Case4.mp4"
                             type="video/mp4">
                   </video>
                 </div>
-              </div>
+              </div> -->
       
             </div>
     
@@ -304,9 +302,9 @@
 
         <!-- 3D Reconstruction. -->
         <div class="content has-text-justified">
-            <h2 class="title is-3 has-text-centered"><p>3D Reconstruction</p></h2>
+            <h2 class="title is-3 has-text-centered"><p>Visual Comparision</p></h2>
             <div class="has-text-centered">
-              <img style="width: 100%;" src="./images/Comparsion_Geometry.png"
+              <img style="width: 100%;" src="./images/Comparsion.png"
                    alt="Comparsion_Geometry."/>
             </div>
           </div>
@@ -317,7 +315,7 @@
 
         <!-- Demos -->
 
-        <div class="container has-text-centered">
+        <!-- <div class="container has-text-centered">
 
             <h2 class="title is-3 has-text-centered"><p>Demos</p></h2>
     
@@ -397,7 +395,7 @@
       
             </div>
     
-        </div>
+        </div> -->
 
         <!--/ Demos -->
 
@@ -408,15 +406,15 @@
 <section class="section" id="BibTeX">
     <div class="container is-max-desktop content">
       <h2 class="title">BibTeX</h2>
-      <pre><code>@inproceedings{chen2023gmnerf,
-        author = {Jianchuan Chen and
-            Wentao Yi and
-            Liqian Ma and
-            Xu Jia and
-            Huchuan Lu},
-        title = {GM-NeRF: Learning Generalizable Model-based Neural Radiance Fields
-            from Multi-view Images},
-        booktitle = {CVPR},
+      <pre><code>@inproceedings{you2023pmce,
+        author = {Yingxuan You and
+            Hong Liu and
+            Ti Wang and
+            Wenhao Li and
+            Runwei Ding and
+            Xia Li},
+        title = {Co-Evolution of Pose and Mesh for 3D Human Body Estimation from Video},
+        booktitle = {ICCV},
         year = {2023}
         }</code></pre>
     </div>

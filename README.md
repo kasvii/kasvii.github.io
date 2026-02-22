@@ -1,1 +1,1 @@
-[Yingxuan You](https://kasvii.github.io/) homepage. Website template taken from [Jon Barron](https://jonbarron.info/).
+[Yingxuan You](https://kasvii.github.io/)'s homepage. Website template taken from [Jon Barron](https://jonbarron.info/).

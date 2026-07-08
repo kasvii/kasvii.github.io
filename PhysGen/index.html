@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="PhysGen: Physically Grounded 3D Shape Generation for Industrial Design. CVPR 2026.">
+  <meta name="keywords" content="PhysGen, 3D Shape Generation, Physics, Industrial Design, Flow Matching, CVPR 2026">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PhysGen: Physically Grounded 3D Shape Generation for Industrial Design</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="../static/css/bulma.min.css">
+  <link rel="stylesheet" href="../static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="../static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="../static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="../static/css/index.css">
+  <link rel="icon" href="../static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="../static/js/fontawesome.all.min.js"></script>
+  <script src="../static/js/bulma-carousel.min.js"></script>
+  <script src="../static/js/bulma-slider.min.js"></script>
+  <script src="../static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://kasvii.github.io/">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://kasvii.github.io/PMCE">
+            PMCE
+          </a>
+          <a class="navbar-item" href="https://github.com/kasvii/GATOR">
+            GATOR
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title">PhysGen: Physically Grounded 3D Shape Generation for Industrial Design</h1>
+            <h1 class="title is-size-3" style="color:#5a6268;">CVPR 2026</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://kasvii.github.io/">Yingxuan You</a>,  </span>
+            <span class="author-block">
+              Chen Zhao,  </span>
+            <span class="author-block">
+              Hantao Zhang,
+            </span>
+            <span class="author-block">
+              Ming Xu,
+            </span>
+            <span class="author-block">
+              <a href="https://people.epfl.ch/pascal.fua">Pascal Fua</a>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">CVLab, EPFL, Switzerland</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://openaccess.thecvf.com/content/CVPR2026/papers/You_PhysGen_Physically_Grounded_3D_Shape_Generation_for_Industrial_Design_CVPR_2026_paper.pdf"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2512.00422"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=5J-m3SR3b-0"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span>
+              <!-- Poster Link. -->
+              <span class="link-block">
+                <a href="./images/CVPR26_poster.png"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-image"></i>
+                  </span>
+                  <span>Poster</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <!-- TODO: uncomment when the code is released
+              <span class="link-block">
+                <a href="https://github.com/kasvii/PhysGen"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Existing generative models for 3D shapes can synthesize high-fidelity and visually plausible shapes. For certain
+            classes of shapes that have undergone an engineering design process, the realism of the shape is tightly coupled
+            with the underlying physical properties, e.g., aerodynamic efficiency for automobiles. Since existing methods lack
+            knowledge of such physics, they are unable to use this knowledge to enhance the realism of shape generation.
+            Motivated by this, we propose a unified physics-based 3D shape generation pipeline, with a focus on industrial
+            design applications. Specifically, we introduce a new flow matching model with explicit physical guidance,
+            consisting of an alternating update process. We iteratively perform a velocity-based update and a physics-based
+            refinement, progressively adjusting the latent code to align with the desired 3D shapes and physical properties.
+            We further strengthen physical validity by incorporating a physics-aware regularization term into the
+            velocity-based update step. To support such physics-guided updates, we build a shape-and-physics variational
+            autoencoder (SP-VAE) that jointly encodes shape and physics information into a unified latent space. The
+            experiments on three benchmarks show that this synergistic formulation improves shape realism beyond mere visual
+            plausibility.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    <!-- Paper video. -->
+    <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+            <h2 class="title is-3">Video</h2>
+            <div class="publication-video">
+            <iframe src="https://www.youtube.com/embed/5J-m3SR3b-0"
+                    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+    <!--/ Paper video. -->
+  </div>
+</section>
+
+
+<section class="section">
+
+    <div class="container is-max-desktop">
+
+        <!-- Framework. -->
+        <div class="content has-text-justified">
+          <h2 class="title is-3 has-text-centered"><p>Framework Overview</p></h2>
+          <div class="has-text-centered">
+            <img style="width: 100%;" src="./images/overview_fig_web.png"
+                 alt="PhysGen Framework."/>
+          </div>
+          <p>
+            The proposed framework consists of two main components: <b>(a) Shape-and-Physics VAE (SP-VAE)</b> learns unified
+            latent representations encoding both geometric structure and aerodynamic properties. The encoder maps uniformly
+            sampled and salient surface points to a latent code, which is shared by three decoders: a shape decoder that
+            predicts the signed distance field of the 3D shape, a pressure decoder that estimates the surface pressure, and
+            a drag decoder that regresses the global drag coefficient. <b>(b) Physics-Guided Shape Generation</b> alternates
+            between physics-regularized flow-matching updates and physical refinements, optionally conditioned on images
+            such as sketches. The flow-matching step is augmented with a physics-aware regularization term that guides the
+            latent code toward a target drag coefficient, while the physical refinement step backpropagates gradients of
+            drag, lift, and lateral forces computed from the decoded shape. This alternating update satisfies both geometric
+            plausibility and physical validity instead of drifting toward either extreme.
+          </p>
+        </div>
+
+        <!--/ Framework. -->
+    </div>
+
+    <br/>
+
+
+</section>
+
+
+<section class="section">
+    <div class="container is-max-desktop">
+
+        <!-- Structural Optimization. -->
+        <div class="content has-text-justified">
+            <h2 class="title is-3 has-text-centered"><p>Physics-Guided Generation Results</p></h2>
+            <div class="has-text-centered">
+              <img style="width: 100%;" src="./images/structural_opt_fig_web.png"
+                   alt="Structural optimization comparison."/>
+            </div>
+            <p>
+              Qualitative comparison of structural optimization under external forces. Given an image and an applied force,
+              PhysGen generates shapes that are both geometrically faithful and structurally sound, achieving substantially
+              lower compliance <i>C</i> and average displacement <i>u</i><sub>avg</sub> than Hunyuan3D 2.1 and PhysiOpt,
+              while avoiding the distorted supports (red boxes) produced by prior physics-driven optimization.
+            </p>
+          </div>
+
+        <!--/ Structural Optimization. -->
+
+        <br/>
+
+    </div>
+</section>
+
+
+<section class="section">
+    <div class="container is-max-desktop">
+
+        <!-- Poster. -->
+        <div class="content has-text-justified">
+            <h2 class="title is-3 has-text-centered"><p>Poster</p></h2>
+            <div class="has-text-centered">
+              <a href="./images/CVPR26_poster.png">
+                <img style="width: 100%;" src="./images/CVPR26_poster_web.jpg"
+                     alt="PhysGen CVPR 2026 Poster."/>
+              </a>
+            </div>
+          </div>
+
+        <!--/ Poster. -->
+
+    </div>
+</section>
+
+
+<section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@inproceedings{you2026physgen,
+      author    = {You, Yingxuan and Zhao, Chen and Zhang, Hantao and Xu, Ming and Fua, Pascal},
+      title     = {PhysGen: Physically Grounded 3D Shape Generation for Industrial Design},
+      booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+      year      = {2026}
+}</code></pre>
+    </div>
+</section>
+
+
+<footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        Thanks to <a href="https://www.flaticon.com/" target="_blank">Flaticon</a> for providing beautiful icons.
+        The website template is borrowed from <a href="https://hypernerf.github.io/" target="_blank">HyperNeRF</a>.
+      </div>
+    </div>
+</footer>
+
+</body>
+</html>
